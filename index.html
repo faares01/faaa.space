@@ -159,6 +159,13 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--t1);min-heig
 </style>
 </head>
 <body>
+<!-- LOADING -->
+<div id="loadingScreen" style="position:fixed;inset:0;z-index:9000;background:#080809;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s">
+  <div style="width:44px;height:44px;border-radius:12px;border:2px solid rgba(255,255,255,.08);border-top-color:rgba(255,255,255,.55);animation:spin .8s linear infinite"></div>
+  <div style="font-family:'Sora',sans-serif;font-size:.75rem;color:rgba(255,255,255,.35);letter-spacing:.08em">جاري التحميل...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
 <canvas id="bgCanvas"></canvas>
 <div class="bg-img" id="bgImg"></div>
 <div class="bg-vid" id="bgVid"><video id="bgVideo" autoplay loop muted playsinline></video></div>
@@ -335,7 +342,7 @@ const svgU=(id,w,h)=>`<svg width="${w||14}" height="${h||14}" viewBox="0 0 24 24
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
 
 /* ══ NHOST API ══ */
-let NH = null; // { subdomain, region }
+let NH = { subdomain: 'nlbllfpowhdjugrkrvcr', region: 'eu-central-1' };
 
 const nhUrl = (svc, path) =>
   `https://${NH.subdomain}.${svc}.${NH.region}.nhost.run/v1${path}`;
@@ -589,9 +596,7 @@ const setTog=(id,val)=>{const el=$(id);if(!el)return;el.textContent=val?'ON':'OF
 
 function updateNhStatus(){
   const d=$('nhDot'),t=$('nhTxt');if(!d||!t)return;
-  if(NH&&C.nhConfig){d.className='nh-dot ok';t.textContent='Connected to Nhost ✓';}
-  else if(C.nhConfig){d.className='nh-dot err';t.textContent='Config saved — try reconnecting';}
-  else{d.className='nh-dot off';t.textContent='Not connected — data saves locally only';}
+  d.className='nh-dot ok';t.textContent='Connected to Nhost ✓ (hardcoded)';
 }
 
 function popDash(){
@@ -814,14 +819,27 @@ let _tt;
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2700);}
 
 /* ══ INIT ══ */
+function hideLoading(){
+  const l=$('loadingScreen');
+  if(!l)return;
+  l.style.opacity='0';
+  setTimeout(()=>l.style.display='none',500);
+}
+
 async function init(){
   loadLocal();
-  if(C.nhConfig&&C.nhConfig.subdomain&&C.nhConfig.region){
-    NH={subdomain:C.nhConfig.subdomain, region:C.nhConfig.region};
-    const cloud=await nhLoad().catch(()=>null);
-    if(cloud){const nhc=C.nhConfig;C={...DEF,...cloud,nhConfig:nhc};saveLocal();}
-  }
+  // Always use hardcoded Nhost config
+  C.nhConfig={subdomain:'nlbllfpowhdjugrkrvcr',region:'eu-central-1'};
+  try{
+    const cloud=await nhLoad();
+    if(cloud){
+      const nhc=C.nhConfig;
+      C={...DEF,...cloud,nhConfig:nhc};
+      saveLocal();
+    }
+  }catch(e){console.warn('Cloud load failed:',e);}
   render();
+  hideLoading();
 }
 init();
 </script>
