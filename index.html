@@ -6,6 +6,7 @@
 <title>✦ FAA site ✦</title>
 <link href="https://fonts.googleapis.com/css2?family=VT323&family=Tahoma:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+<link rel="icon" href="ava.png">
 <style>
 /* ═══════════════════════════════════════
    ROOT VARIABLES — Windows 7 + Dark Indie
@@ -840,7 +841,7 @@ body {
 
 <!-- TRANSITION -->
 <div id="tov">
-  <div class="tov-t">LOADING...</div>
+  <div class="tov-t">entering the site... ✦</div>
   <div class="tov-b"><div class="tov-f"></div></div>
 </div>
 
@@ -857,12 +858,42 @@ body {
     <div class="l-body">
       <div class="l-logo-area">
         <div class="l-logo">FAA SITE</div>
-        <div class="l-logo-sub">// enter anything to continue</div>
+        <div class="l-logo-sub">// enter a name and password, or press enter to continue anonymously ✦ </div>
       </div>
-      <div class="l-field"><label>USERNAME</label><input type="text" id="l-user" placeholder="enter your name..." autocomplete="off"></div>
+      <div class="l-field"><label>NAME</label><input type="text" id="l-user" placeholder="enter your name..." autocomplete="off"></div>
       <div class="l-field"><label>PASSWORD</label><input type="password" id="l-pass" placeholder="••••••••" autocomplete="off"></div>
       <button class="l-btn" onclick="doLogin()">Log In</button>
-      <div class="l-note">best viewed on desktop · 1920×1080<br><span class="blink">_</span></div>
+      <!-- ★ زر "نسخة الجوال" — انسخه والصقه أي مكان في صفحتك ★ -->
+      <div class="l-note">best viewed on desktop · 1920×1080<br>
+        <a href="https://faaa.space/old/" target="_blank" id="mob-ver-btn" class="mob-btn">Mobile version. (And it's old.)</a>
+        <style>
+        #mob-ver-btn {
+          display: inline-block;
+          font-family: 'Tahoma', sans-serif;
+          font-size: 11px;
+          color: #b090e8;
+          text-decoration: none;
+          padding: 3px 10px;
+          border: 1px solid rgba(100,60,180,.35);
+          background: linear-gradient(180deg, rgba(60,30,110,.4), rgba(20,8,50,.6));
+          letter-spacing: 1px;
+          transition: all 0.15s;
+          box-shadow: inset 0 1px 0 rgba(180,140,255,.08);
+        }
+        #mob-ver-btn:hover {
+          color: #fff;
+          border-color: #c084fc;
+          background: linear-gradient(180deg, rgba(100,50,200,.5), rgba(50,20,110,.7));
+          box-shadow: 0 0 10px rgba(192,132,252,.25);
+        }
+        </style>
+        
+        
+        <span class="blink">✦✦✦✦✦</span></div>
+      
+
+
+
     </div>
   </div>
 </div>
@@ -917,16 +948,16 @@ body {
       <div class="ab-sec"><h3>Interests</h3>
         <!-- ★ EDIT YOUR INTERESTS ★ -->
         <div class="ab-tags">
-          <span class="ab-tag">anime</span><span class="ab-tag">music</span><span class="ab-tag">web design</span>
-          <span class="ab-tag">art</span><span class="ab-tag">games</span><span class="ab-tag">coding</span>
-          <span class="ab-tag">night sky</span><span class="ab-tag">pixel art</span>
+          <span class="ab-tag">dev</span><span class="ab-tag">music</span><span class="ab-tag">web design</span>
+          <span class="ab-tag">discord bots</span><span class="ab-tag">games</span><span class="ab-tag">coding</span>
+          <span class="ab-tag">foooooodss</span><span class="ab-tag">potato chips</span>
         </div>
       </div>
 
       <div class="ab-sec"><h3>Stats</h3>
-        <div class="stat-row"><span class="stat-lbl">online</span><div class="stat-track"><div class="stat-fill" style="width:95%"></div></div></div>
+        <div class="stat-row"><span class="stat-lbl">online</span><div class="stat-track"><div class="stat-fill" style="width:85%"></div></div></div>
         <div class="stat-row"><span class="stat-lbl">chaotic</span><div class="stat-track"><div class="stat-fill" style="width:78%"></div></div></div>
-        <div class="stat-row"><span class="stat-lbl">sleepy</span><div class="stat-track"><div class="stat-fill" style="width:70%"></div></div></div>
+        <div class="stat-row"><span class="stat-lbl">sleepy</span><div class="stat-track"><div class="stat-fill" style="width:99%"></div></div></div>
         <div class="stat-row"><span class="stat-lbl">gamer</span><div class="stat-track"><div class="stat-fill" style="width:85%"></div></div></div>
       </div>
 
@@ -952,28 +983,31 @@ body {
             <button class="btn-copy" onclick="copyBtnCode()">Copy Code</button>
           </div>
         </div>
-        <div class="btn-hint">// right-click the button → "Save image" → upload as button.png to your site</div>
+        <div class="btn-hint">// let me know if you use my button so i can add yours back!</div>
       </div>
 
 
       <!-- FRIENDS BUTTONS -->
       <div class="btns-section">
-        <div class="btns-section-title">Friends &amp; Cool Sites</div>
+        <div class="btns-section-title">Cool Sites</div>
         <div class="btns-note">// click to visit!</div>
         <div class="btns-grid">
           <!-- ★★★ ADD FRIEND BUTTONS HERE ★★★ -->
           <!-- <a class="nb" href="SITE_URL" target="_blank"><img src="BUTTON_URL" alt="Site"></a> -->
-          <a class="nb" href="https://ventablack.neocities.org" target="_blank">
-            <div style="width:88px;height:31px;background:linear-gradient(135deg,#0a0015,#1a003a);display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:12px;color:#c084fc;letter-spacing:1px">ventablack</div>
-          </a>
-          <a class="nb" href="https://calzonie.neocities.org" target="_blank">
-            <div style="width:88px;height:31px;background:linear-gradient(135deg,#001510,#003020);display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:12px;color:#34d399;letter-spacing:1px">calzonie</div>
-          </a>
-          <a class="nb" href="https://justbecaws.neocities.org" target="_blank">
-            <div style="width:88px;height:31px;background:linear-gradient(135deg,#15001a,#350040);display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:12px;color:#f472b6;letter-spacing:1px">justbecaws</div>
-          </a>
-          <div class="nb nb-ph">+ add</div>
-          <div class="nb nb-ph">+ add</div>
+          <a href="https://starry-knight.neocities.org/" target="_blank">
+            <img src="https://starryknight06.github.io/neocities/public/images/button-starrys-grove.png" alt="Starry's Grove">
+            </a>
+            <a href="https://lilithdev.neocities.org/"><img src="https://lilithdev.neocities.org/buttons/lilithdevbtn.gif"></a>
+            
+
+
+
+
+
+
+
+
+
         </div>
       </div>
 
@@ -1052,18 +1086,20 @@ body {
         <span id="welcome-greeting">hey !! thanks for visiting ˘ᵕ˘</span><br><br>
         this site is my personal space on the internet. i put stuff here
         that i like and want to share with the world.<br><br>
-        feel free to look around !! you can chat with me using the
+        feel free to look around !! you can chat using the
         <span class="hl">chatbox</span>, or check out my
         <span class="hl">about me</span> to know more.<br><br>
         this site is always being updated so check back for new stuff <span class="hl">✦</span><br><br>
         <span class="hl">// best viewed at 1920×1080 · not mobile friendly</span>
+        <br>
+        <span class="hl">// the total number of lines used to build this site was 1990 ✦</span>
       </div>
       <div class="w-badges">
         <span class="w-badge">MADE WITH ♡</span>
-        <span class="w-badge">NEOCITIES</span>
+        <span class="w-badge">killer</span>
         <span class="w-badge">HTML · CSS · JS</span>
         <span class="w-badge">INDIE WEB</span>
-        <span class="w-badge">BEST VIEWED DARK</span>
+        <span class="w-badge">hmmmmm</span>
       </div>
     </div></div>
   </div>
@@ -1116,6 +1152,8 @@ body {
   <div class="sm-item" onclick="openWin('welcome');toggleStart()"><span class="si">🌙</span>Welcome</div>
   <div class="sm-item" onclick="openWin('gallery');toggleStart()"><span class="si">🖼️</span>Gallery</div>
   <div class="sm-divider"></div>
+  <div class="sm-item" onclick="window.open('https://faaa.space/old','_blank')"><span class="si">🕹️</span>Old Site</div>
+  <div class="sm-divider"></div>
   <div class="sm-item" style="color:var(--a2)" onclick="logout()"><span class="si">🔒</span>Log Out</div>
 </div>
 
@@ -1155,9 +1193,9 @@ body {
       </div>
       <div class="mob-sec"><h3>Interests</h3>
         <div class="ab-tags">
-          <span class="ab-tag">anime</span><span class="ab-tag">music</span><span class="ab-tag">web design</span>
+          <span class="ab-tag">dev</span><span class="ab-tag">music</span><span class="ab-tag">web design</span>
           <span class="ab-tag">art</span><span class="ab-tag">games</span><span class="ab-tag">coding</span>
-          <span class="ab-tag">night sky</span><span class="ab-tag">pixel art</span>
+          <span class="ab-tag">discord bots</span><span class="ab-tag">fooooooodss</span>
         </div>
       </div>
       <div class="mob-sec"><h3>Stats</h3>
@@ -1847,6 +1885,139 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
     <div id="lb-caption"></div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+<style>
+  /* إخفاء الماوس الأصلي */
+  * { cursor: none !important; }
+  
+  #star-cursor {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999999;
+    width: 28px;
+    height: 28px;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s ease, opacity 0.2s;
+    will-change: transform;
+  }
+  
+  /* النجمة الرئيسية */
+  #star-cursor::before {
+    content: '✦';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #c084fc;
+    text-shadow:
+      0 0 6px rgba(192,132,252,0.9),
+      0 0 14px rgba(192,132,252,0.5);
+    animation: cur-spin 4s linear infinite;
+    line-height: 28px;
+  }
+  
+  /* نقطة صغيرة في المنتصف */
+  #star-cursor::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #fff;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 4px rgba(255,255,255,0.8);
+  }
+  
+  /* ذيل النجوم الصغيرة اللي تتبع */
+  .cur-trail {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999998;
+    font-size: 10px;
+    color: #f472b6;
+    text-shadow: 0 0 6px rgba(244,114,182,0.8);
+    transform: translate(-50%, -50%);
+    animation: cur-trail-fade 0.6s forwards ease-out;
+    will-change: opacity, transform;
+  }
+  
+  @keyframes cur-spin {
+    from { transform: rotate(0deg);   }
+    to   { transform: rotate(360deg); }
+  }
+  
+  @keyframes cur-trail-fade {
+    0%   { opacity: 0.9; transform: translate(-50%, -50%) scale(1);    }
+    100% { opacity: 0;   transform: translate(-50%, -70%) scale(0.3);  }
+  }
+  
+  /* لما الضغط — النجمة تنبض */
+  #star-cursor.clicking::before {
+    color: #f472b6;
+    text-shadow:
+      0 0 10px rgba(244,114,182,1),
+      0 0 20px rgba(244,114,182,0.6);
+    font-size: 28px;
+  }
+  </style>
+  
+  <div id="star-cursor"></div>
+  
+  <script>
+  (function() {
+    const cursor = document.getElementById('star-cursor');
+    let mx = -100, my = -100;
+    let trailTimer = 0;
+    const TRAIL_CHARS = ['✦','✧','⋆','·','★'];
+  
+    // تحريك النجمة مع الماوس
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top  = my + 'px';
+  
+      // إضافة ذيل كل 60ms
+      if (Date.now() - trailTimer > 60) {
+        spawnTrail(mx, my);
+        trailTimer = Date.now();
+      }
+    });
+  
+    // نبضة عند الضغط
+    document.addEventListener('mousedown', () => cursor.classList.add('clicking'));
+    document.addEventListener('mouseup',   () => cursor.classList.remove('clicking'));
+  
+    // إخفاء لما يخرج من الشاشة
+    document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
+    document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
+  
+    function spawnTrail(x, y) {
+      const t = document.createElement('div');
+      t.className = 'cur-trail';
+      t.textContent = TRAIL_CHARS[Math.floor(Math.random() * TRAIL_CHARS.length)];
+      t.style.left = (x + (Math.random()-0.5)*10) + 'px';
+      t.style.top  = (y + (Math.random()-0.5)*10) + 'px';
+      t.style.fontSize = (Math.random()*8+6) + 'px';
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 600);
+    }
+  })();
+  </script>
+  
+
+
 
 </body>
 </html>
