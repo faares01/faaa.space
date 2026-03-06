@@ -831,6 +831,174 @@ body {
 }
 
 /* Gallery */
+
+/* ═══════════════════════════════
+   DISCORD STATUS
+   ═══════════════════════════════ */
+.dc-status-box {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 10px;
+  background:rgba(88,101,242,.08);
+  border:1px solid rgba(88,101,242,.25);
+  border-radius:2px; margin-bottom:10px;
+}
+.dc-avatar-wrap { position:relative; flex-shrink:0; }
+.dc-avatar, .dc-avatar-fallback {
+  width:40px; height:40px; border-radius:50%;
+  border:2px solid rgba(88,101,242,.4);
+  object-fit:cover; display:block;
+}
+.dc-avatar-fallback {
+  background:linear-gradient(135deg,#3a1878,#5865f2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px;
+}
+.dc-dot {
+  position:absolute; bottom:1px; right:1px;
+  width:12px; height:12px; border-radius:50%;
+  border:2px solid var(--win-bg); background:#747f8d;
+}
+.dc-dot.online  { background:#3ba55c; }
+.dc-dot.idle    { background:#faa61a; }
+.dc-dot.dnd     { background:#ed4245; }
+.dc-info { flex:1; min-width:0; }
+.dc-name { font-family:'Share Tech Mono',monospace; font-size:11px; color:#fff; font-weight:bold; margin-bottom:2px; }
+.dc-state { font-size:9px; color:var(--dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dc-activity { font-size:9px; color:var(--a1); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dc-badge { font-size:9px; padding:1px 6px; font-family:'Tahoma',sans-serif; flex-shrink:0; border-radius:2px; }
+.dc-badge.online  { background:rgba(59,165,92,.2);  color:#3ba55c; border:1px solid rgba(59,165,92,.3); }
+.dc-badge.idle    { background:rgba(250,166,26,.2);  color:#faa61a; border:1px solid rgba(250,166,26,.3); }
+.dc-badge.dnd     { background:rgba(237,66,69,.2);   color:#ed4245; border:1px solid rgba(237,66,69,.3); }
+.dc-badge.offline { background:rgba(116,127,141,.15);color:#747f8d; border:1px solid rgba(116,127,141,.2); }
+
+/* ═══════════════════════════════
+   BLOG WINDOW
+   ═══════════════════════════════ */
+#blog-inner { padding:0; display:flex; flex-direction:column; height:100%; }
+.blog-toolbar {
+  padding:6px 10px; border-bottom:1px solid rgba(60,35,100,.4);
+  display:flex; align-items:center; gap:6px;
+  background:rgba(15,8,35,.5); flex-shrink:0;
+}
+.blog-toolbar-title { font-family:'VT323',monospace; font-size:18px; color:var(--a1); flex:1; letter-spacing:1px; }
+.blog-admin-badge {
+  font-size:9px; padding:2px 8px;
+  background:rgba(192,132,252,.12); border:1px solid rgba(192,132,252,.3);
+  color:var(--a1); font-family:'Share Tech Mono',monospace; letter-spacing:1px;
+}
+.blog-new-btn {
+  font-size:9px; padding:3px 10px; cursor:pointer;
+  background:linear-gradient(180deg,#5a2ab0,#3a1278);
+  border:1px solid rgba(140,80,255,.4); color:#e0d0ff;
+  font-family:'Tahoma',sans-serif; transition:all .1s;
+}
+.blog-new-btn:hover { background:linear-gradient(180deg,#7a3adc,#5a1a9a); }
+.blog-posts { flex:1; overflow-y:auto; padding:10px; }
+.blog-posts::-webkit-scrollbar { width:5px; }
+.blog-posts::-webkit-scrollbar-track { background:rgba(10,5,25,.5); }
+.blog-posts::-webkit-scrollbar-thumb { background:rgba(80,45,140,.5); }
+.blog-post {
+  border:1px solid rgba(60,35,100,.4); background:rgba(15,8,35,.6);
+  padding:10px 12px; margin-bottom:8px; transition:border-color .15s;
+}
+.blog-post:hover { border-color:rgba(100,60,180,.4); }
+.blog-post-header { display:flex; align-items:flex-start; gap:8px; margin-bottom:6px; }
+.blog-post-title { font-family:'VT323',monospace; font-size:20px; color:var(--a2); flex:1; line-height:1.2; }
+.blog-post-date { font-family:'Share Tech Mono',monospace; font-size:8px; color:var(--dim); flex-shrink:0; padding-top:4px; }
+.blog-post-body { font-size:10px; color:var(--text); line-height:1.8; white-space:pre-wrap; word-break:break-word; }
+.blog-delete-btn {
+  background:rgba(180,40,60,.15); border:1px solid rgba(200,50,70,.3);
+  color:#f87171; font-size:9px; padding:1px 6px; cursor:pointer;
+  font-family:'Tahoma',sans-serif; flex-shrink:0; transition:all .1s;
+}
+.blog-delete-btn:hover { background:rgba(220,50,70,.3); color:#fff; }
+.blog-empty { text-align:center; color:var(--dim); font-family:'Share Tech Mono',monospace; font-size:10px; padding:30px; letter-spacing:1px; }
+#blog-compose {
+  border-top:1px solid rgba(60,35,100,.4); background:rgba(10,5,25,.7);
+  padding:10px; flex-shrink:0; display:none;
+}
+#blog-compose.open { display:block; }
+.blog-compose-label { font-family:'Share Tech Mono',monospace; font-size:9px; color:var(--a1); margin-bottom:6px; letter-spacing:1px; }
+#blog-title-input, #blog-body-input {
+  width:100%; background:rgba(15,8,35,.9);
+  border:1px solid rgba(60,35,100,.5); color:var(--text);
+  font-family:'Share Tech Mono',monospace; font-size:10px;
+  padding:6px 8px; outline:none; transition:border-color .1s; resize:none;
+}
+#blog-title-input { height:28px; margin-bottom:4px; font-size:11px; }
+#blog-body-input  { height:70px; resize:vertical; }
+#blog-title-input:focus, #blog-body-input:focus { border-color:var(--a1); }
+.blog-compose-btns { display:flex; gap:6px; margin-top:6px; justify-content:flex-end; }
+.blog-submit-btn {
+  background:linear-gradient(180deg,#5a2ab0,#3a1278); border:1px solid rgba(140,80,255,.4);
+  color:#e0d0ff; font-family:'Tahoma',sans-serif; font-size:10px; padding:4px 14px;
+  cursor:pointer; transition:all .1s;
+}
+.blog-submit-btn:hover { background:linear-gradient(180deg,#7a3adc,#5a1a9a); }
+.blog-cancel-btn {
+  background:rgba(30,15,60,.5); border:1px solid rgba(60,35,100,.4);
+  color:var(--dim); font-family:'Tahoma',sans-serif; font-size:10px;
+  padding:4px 10px; cursor:pointer;
+}
+.blog-loading { text-align:center; color:var(--dim); font-family:'Share Tech Mono',monospace; font-size:9px; padding:20px; letter-spacing:1px; }
+
+/* ═══════════════════════════════
+   BLOG POST MODAL
+   ═══════════════════════════════ */
+#post-modal {
+  display:none; position:fixed; inset:0; z-index:88888;
+  background:rgba(0,0,0,.82); align-items:center; justify-content:center;
+  cursor:pointer;
+}
+#post-modal.open { display:flex; }
+#post-modal-inner {
+  width:min(560px,92vw); max-height:80vh;
+  background:linear-gradient(180deg,rgba(18,9,40,.99),rgba(10,5,25,.99));
+  border:1px solid var(--win-border2);
+  box-shadow:0 0 60px rgba(0,0,0,.9), 0 0 20px rgba(140,80,255,.15);
+  display:flex; flex-direction:column; cursor:default;
+}
+#post-modal-tb {
+  background:linear-gradient(180deg,var(--tb-top),var(--tb-mid),var(--tb-bot));
+  padding:6px 10px; display:flex; align-items:center;
+  border-bottom:1px solid rgba(60,35,100,.4); flex-shrink:0;
+}
+#post-modal-title-bar {
+  flex:1; font-family:'VT323',monospace; font-size:18px; color:var(--tb-text);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+#post-modal-close {
+  background:linear-gradient(180deg,#a02030,#600d18);
+  border:1px solid rgba(200,60,80,.4); color:#ffd0d8;
+  font-size:13px; font-weight:bold; width:26px; height:20px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:filter .1s; flex-shrink:0;
+}
+#post-modal-close:hover { filter:brightness(1.3); }
+#post-modal-date {
+  font-family:'Share Tech Mono',monospace; font-size:9px;
+  color:var(--dim); padding:8px 12px 0; flex-shrink:0;
+}
+#post-modal-body {
+  flex:1; overflow-y:auto; padding:10px 14px 16px;
+  font-size:11px; color:var(--text); line-height:1.9;
+  white-space:pre-wrap; word-break:break-word;
+}
+#post-modal-body::-webkit-scrollbar { width:5px; }
+#post-modal-body::-webkit-scrollbar-track { background:rgba(10,5,25,.5); }
+#post-modal-body::-webkit-scrollbar-thumb { background:rgba(80,45,140,.5); }
+/* post card — clickable */
+.blog-post { cursor:pointer; }
+.blog-post-preview {
+  font-size:10px; color:var(--dim); line-height:1.6;
+  overflow:hidden; display:-webkit-box;
+  -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  margin-top:4px;
+}
+.blog-post-read {
+  font-size:8px; color:var(--a1); font-family:'Share Tech Mono',monospace;
+  margin-top:5px; letter-spacing:1px; opacity:.7;
+}
 </style>
 </head>
 <body>
@@ -916,6 +1084,9 @@ body {
     <div class="dicon" onclick="openWin('gallery')">
       <div class="di">🖼️</div><div class="dl">Gallery</div>
     </div>
+    <div class="dicon" onclick="openWin('blog')">
+      <div class="di">📝</div><div class="dl">Blog</div>
+    </div>
   </div>
 
   <!-- ─────── ABOUT ME ─────── -->
@@ -942,7 +1113,7 @@ body {
       </div>
 
       <div class="ab-sec"><h3>Who am I</h3>
-        <p>hey !! welcome to my site. i'm just a guy who spends too much time online making things. this is my personal space on the web 。◕‿◕。<br><br>feel free to look around & leave a message in the chat !!</p>
+        <p>hey !! i'm <span style="color:var(--a2);font-weight:bold">Fares almori</span>, also known as <span style="color:var(--a1);font-weight:bold">FAA</span>. i'm just a guy who spends too much time online making things. this is my personal space on the web 。◕‿◕。<br><br>feel free to look around & leave a message in the chat !!</p>
       </div>
 
       <div class="ab-sec"><h3>Interests</h3>
@@ -959,6 +1130,21 @@ body {
         <div class="stat-row"><span class="stat-lbl">chaotic</span><div class="stat-track"><div class="stat-fill" style="width:78%"></div></div></div>
         <div class="stat-row"><span class="stat-lbl">sleepy</span><div class="stat-track"><div class="stat-fill" style="width:99%"></div></div></div>
         <div class="stat-row"><span class="stat-lbl">gamer</span><div class="stat-track"><div class="stat-fill" style="width:85%"></div></div></div>
+      </div>
+
+      <div class="ab-sec"><h3>Discord</h3>
+        <div class="dc-status-box" id="dc-status-box">
+          <div class="dc-avatar-wrap">
+            <div class="dc-avatar-fallback" id="dc-avatar-el">⚙</div>
+            <div class="dc-dot" id="dc-dot"></div>
+          </div>
+          <div class="dc-info">
+            <div class="dc-name" id="dc-name">faares0</div>
+            <div class="dc-state" id="dc-state">fetching status...</div>
+            <div class="dc-activity" id="dc-activity"></div>
+          </div>
+          <div class="dc-badge offline" id="dc-badge">—</div>
+        </div>
       </div>
 
       <div class="ab-sec"><h3>Find Me</h3>
@@ -1122,6 +1308,41 @@ body {
       </div>
     </div></div>
   </div>
+
+  <!-- ─────── BLOG ─────── -->
+  <div class="win" id="win-blog" style="width:480px;height:520px;top:60px;left:200px">
+    <div class="win-tb" onmousedown="dragStart(event,'win-blog')">
+      <div class="win-tl"><span class="wico">📝</span><span class="wtitle">Blog</span></div>
+      <div class="win-btns">
+        <button class="wbtn bm" onclick="minWin('blog')">−</button>
+        <button class="wbtn bx" onclick="maxWin('win-blog')">□</button>
+        <button class="wbtn bc" onclick="closeWin('blog')">✕</button>
+      </div>
+    </div>
+    <div class="win-menu"><span>File</span><span>Edit</span><span>View</span></div>
+    <div class="win-body" style="padding:0;overflow:hidden">
+      <div id="blog-inner">
+        <div class="blog-toolbar">
+          <div class="blog-toolbar-title">✦ FAA // blog</div>
+          <span class="blog-admin-badge" id="blog-admin-badge" style="display:none">ADMIN</span>
+          <button class="blog-new-btn" id="blog-new-btn" onclick="blogToggleCompose()" style="display:none">+ New Post</button>
+        </div>
+        <div class="blog-posts" id="blog-posts">
+          <div class="blog-loading" id="blog-loading">// loading posts...</div>
+        </div>
+        <div id="blog-compose">
+          <div class="blog-compose-label">// new post</div>
+          <input type="text" id="blog-title-input" placeholder="title...">
+          <textarea id="blog-body-input" placeholder="write something..."></textarea>
+          <div class="blog-compose-btns">
+            <button class="blog-cancel-btn" onclick="blogToggleCompose()">Cancel</button>
+            <button class="blog-submit-btn" onclick="blogSubmit()">Publish ✦</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div><!-- end desktop -->
 
 <!-- ══════════ TASKBAR ══════════ -->
@@ -1133,6 +1354,7 @@ body {
   <div class="tb-item" id="tb-chat"    onclick="tbClick('chat')">💬 Chat</div>
   <div class="tb-item" id="tb-welcome" onclick="tbClick('welcome')">🌙 Welcome</div>
   <div class="tb-item" id="tb-gallery" onclick="tbClick('gallery')">🖼️ Gallery</div>
+  <div class="tb-item" id="tb-blog"    onclick="tbClick('blog')">📝 Blog</div>
   <div style="flex:1"></div>
   <div id="clock"></div>
   <div class="tb-sep"></div>
@@ -1151,6 +1373,7 @@ body {
   <div class="sm-item" onclick="openWin('chat');toggleStart()"><span class="si">💬</span>Chat Box</div>
   <div class="sm-item" onclick="openWin('welcome');toggleStart()"><span class="si">🌙</span>Welcome</div>
   <div class="sm-item" onclick="openWin('gallery');toggleStart()"><span class="si">🖼️</span>Gallery</div>
+  <div class="sm-item" onclick="openWin('blog');toggleStart()"><span class="si">📝</span>Blog</div>
   <div class="sm-divider"></div>
   <div class="sm-item" onclick="window.open('https://faaa.space/old','_blank')"><span class="si">🕹️</span>Old Site</div>
   <div class="sm-divider"></div>
@@ -1174,12 +1397,14 @@ body {
       <div class="mob-tab active" onclick="mobTab('about',this)">✦ About</div>
       <div class="mob-tab" onclick="mobTab('music',this)">🎵 Music</div>
       <div class="mob-tab" onclick="mobTab('chat',this)">💬 Chat</div>
+      <div class="mob-tab" onclick="mobTab('blog',this)">📝 Blog</div>
       <div class="mob-tab" onclick="mobTab('welcome',this)">🌙 Welcome</div>
       <div class="mob-tab" onclick="mobTab('buttons',this)">🔗 Buttons</div>
     </div>
 
-    <!-- ABOUT TAB -->
+    <!-- ── ABOUT TAB ── -->
     <div class="mob-section active" id="mob-about">
+
       <div class="mob-profile">
         <div class="mob-avatar" id="mob-avatar-el">✦</div>
         <div>
@@ -1188,9 +1413,28 @@ body {
           <div class="mob-status">✦ currently: existing on the internet</div>
         </div>
       </div>
-      <div class="mob-sec"><h3>Who am I</h3>
-        <p>hey !! welcome to my site. i'm just a guy who spends too much time online making things. feel free to look around & leave a message in the chat !!</p>
+
+      <!-- Discord Status — mobile -->
+      <div class="mob-sec">
+        <h3>Discord</h3>
+        <div class="dc-status-box" id="mob-dc-box">
+          <div class="dc-avatar-wrap">
+            <div class="dc-avatar-fallback" id="mob-dc-avatar">⚙</div>
+            <div class="dc-dot" id="mob-dc-dot"></div>
+          </div>
+          <div class="dc-info">
+            <div class="dc-name" id="mob-dc-name">faares0</div>
+            <div class="dc-state" id="mob-dc-state">fetching...</div>
+            <div class="dc-activity" id="mob-dc-activity"></div>
+          </div>
+          <div class="dc-badge offline" id="mob-dc-badge">—</div>
+        </div>
       </div>
+
+      <div class="mob-sec"><h3>Who am I</h3>
+        <p>hey !! i'm <span style="color:var(--a2);font-weight:bold">Fares almori</span>, also known as <span style="color:var(--a1);font-weight:bold">FAA</span>. i'm just a guy who spends too much time online making things. this is my personal space on the web 。◕‿◕。<br><br>feel free to look around & leave a message in the chat !!</p>
+      </div>
+
       <div class="mob-sec"><h3>Interests</h3>
         <div class="ab-tags">
           <span class="ab-tag">dev</span><span class="ab-tag">music</span><span class="ab-tag">web design</span>
@@ -1198,12 +1442,14 @@ body {
           <span class="ab-tag">discord bots</span><span class="ab-tag">fooooooodss</span>
         </div>
       </div>
+
       <div class="mob-sec"><h3>Stats</h3>
         <div class="stat-row"><span class="stat-lbl">online</span><div class="stat-track"><div class="stat-fill" style="width:95%"></div></div></div>
         <div class="stat-row"><span class="stat-lbl">chaotic</span><div class="stat-track"><div class="stat-fill" style="width:78%"></div></div></div>
-        <div class="stat-row"><span class="stat-lbl">sleepy</span><div class="stat-track"><div class="stat-fill" style="width:70%"></div></div></div>
+        <div class="stat-row"><span class="stat-lbl">sleepy</span><div class="stat-track"><div class="stat-fill" style="width:99%"></div></div></div>
         <div class="stat-row"><span class="stat-lbl">gamer</span><div class="stat-track"><div class="stat-fill" style="width:85%"></div></div></div>
       </div>
+
       <div class="mob-sec"><h3>Find Me</h3>
         <div class="ab-socials">
           <a class="ab-social" href="https://www.instagram.com/faares.8/?igsh=ZTkyOGdiZ2hrMm0z&utm_source=qr" target="_blank">Instagram</a>
@@ -1215,7 +1461,7 @@ body {
       </div>
     </div>
 
-    <!-- MUSIC TAB -->
+    <!-- ── MUSIC TAB ── -->
     <div class="mob-section" id="mob-music">
       <div class="mob-mp-art" id="mob-art"><span>🎵</span></div>
       <div style="text-align:center;margin-bottom:12px">
@@ -1236,16 +1482,40 @@ body {
       <div class="mp-pl" id="mob-pl"><div class="mp-empty">// loading songs...</div></div>
     </div>
 
-    <!-- CHAT TAB -->
+    <!-- ── CHAT TAB ── -->
     <div class="mob-section" id="mob-chat">
       <div class="mob-chat-wrap">
         <iframe src="https://my.cbox.ws/FAARES" allowtransparency="true" title="Cbox"></iframe>
       </div>
     </div>
 
-    <!-- WELCOME TAB -->
+    <!-- ── BLOG TAB ── -->
+    <div class="mob-section" id="mob-blog">
+      <div class="mob-sec" style="padding:0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:0 2px">
+          <h3 style="flex:1;margin:0">Blog</h3>
+          <span class="blog-admin-badge" id="mob-blog-admin-badge" style="display:none">ADMIN</span>
+          <button class="blog-new-btn" id="mob-blog-new-btn" onclick="mobBlogToggleCompose()" style="display:none">+ New</button>
+        </div>
+
+        <!-- compose area mobile -->
+        <div id="mob-blog-compose" style="display:none;margin-bottom:10px;background:rgba(10,5,25,.7);border:1px solid rgba(60,35,100,.4);padding:10px">
+          <div class="blog-compose-label">// new post</div>
+          <input type="text" id="mob-blog-title" placeholder="title..." style="width:100%;background:rgba(15,8,35,.9);border:1px solid rgba(60,35,100,.5);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:10px;padding:6px 8px;outline:none;margin-bottom:4px;height:28px">
+          <textarea id="mob-blog-body" placeholder="write something..." style="width:100%;height:80px;background:rgba(15,8,35,.9);border:1px solid rgba(60,35,100,.5);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:10px;padding:6px 8px;outline:none;resize:vertical"></textarea>
+          <div style="display:flex;gap:6px;margin-top:6px;justify-content:flex-end">
+            <button class="blog-cancel-btn" onclick="mobBlogToggleCompose()">Cancel</button>
+            <button class="blog-submit-btn" onclick="mobBlogSubmit()">Publish ✦</button>
+          </div>
+        </div>
+
+        <div id="mob-blog-posts"><div class="blog-loading">// loading posts...</div></div>
+      </div>
+    </div>
+
+    <!-- ── WELCOME TAB ── -->
     <div class="mob-section" id="mob-welcome">
-      <div style="background:rgba(20,10,40,.5);border:1px solid rgba(60,35,100,.4);padding:16px;margin-bottom:12px;font-family:'Tahoma',sans-serif">
+      <div style="background:rgba(20,10,40,.5);border:1px solid rgba(60,35,100,.4);padding:16px;margin-bottom:12px">
         <div style="font-family:'VT323',monospace;font-size:24px;color:var(--a1);letter-spacing:2px;margin-bottom:10px">✦ FAA SITE</div>
         <div style="font-size:10px;color:var(--dim);line-height:1.9" id="mob-welcome-txt">
           hey !! thanks for visiting my little corner of the internet ˘ᵕ˘<br><br>
@@ -1261,17 +1531,16 @@ body {
       </div>
     </div>
 
-    <!-- BUTTONS TAB -->
+    <!-- ── BUTTONS TAB ── -->
     <div class="mob-section" id="mob-buttons">
-      <div class="mob-sec"><h3>Friends &amp; Cool Sites</h3>
+      <div class="mob-sec"><h3>Cool Sites</h3>
         <div class="btns-grid">
-          <a class="nb" href="https://ventablack.neocities.org" target="_blank">
-            <div style="width:88px;height:31px;background:linear-gradient(135deg,#0a0015,#1a003a);display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:12px;color:#c084fc">ventablack</div>
+          <a class="nb" href="https://starry-knight.neocities.org/" target="_blank">
+            <img src="https://starryknight06.github.io/neocities/public/images/button-starrys-grove.png" alt="Starry's Grove" style="width:88px;height:31px;display:block">
           </a>
-          <a class="nb" href="https://calzonie.neocities.org" target="_blank">
-            <div style="width:88px;height:31px;background:linear-gradient(135deg,#001510,#003020);display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:12px;color:#34d399">calzonie</div>
+          <a class="nb" href="https://lilithdev.neocities.org/" target="_blank">
+            <img src="https://lilithdev.neocities.org/buttons/lilithdevbtn.gif" alt="lilithdev" style="width:88px;height:31px;display:block">
           </a>
-          <div class="nb nb-ph">+ add</div>
         </div>
       </div>
     </div>
@@ -1430,8 +1699,18 @@ initStars(document.getElementById('stars-canvas'));
 // LOGIN → DETECT MOBILE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━
 let username = '';
+let isAdmin = false;
 function doLogin() {
-  username = document.getElementById('l-user').value.trim();
+  const u = document.getElementById('l-user').value.trim();
+  const p = document.getElementById('l-pass').value;
+  // Admin check
+  if (u === 'faares0' && p === 'Fares100') {
+    isAdmin = true;
+    username = 'FAA';
+  } else {
+    isAdmin = false;
+    username = u;
+  }
   const ov = document.getElementById('tov');
   ov.style.display = 'flex';
   setTimeout(() => {
@@ -1462,21 +1741,31 @@ function startDesktop() {
 
   // ── AUTO-SCAN Music/ and pics/ from GitHub ──
   autoScanGitHub();
+
+  // ── DISCORD STATUS ──
+  fetchDiscordStatus();
+  setInterval(fetchDiscordStatus, 30000);
+
+  // ── BLOG ──
+  blogInit();
 }
 
 function startMobile() {
   const mp = document.getElementById('mobile-page');
   mp.style.display = 'block';
-  // init mobile stars
   const mc = document.getElementById('mob-stars');
   mc.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%';
   initStars(mc);
-  // greeting
   if (username) {
     document.getElementById('mob-hi-name').textContent = `welcome back, ${username} !!`;
     document.getElementById('mob-welcome-txt').innerHTML =
       `hey, <strong style="color:var(--a2)">${username}</strong> !! thanks for visiting my little corner of the internet ˘ᵕ˘<br><br>this site is my personal space. feel free to look around !!<br><br><span style="color:var(--a1)">// this site is best viewed on desktop!</span>`;
   }
+  // Discord + blog for mobile
+  fetchDiscordStatus();
+  setInterval(fetchDiscordStatus, 30000);
+  autoScanGitHub();
+  mobBlogInit();
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1494,7 +1783,7 @@ updateClock(); setInterval(updateClock,10000);
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━
 // WINDOW MANAGEMENT
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━
-const WINS = ['about','music','chat','welcome','gallery'];
+const WINS = ['about','music','chat','welcome','gallery','blog'];
 const wSt={}, wPv={}, wMx={};
 WINS.forEach(k=>{wSt[k]=false;wMx[k]=false});
 
@@ -1873,10 +2162,342 @@ function closeLightbox() {
   document.getElementById('lb-img').src = '';
   document.body.style.overflow = '';
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeLightbox(); closePostModal(); }
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// DISCORD STATUS (Lanyard API)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+async function fetchDiscordStatus() {
+  try {
+    const r = await fetch('https://api.lanyard.rest/v1/users/1111705596543119370');
+    const j = await r.json();
+    if (!j.success) return;
+    const d = j.data;
+    const status = d.discord_status || 'offline';
+    const user   = d.discord_user;
+    const act    = d.activities?.find(a => a.type === 0);
+    const customStatus = d.activities?.find(a => a.type === 4);
+    const statusLabels = { online:'Online', idle:'Idle', dnd:'Do Not Disturb', offline:'Offline' };
+    const stateText    = customStatus?.state || statusLabels[status] || status;
+    const actText      = act ? `▶ ${act.name}` : '';
+
+    // ── Avatar → About Me + both Discord widgets ──
+    if (user?.avatar) {
+      const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
+
+      // Desktop Discord widget
+      const avEl = document.getElementById('dc-avatar-el');
+      if (avEl) avEl.innerHTML = `<img class="dc-avatar" src="${avatarUrl}" alt="av" onerror="this.parentElement.textContent='⚙'">`;
+
+      // Desktop About Me avatar
+      const abAvEl = document.getElementById('ab-avatar-el');
+      if (abAvEl) {
+        const img = new Image();
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+        img.src = avatarUrl;
+        img.onload = () => { abAvEl.innerHTML = ''; abAvEl.appendChild(img); };
+      }
+
+      // Mobile avatar (top profile)
+      const mobAvEl = document.getElementById('mob-avatar-el');
+      if (mobAvEl) {
+        const img2 = new Image();
+        img2.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;';
+        img2.src = avatarUrl;
+        img2.onload = () => { mobAvEl.innerHTML = ''; mobAvEl.appendChild(img2); };
+      }
+
+      // Mobile Discord widget avatar
+      const mobDcAv = document.getElementById('mob-dc-avatar');
+      if (mobDcAv) mobDcAv.innerHTML = `<img class="dc-avatar" src="${avatarUrl}" alt="av" onerror="this.parentElement.textContent='⚙'">`;
+    }
+
+    // ── Desktop Discord widget ──
+    const dot = document.getElementById('dc-dot');
+    if (dot) dot.className = `dc-dot ${status}`;
+    const dcName = document.getElementById('dc-name');
+    if (dcName) dcName.textContent = user?.display_name || user?.username || 'faares0';
+    const dcState = document.getElementById('dc-state');
+    if (dcState) dcState.textContent = stateText;
+    const dcAct = document.getElementById('dc-activity');
+    if (dcAct) dcAct.textContent = actText;
+    const badge = document.getElementById('dc-badge');
+    if (badge) { badge.className = `dc-badge ${status}`; badge.textContent = statusLabels[status] || status; }
+
+    // ── Mobile Discord widget ──
+    const mDot = document.getElementById('mob-dc-dot');
+    if (mDot) mDot.className = `dc-dot ${status}`;
+    const mName = document.getElementById('mob-dc-name');
+    if (mName) mName.textContent = user?.display_name || user?.username || 'faares0';
+    const mState = document.getElementById('mob-dc-state');
+    if (mState) mState.textContent = stateText;
+    const mAct = document.getElementById('mob-dc-activity');
+    if (mAct) mAct.textContent = actText;
+    const mBadge = document.getElementById('mob-dc-badge');
+    if (mBadge) { mBadge.className = `dc-badge ${status}`; mBadge.textContent = statusLabels[status] || status; }
+
+  } catch(e) {
+    const els = ['dc-state','mob-dc-state'];
+    els.forEach(id => { const el = document.getElementById(id); if(el) el.textContent = 'could not fetch'; });
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// BLOG — Nhost GraphQL
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const NHOST_GQL = 'https://nlbllfpowhdjugrkrvcr.hasura.eu-central-1.nhost.run/v1/graphql';
+
+async function nhostQuery(query, variables = {}) {
+  const res = await fetch(NHOST_GQL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, variables })
+  });
+  return res.json();
+}
+
+function blogInit() {
+  // Show admin controls if admin
+  if (isAdmin) {
+    document.getElementById('blog-admin-badge').style.display = 'inline';
+    document.getElementById('blog-new-btn').style.display = 'inline-block';
+  }
+  blogLoadPosts();
+}
+
+async function blogLoadPosts() {
+  document.getElementById('blog-posts').innerHTML = '<div class="blog-loading">// loading posts...</div>';
+  try {
+    const res = await nhostQuery(`
+      query {
+        posts(order_by: {created_at: desc}) {
+          id title content created_at
+        }
+      }
+    `);
+    const posts = res?.data?.posts || [];
+    blogRender(posts);
+  } catch(e) {
+    document.getElementById('blog-posts').innerHTML =
+      '<div class="blog-empty">// could not load posts<br>check Nhost table setup</div>';
+  }
+}
+
+function blogRender(posts) {
+  const container = document.getElementById('blog-posts');
+  if (!posts.length) {
+    container.innerHTML = '<div class="blog-empty">// no posts yet ✦</div>';
+    return;
+  }
+  // store posts globally for modal
+  window._blogPosts = posts;
+  container.innerHTML = posts.map((p, idx) => {
+    const date = new Date(p.created_at).toLocaleDateString('en-GB', {
+      day:'2-digit', month:'short', year:'numeric'
+    });
+    const deleteBtn = isAdmin
+      ? `<button class="blog-delete-btn" onclick="event.stopPropagation();blogDelete('${p.id}')">✕</button>`
+      : '';
+    return `
+      <div class="blog-post" id="post-${p.id}" onclick="openPostModal(${idx})">
+        <div class="blog-post-header">
+          <div class="blog-post-title">${escHtml(p.title)}</div>
+          <div class="blog-post-date">${date}</div>
+          ${deleteBtn}
+        </div>
+        <div class="blog-post-preview">${escHtml(p.content)}</div>
+        <div class="blog-post-read">// click to read more →</div>
+      </div>`;
+  }).join('');
+}
+
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function openPostModal(idx, src) {
+  const posts = src === 'mob' ? window._mobBlogPosts : window._blogPosts;
+  const p = posts?.[idx];
+  if (!p) return;
+  const date = new Date(p.created_at).toLocaleDateString('en-GB', {
+    weekday:'long', day:'2-digit', month:'long', year:'numeric'
+  });
+  document.getElementById('post-modal-title-bar').textContent = '📝 ' + p.title;
+  document.getElementById('post-modal-date').textContent = '// ' + date;
+  document.getElementById('post-modal-body').textContent = p.content;
+  document.getElementById('post-modal').classList.add('open');
+}
+
+function closePostModal() {
+  document.getElementById('post-modal').classList.remove('open');
+}
+
+function blogToggleCompose() {
+  const c = document.getElementById('blog-compose');
+  c.classList.toggle('open');
+  if (c.classList.contains('open')) {
+    document.getElementById('blog-title-input').focus();
+  } else {
+    document.getElementById('blog-title-input').value = '';
+    document.getElementById('blog-body-input').value  = '';
+  }
+}
+
+async function blogSubmit() {
+  const title   = document.getElementById('blog-title-input').value.trim();
+  const content = document.getElementById('blog-body-input').value.trim();
+  if (!title || !content) return;
+
+  const btn = document.querySelector('.blog-submit-btn');
+  btn.textContent = 'Publishing...'; btn.disabled = true;
+
+  try {
+    await nhostQuery(`
+      mutation($title: String!, $content: String!) {
+        insert_posts_one(object: {title: $title, content: $content}) { id }
+      }
+    `, { title, content });
+    blogToggleCompose();
+    blogLoadPosts();
+  } catch(e) {
+    btn.textContent = 'Error — retry';
+    btn.disabled = false;
+  }
+}
+
+async function blogDelete(id) {
+  if (!confirm('Delete this post?')) return;
+  const el = document.getElementById(`post-${id}`);
+  if (el) el.style.opacity = '0.4';
+  try {
+    await nhostQuery(`
+      mutation($id: uuid!) {
+        delete_posts_by_pk(id: $id) { id }
+      }
+    `, { id });
+    blogLoadPosts();
+    mobBlogLoadPosts();
+  } catch(e) {
+    if (el) el.style.opacity = '1';
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MOBILE BLOG
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function mobBlogInit() {
+  if (isAdmin) {
+    const badge = document.getElementById('mob-blog-admin-badge');
+    const btn   = document.getElementById('mob-blog-new-btn');
+    if (badge) badge.style.display = 'inline';
+    if (btn)   btn.style.display   = 'inline-block';
+  }
+  mobBlogLoadPosts();
+}
+
+async function mobBlogLoadPosts() {
+  const container = document.getElementById('mob-blog-posts');
+  if (!container) return;
+  container.innerHTML = '<div class="blog-loading">// loading posts...</div>';
+  try {
+    const res = await nhostQuery(`
+      query { posts(order_by: {created_at: desc}) { id title content created_at } }
+    `);
+    const posts = res?.data?.posts || [];
+    mobBlogRender(posts);
+  } catch(e) {
+    container.innerHTML = '<div class="blog-empty">// could not load posts</div>';
+  }
+}
+
+function mobBlogRender(posts) {
+  const container = document.getElementById('mob-blog-posts');
+  if (!container) return;
+  if (!posts.length) {
+    container.innerHTML = '<div class="blog-empty">// no posts yet ✦</div>';
+    return;
+  }
+  window._mobBlogPosts = posts;
+  container.innerHTML = posts.map((p, idx) => {
+    const date = new Date(p.created_at).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+    const deleteBtn = isAdmin
+      ? `<button class="blog-delete-btn" onclick="event.stopPropagation();mobBlogDelete('${p.id}')">✕</button>`
+      : '';
+    return `
+      <div class="blog-post" onclick="openPostModal(${idx},'mob')" style="margin-bottom:8px">
+        <div class="blog-post-header">
+          <div class="blog-post-title">${escHtml(p.title)}</div>
+          <div class="blog-post-date">${date}</div>
+          ${deleteBtn}
+        </div>
+        <div class="blog-post-preview">${escHtml(p.content)}</div>
+        <div class="blog-post-read">// tap to read →</div>
+      </div>`;
+  }).join('');
+}
+
+function mobBlogToggleCompose() {
+  const c = document.getElementById('mob-blog-compose');
+  if (!c) return;
+  const open = c.style.display === 'none' || !c.style.display;
+  c.style.display = open ? 'block' : 'none';
+  if (open) document.getElementById('mob-blog-title')?.focus();
+  else {
+    const t = document.getElementById('mob-blog-title'); if(t) t.value='';
+    const b = document.getElementById('mob-blog-body');  if(b) b.value='';
+  }
+}
+
+async function mobBlogSubmit() {
+  const title   = document.getElementById('mob-blog-title')?.value.trim();
+  const content = document.getElementById('mob-blog-body')?.value.trim();
+  if (!title || !content) return;
+  const btn = document.querySelector('#mob-blog-compose .blog-submit-btn');
+  if (btn) { btn.textContent = 'Publishing...'; btn.disabled = true; }
+  try {
+    await nhostQuery(`
+      mutation($title: String!, $content: String!) {
+        insert_posts_one(object: {title: $title, content: $content}) { id }
+      }
+    `, { title, content });
+    mobBlogToggleCompose();
+    mobBlogLoadPosts();
+    blogLoadPosts(); // sync desktop too
+  } catch(e) {
+    if (btn) { btn.textContent = 'Error — retry'; btn.disabled = false; }
+  }
+}
+
+async function mobBlogDelete(id) {
+  if (!confirm('Delete this post?')) return;
+  try {
+    await nhostQuery(`
+      mutation($id: uuid!) { delete_posts_by_pk(id: $id) { id } }
+    `, { id });
+    mobBlogLoadPosts();
+    blogLoadPosts();
+  } catch(e) {}
+}
+
 
 
 </script>
+<!-- POST MODAL -->
+<div id="post-modal" onclick="closePostModal()">
+  <div id="post-modal-inner" onclick="event.stopPropagation()">
+    <div id="post-modal-tb">
+      <div id="post-modal-title-bar"></div>
+      <button id="post-modal-close" onclick="closePostModal()">✕</button>
+    </div>
+    <div id="post-modal-date"></div>
+    <div id="post-modal-body"></div>
+  </div>
+</div>
+
 <!-- LIGHTBOX -->
 <div id="lightbox" onclick="closeLightbox()">
   <div id="lb-inner">
