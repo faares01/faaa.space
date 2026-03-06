@@ -2,846 +2,1851 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title id="pg-title">Profile</title>
-<link rel="icon" id="favicon" type="image/png" href="data:,">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ FAA site ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Tahoma:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#080809;--glass:rgba(14,14,18,.78);--b1:rgba(255,255,255,.1);--t1:#dddde4;--t2:rgba(221,221,228,.42);--t3:rgba(221,221,228,.22);--r:20px}
-html,body{height:100%;overflow-x:hidden}
-body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:44px 20px}
-#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;transition:opacity .7s}
-.bg-img{position:fixed;inset:0;z-index:0;pointer-events:none;background-size:cover;background-position:center;opacity:0;transition:opacity .8s}
-.bg-vid{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .8s}
-.bg-vid video{width:100%;height:100%;object-fit:cover}
-.bg-vig{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 100% 100% at 50% 50%,transparent 30%,rgba(0,0,0,.72) 100%)}
-.bg-grid{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.013) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.013) 1px,transparent 1px);background-size:54px 54px;mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 10%,transparent 100%);opacity:0;transition:opacity .6s}
-.bg-grid.show{opacity:1}
-.bgtog{position:fixed;bottom:22px;right:22px;z-index:20;width:38px;height:38px;border-radius:10px;background:rgba(12,12,18,.85);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);font-size:15px;display:none;align-items:center;justify-content:center;cursor:pointer;transition:all .22s;backdrop-filter:blur(12px)}
-.bgtog.vis{display:flex}.bgtog:hover{color:#fff}
-.gl{background:var(--glass);backdrop-filter:blur(44px) saturate(155%) brightness(110%);-webkit-backdrop-filter:blur(44px) saturate(155%) brightness(110%);border:1px solid var(--b1);border-radius:var(--r);box-shadow:0 0 0 .5px rgba(255,255,255,.03),inset 0 1.5px 0 rgba(255,255,255,.06),inset 0 -1px 0 rgba(0,0,0,.3),0 28px 80px rgba(0,0,0,.6);position:relative;overflow:hidden}
-.gl::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 8%,rgba(255,255,255,.17) 35%,rgba(255,255,255,.22) 50%,rgba(255,255,255,.17) 65%,transparent 92%);z-index:1;pointer-events:none}
-.gl::after{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(150deg,rgba(255,255,255,.04) 0%,transparent 45%,rgba(255,255,255,.008) 100%);pointer-events:none;z-index:1}
-.card{position:relative;z-index:10;width:min(420px,100%);padding:34px 28px;animation:cin .7s cubic-bezier(.16,1,.3,1) both}
-@keyframes cin{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
-.ava-w{position:relative;width:86px;height:86px;margin:0 auto 17px;cursor:pointer;-webkit-user-select:none;user-select:none}
-.ava-img{width:100%;height:100%;border-radius:20px;object-fit:cover;border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 26px rgba(0,0,0,.5);transition:filter .3s,transform .3s;display:block}
-.ava-w:hover .ava-img{filter:brightness(1.08);transform:scale(1.03)}
-.cdots{position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);display:flex;gap:3px}
-.cdot{width:3.5px;height:3.5px;border-radius:50%;background:rgba(255,255,255,.14);transition:background .2s,transform .16s}
-.cdot.lit{background:rgba(255,255,255,.8);transform:scale(1.5)}
-.uname{font-size:1.15rem;font-weight:600;text-align:center;color:#fff;margin-bottom:7px}
-.ubio{font-size:.78rem;font-weight:300;color:var(--t2);text-align:center;line-height:1.84;max-width:320px;margin:0 auto 20px}
-.sep{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);margin:18px 0}
-.soc{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-.sl{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:9px;text-decoration:none;color:rgba(255,255,255,.56);font-size:.72rem;transition:all .2s;white-space:nowrap}
-.sl:hover{color:rgba(255,255,255,.9);border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.08);transform:translateY(-2px)}
-.player{margin-top:18px;padding:16px 16px 13px;background:rgba(255,255,255,.026);border:1px solid rgba(255,255,255,.062);border-radius:15px;position:relative}
-.player::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.09),transparent);pointer-events:none}
-.ptop{display:flex;align-items:center;gap:12px;margin-bottom:13px}
-.cover{width:50px;height:50px;border-radius:10px;flex-shrink:0;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;position:relative}
-.cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
-.cover .cph{opacity:.22}
-.tinfo{flex:1;min-width:0}
-.tname{font-size:.79rem;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
-.tartist{font-size:.67rem;color:var(--t2)}
-.prog-w{margin-bottom:9px;cursor:pointer;padding:4px 0}
-.pbar{height:2.5px;background:rgba(255,255,255,.09);border-radius:2px;overflow:hidden;transition:height .15s}
-.prog-w:hover .pbar{height:3.5px}
-.pfill{height:100%;background:rgba(255,255,255,.7);border-radius:2px;width:0%;transition:width .22s linear;pointer-events:none}
-.ptimes{display:flex;justify-content:space-between;margin-top:3px}
-.ptimes span{font-size:.6rem;color:var(--t3);font-family:'DM Mono',monospace}
-.ctrl{display:flex;align-items:center;justify-content:center;gap:5px}
-.cb{width:33px;height:33px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.48);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;flex-shrink:0}
-.cb svg{width:13px;height:13px;fill:currentColor;pointer-events:none}
-.cb:hover{background:rgba(255,255,255,.09);color:#fff}
-.cb.main{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff}
-.cb.main svg{width:15px;height:15px}.cb.main:hover{background:rgba(255,255,255,.16)}
-.cb.on{color:rgba(255,255,255,.82);background:rgba(255,255,255,.07)}.cb.hidden{display:none}
-.vrow{display:flex;align-items:center;gap:7px;margin-top:9px}
-.vico{display:flex;align-items:center;cursor:pointer;color:var(--t3);flex-shrink:0}
-.vico svg{width:13px;height:13px;fill:currentColor}
-.vtrack{flex:1;height:2.5px;background:rgba(255,255,255,.08);border-radius:2px;cursor:pointer}
-.vfill{height:100%;background:rgba(255,255,255,.42);border-radius:2px;width:80%;pointer-events:none}
-.plist{margin-top:9px;max-height:140px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.07) transparent}
-.pi{display:flex;align-items:center;gap:7px;padding:5px 7px;border-radius:6px;cursor:pointer;transition:background .16s}
-.pi:hover{background:rgba(255,255,255,.04)}.pi.cur{background:rgba(255,255,255,.06)}
-.pi-n{font-size:.63rem;color:var(--t3);font-family:'DM Mono',monospace;width:16px;text-align:right;flex-shrink:0}
-.pi-name{flex:1;font-size:.7rem;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pi.cur .pi-name{color:#fff}
-.ov{position:fixed;inset:0;z-index:500;background:rgba(4,4,6,.9);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:18px}
-.ov.open{display:flex}
-.dp{width:min(520px,100%);max-height:90vh;overflow-y:auto;padding:24px 22px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.07) transparent}
-.dp::-webkit-scrollbar{width:2px}.dp::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
-.dh{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.dh-t{font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.45)}
-.dx{width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--t2);font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.dx:hover{color:#fff}
-.lbox{text-align:center;padding:6px 0 16px}
-.lico{font-size:1.7rem;margin-bottom:11px;opacity:.45}
-.lbox h2{font-size:.88rem;font-weight:500;color:#fff;margin-bottom:4px}
-.lbox p{font-size:.71rem;color:var(--t2);margin-bottom:16px}
-.pwin{display:block;margin:0 auto 10px;width:175px;text-align:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:9px 12px;color:#fff;font-family:'DM Mono',monospace;font-size:.86rem;letter-spacing:4px;outline:none}
-.pwin:focus{border-color:rgba(255,255,255,.22)}
-.pbtn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:8px 24px;color:#fff;font-family:'Sora',sans-serif;font-size:.74rem;font-weight:500;text-transform:uppercase;cursor:pointer;transition:all .2s}
-.pbtn:hover{background:rgba(255,255,255,.14)}
-.perr{color:rgba(255,80,80,.72);font-size:.67rem;margin-top:7px;display:none}
-.dtabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px}
-.dtb{padding:4px 10px;border-radius:6px;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);color:var(--t2);transition:all .18s;font-family:'Sora',sans-serif}
-.dtb.on{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff}
-.dpane{display:none}.dpane.on{display:block}
-.dsub{font-size:.59rem;text-transform:uppercase;letter-spacing:.12em;color:var(--t3);margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,.055)}
-.df{margin-bottom:8px}
-.df label{display:block;font-size:.63rem;color:var(--t2);margin-bottom:3px}
-.di,.dta{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:8px 10px;color:#fff;font-family:'Sora',sans-serif;font-size:.77rem;outline:none;transition:border-color .2s}
-.di:focus,.dta:focus{border-color:rgba(255,255,255,.22)}
-.dta{height:70px;resize:vertical}
-.drow{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.avu{display:flex;align-items:center;gap:12px;padding:12px;border:1.5px dashed rgba(255,255,255,.1);border-radius:11px;cursor:pointer;transition:all .2s;margin-bottom:10px}
-.avu:hover{border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.028)}
-#avuP{width:54px;height:54px;border-radius:10px;object-fit:cover;border:1px solid rgba(255,255,255,.09);flex-shrink:0}
-.avu-info p:first-child{font-size:.76rem;color:#fff;font-weight:500}
-.avu-info p:last-child{font-size:.64rem;color:var(--t2);margin-top:2px}
-.si{display:flex;align-items:center;gap:7px;padding:7px 9px;background:rgba(255,255,255,.026);border:1px solid rgba(255,255,255,.06);border-radius:8px;margin-bottom:5px}
-.si-i{width:22px;text-align:center;flex-shrink:0;display:flex;align-items:center;justify-content:center}
-.si-i svg{width:14px;height:14px;fill:var(--t2)}
-.si-l{font-size:.67rem;color:var(--t2);width:72px;flex-shrink:0}
-.si-u{flex:1;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.07);padding:2px 4px;color:#fff;font-family:'Sora',sans-serif;font-size:.72rem;outline:none}
-.si-u:focus{border-bottom-color:rgba(255,255,255,.26)}
-.tog{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:5px;font-size:.62rem;padding:2px 7px;cursor:pointer;color:var(--t2);transition:all .17s;font-family:'Sora',sans-serif;white-space:nowrap}
-.tog.on{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff}
-.song-item{display:flex;align-items:center;gap:9px;padding:8px 10px;background:rgba(255,255,255,.026);border:1px solid rgba(255,255,255,.06);border-radius:9px;margin-bottom:6px}
-.song-cov{width:38px;height:38px;border-radius:7px;flex-shrink:0;overflow:hidden;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
-.song-cov img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.song-cov-hint{position:absolute;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:.55rem;color:#fff;text-align:center;border-radius:7px}
-.song-cov:hover .song-cov-hint{display:flex}
-.song-info{flex:1;min-width:0}
-.song-name-inp{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.07);color:#fff;font-family:'Sora',sans-serif;font-size:.74rem;padding:2px 0 3px;outline:none}
-.song-name-inp:focus{border-bottom-color:rgba(255,255,255,.28)}
-.song-meta{font-size:.61rem;color:var(--t3);margin-top:2px}
-.song-rm{color:var(--t3);font-size:11px;cursor:pointer;padding:3px 6px;border-radius:5px;transition:all .15s;flex-shrink:0}
-.song-rm:hover{color:rgba(255,100,100,.8);background:rgba(255,60,60,.07)}
-.upzone{border:1.5px dashed rgba(255,255,255,.1);border-radius:11px;padding:14px;text-align:center;cursor:pointer;transition:all .22s;margin-bottom:10px}
-.upzone:hover{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.025)}
-.upzone .uz-ico{font-size:18px;opacity:.35;margin-bottom:5px}
-.upzone p{font-size:.72rem;color:var(--t2);font-weight:500}
-.upzone span{font-size:.63rem;color:var(--t3);margin-top:2px;display:block}
-.bg-preview{width:100%;height:96px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px}
-.bg-preview img,.bg-preview video{width:100%;height:100%;object-fit:cover}
-.bg-preview-ph{color:var(--t3);text-align:center;font-size:.67rem}
-.bg-opts{display:flex;gap:7px;margin-bottom:10px}
-.bgo{flex:1;padding:7px;border:1px solid rgba(255,255,255,.08);border-radius:9px;background:rgba(255,255,255,.03);color:var(--t2);font-size:.69rem;cursor:pointer;text-align:center;transition:all .2s;font-family:'Sora',sans-serif}
-.bgo.on{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff}
-.tog-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.tog-row label{flex:1;font-size:.7rem;color:var(--t2)}
-.sbtn{width:100%;padding:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);border-radius:9px;color:#fff;font-family:'Sora',sans-serif;font-size:.76rem;font-weight:500;text-transform:uppercase;cursor:pointer;transition:all .22s;margin-top:5px}
-.sbtn:hover{background:rgba(255,255,255,.12);transform:translateY(-1px)}
-.sbtn.danger{border-color:rgba(255,65,65,.17);color:rgba(255,100,100,.6)}
-.sbtn.danger:hover{background:rgba(255,65,65,.06);color:rgba(255,120,120,.88)}
-.nh-box{padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.026);border:1px solid rgba(255,255,255,.07);margin-bottom:12px}
-.nh-status{display:flex;align-items:center;gap:6px;font-size:.68rem;font-weight:500;margin-bottom:8px}
-.nh-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.nh-dot.ok{background:#7c3aed;box-shadow:0 0 7px #7c3aed88}
-.nh-dot.err{background:#f44336}
-.nh-dot.off{background:rgba(255,255,255,.2)}
-.nh-hint{font-size:.62rem;color:var(--t3);line-height:1.8}
-.nh-hint a{color:rgba(255,255,255,.45);text-decoration:none}
-.nh-hint a:hover{color:#a78bfa}
-.nh-hint b{color:rgba(255,255,255,.6)}
-.nh-hint code{background:rgba(0,0,0,.4);padding:3px 7px;border-radius:5px;display:block;margin-top:6px;font-family:'DM Mono',monospace;font-size:.6rem;line-height:1.8;white-space:pre}
-.prog-bar-w{width:100%;height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:7px;overflow:hidden;display:none}
-.prog-bar-fill{height:100%;background:#7c3aed;border-radius:2px;transition:width .3s;width:0%}
-.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(11px);background:rgba(18,18,22,.93);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(16px);border-radius:9px;padding:7px 16px;font-size:.73rem;color:rgba(255,255,255,.8);z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(max-width:480px){.card{padding:22px 17px}.drow{grid-template-columns:1fr}}
+/* ═══════════════════════════════════════
+   ROOT VARIABLES — Windows 7 + Dark Indie
+   ═══════════════════════════════════════ */
+:root {
+  --bg:          #0a080f;
+  --win-bg:      rgba(12,9,22,0.97);
+  --win-border:  #4a3a7a;
+  --win-border2: #6b4fa0;
+  --tb-top:      #3d1f7a;
+  --tb-mid:      #5c2ca8;
+  --tb-bot:      #2a1055;
+  --tb-text:     #e8d8ff;
+  --btn-face:    linear-gradient(180deg,#2e1d5c 0%,#1a0d38 100%);
+  --btn-hover:   linear-gradient(180deg,#4a2d8a 0%,#2a1a5a 100%);
+  --btn-border:  #5a3a8a;
+  --a1:          #c084fc;
+  --a2:          #f472b6;
+  --a3:          #67e8f9;
+  --a4:          #fbbf24;
+  --text:        #e2d9f3;
+  --dim:         #7a6a9a;
+  --glow:        rgba(192,132,252,.25);
+
+  /* Glass effect colors */
+  --glass-top:   rgba(120,80,200,.25);
+  --glass-bot:   rgba(60,30,110,.15);
+  --glass-edge:  rgba(180,130,255,.3);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; }
+
+body {
+  font-family: 'Tahoma', sans-serif;
+  font-size: 11px;
+  color: var(--text);
+  background: var(--bg);
+  cursor: default;
+}
+
+/* ═══════════════
+   STARS BG
+   ═══════════════ */
+#stars-canvas {
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+}
+#bg-glow {
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 60%, rgba(80,30,160,.18) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 30%, rgba(160,20,80,.13) 0%, transparent 70%);
+}
+
+/* ═══════════════
+   SCANLINES
+   ═══════════════ */
+.scanlines {
+  position:fixed; inset:0; z-index:9999; pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px);
+}
+
+/* ═════════════════════════════
+   LOGIN PAGE
+   ═════════════════════════════ */
+#login-page {
+  position:fixed; inset:0; z-index:500;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* Windows 7 style dialog box */
+.login-box {
+  width: 340px;
+  background: linear-gradient(180deg, #18103a 0%, #0e0824 100%);
+  border: 1px solid var(--win-border2);
+  box-shadow:
+    0 0 0 1px rgba(120,80,220,.15),
+    0 0 40px rgba(100,50,200,.3),
+    inset 0 1px 0 rgba(200,160,255,.15);
+  animation: fadeUp .5s ease;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* Win7 titlebar glass */
+.l-titlebar {
+  height: 32px;
+  background: linear-gradient(180deg,
+    rgba(100,60,200,.9) 0%,
+    rgba(70,35,150,.95) 50%,
+    rgba(50,20,110,1) 100%);
+  border-bottom: 1px solid rgba(150,100,255,.3);
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 0 8px 0 10px;
+  box-shadow: inset 0 1px 0 rgba(200,160,255,.25);
+}
+.l-titlebar .l-title-left {
+  display:flex; align-items:center; gap:6px;
+}
+.l-titlebar .l-icon { font-size:14px; }
+.l-titlebar .l-title-text {
+  font-family:'Tahoma',sans-serif; font-size:12px; font-weight:bold;
+  color: var(--tb-text); text-shadow: 0 1px 2px rgba(0,0,0,.6);
+}
+
+/* Win7 close button */
+.l-close-btn {
+  width:21px; height:21px;
+  background: linear-gradient(180deg,#c0392b 0%,#8b1a1a 100%);
+  border:1px solid rgba(255,100,100,.4);
+  border-radius:2px;
+  color:white; font-size:11px; font-weight:bold;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:filter .1s;
+  box-shadow: inset 0 1px 0 rgba(255,150,150,.3);
+}
+.l-close-btn:hover { filter:brightness(1.3); }
+
+.l-body { padding:24px 22px; }
+
+.l-logo-area {
+  text-align:center; margin-bottom:20px;
+}
+.l-logo {
+  font-family:'VT323',monospace;
+  font-size:42px; letter-spacing:4px; line-height:1;
+  background: linear-gradient(135deg, var(--a1), var(--a2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:glitch 8s infinite;
+}
+@keyframes glitch {
+  0%,88%,100%{clip-path:none;transform:none}
+  90%{clip-path:inset(10% 0 80% 0);transform:translateX(-3px)}
+  92%{clip-path:inset(60% 0 5% 0);transform:translateX(3px)}
+  94%{clip-path:none;transform:none}
+}
+.l-logo-sub { color:var(--dim); font-size:10px; letter-spacing:1px; margin-top:3px; }
+
+/* Win7 input style */
+.l-field { margin-bottom:12px; }
+.l-field label {
+  display:block; font-size:10px; color:var(--a1);
+  letter-spacing:1px; margin-bottom:3px;
+  font-family:'Share Tech Mono',monospace;
+}
+.l-field input {
+  width:100%;
+  background: rgba(20,10,40,.9);
+  border: 1px solid var(--win-border);
+  border-bottom-color: var(--win-border2);
+  color:var(--text);
+  font-family:'Tahoma',sans-serif; font-size:11px;
+  padding:6px 8px; outline:none;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.4);
+  transition:border-color .15s, box-shadow .15s;
+}
+.l-field input:focus {
+  border-color: var(--a1);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.4), 0 0 6px rgba(192,132,252,.25);
+}
+.l-field input::placeholder { color:rgba(120,100,160,.5); }
+
+/* Win7 button */
+.l-btn {
+  width:100%;
+  background: linear-gradient(180deg, #4a2a9a 0%, #2e1060 60%, #1e0840 100%);
+  border: 1px solid var(--btn-border);
+  color:#e0d0ff;
+  font-family:'Tahoma',sans-serif; font-size:11px; font-weight:bold;
+  padding:7px; cursor:pointer;
+  transition:all .15s;
+  box-shadow:
+    inset 0 1px 0 rgba(200,160,255,.2),
+    0 1px 3px rgba(0,0,0,.5);
+  margin-top:4px;
+}
+.l-btn:hover {
+  background: linear-gradient(180deg,#6a3aba 0%,#4a1a80 60%,#2e0a60 100%);
+  box-shadow: inset 0 1px 0 rgba(220,180,255,.3), 0 0 12px rgba(150,80,255,.3);
+}
+.l-btn:active { transform:translateY(1px); }
+.l-note {
+  text-align:center; color:var(--dim); font-size:9px;
+  margin-top:12px; letter-spacing:1px; line-height:1.9;
+  font-family:'Share Tech Mono',monospace;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.blink{animation:blink 1s step-end infinite}
+
+/* ═════════════════════════════
+   TRANSITION OVERLAY
+   ═════════════════════════════ */
+#tov {
+  position:fixed;inset:0;z-index:600;
+  background:var(--bg);
+  display:none; align-items:center; justify-content:center; flex-direction:column; gap:12px;
+}
+.tov-t { font-family:'VT323',monospace; font-size:22px; color:var(--a1); letter-spacing:4px; }
+.tov-b { width:200px; height:4px; background:rgba(255,255,255,.07); border:1px solid rgba(80,40,120,.4); overflow:hidden; }
+.tov-f { height:100%; background:linear-gradient(90deg,var(--a1),var(--a2)); animation:tfill 1.2s ease forwards; }
+@keyframes tfill{from{width:0}to{width:100%}}
+
+/* ═════════════════════════════
+   DESKTOP
+   ═════════════════════════════ */
+#desktop { position:fixed; inset:0 0 40px 0; z-index:10; display:none; }
+
+/* Desktop Icons — top left */
+.desk-icons {
+  position:absolute; top:10px; left:10px;
+  display:flex; flex-direction:column; gap:6px; z-index:15;
+}
+.dicon {
+  display:flex; flex-direction:column; align-items:center;
+  width:68px; gap:2px; cursor:pointer; padding:5px 3px;
+  border:1px solid transparent; user-select:none;
+  transition:all .1s;
+}
+.dicon:hover {
+  background: rgba(100,60,200,.15);
+  border-color: rgba(150,100,255,.3);
+}
+.dicon:active { transform:scale(.96); }
+.di { font-size:32px; line-height:1; filter:drop-shadow(0 1px 4px rgba(0,0,0,.8)); }
+.dl {
+  font-family:'Tahoma',sans-serif; font-size:10px; font-weight:bold;
+  color:#fff; text-align:center;
+  text-shadow:1px 1px 3px #000, 0 0 8px rgba(0,0,0,.9);
+  line-height:1.3; letter-spacing:.2px;
+}
+
+/* ═════════════════════════════
+   WINDOWS — Win7 Aero Dark Style
+   ═════════════════════════════ */
+.win {
+  position:absolute;
+  background: linear-gradient(180deg, rgba(14,9,28,.98) 0%, rgba(10,6,20,.98) 100%);
+  border: 1px solid var(--win-border2);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,.8),
+    0 0 0 1px rgba(80,40,140,.2),
+    inset 0 1px 0 rgba(160,100,255,.1);
+  z-index:20; display:none; flex-direction:column;
+  min-width:180px; min-height:100px;
+  animation:wopen .2s ease;
+}
+.win.active { z-index:30; box-shadow: 0 12px 40px rgba(0,0,0,.9), 0 0 0 1px rgba(120,70,200,.3), inset 0 1px 0 rgba(180,120,255,.12); }
+@keyframes wopen{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+
+/* Win7 glass titlebar */
+.win-tb {
+  height:30px; flex-shrink:0;
+  background: linear-gradient(180deg,
+    rgba(100,60,200,.85) 0%,
+    rgba(70,35,150,.9) 40%,
+    rgba(40,18,100,.95) 100%);
+  border-bottom:1px solid rgba(100,60,180,.4);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 6px 0 8px;
+  cursor:grab;
+  box-shadow: inset 0 1px 0 rgba(200,160,255,.2);
+  user-select:none;
+}
+.win-tb:active { cursor:grabbing; }
+.win-tl { display:flex; align-items:center; gap:5px; }
+.win-tl .wico { font-size:14px; }
+.win-tl .wtitle {
+  font-family:'Tahoma',sans-serif; font-size:11px; font-weight:bold;
+  color:#ddd8ff; text-shadow:0 1px 2px rgba(0,0,0,.6);
+  letter-spacing:.2px;
+}
+.win-btns { display:flex; gap:2px; }
+
+/* Win7 control buttons */
+.wbtn {
+  width:21px; height:19px;
+  border:1px solid rgba(100,60,180,.4);
+  border-radius:2px;
+  cursor:pointer; font-size:10px; font-weight:bold;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .1s;
+  box-shadow:inset 0 1px 0 rgba(200,160,255,.1);
+  color:#ccc;
+  background: linear-gradient(180deg,rgba(80,50,160,.6) 0%,rgba(40,20,100,.8) 100%);
+}
+.wbtn:hover { filter:brightness(1.3); }
+.bc { background:linear-gradient(180deg,#a02030 0%,#600d18 100%); border-color:rgba(200,60,80,.4); color:#ffd0d8; }
+.bc:hover { background:linear-gradient(180deg,#c73040 0%,#801020 100%); }
+
+/* Win7 menubar */
+.win-menu {
+  height:22px; flex-shrink:0;
+  background: rgba(20,12,40,.9);
+  border-bottom:1px solid rgba(60,35,110,.5);
+  display:flex; align-items:center; padding:0 8px; gap:2px;
+}
+.win-menu span {
+  font-family:'Tahoma',sans-serif; font-size:10px; color:var(--dim);
+  padding:2px 6px; cursor:pointer; border:1px solid transparent;
+  transition:all .1s;
+}
+.win-menu span:hover {
+  color:var(--text); background:rgba(80,50,160,.3);
+  border-color:rgba(100,60,180,.3);
+}
+
+.win-body {
+  flex:1; overflow:auto;
+  scrollbar-width:thin; scrollbar-color:rgba(80,40,140,.5) transparent;
+}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:rgba(10,6,20,.8);border-left:1px solid rgba(60,35,100,.3)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#4a2a80,#2a1050);border:1px solid rgba(100,60,160,.3)}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#6a3aaa,#3a1870)}
+
+/* ═════════════════════════════
+   TASKBAR — Win7 style
+   ═════════════════════════════ */
+#taskbar {
+  position:fixed; bottom:0; left:0; right:0; height:40px;
+  background: linear-gradient(180deg, rgba(25,14,52,.98) 0%, rgba(10,5,25,.99) 100%);
+  border-top:1px solid rgba(80,45,150,.5);
+  display:none; align-items:center; z-index:9000;
+  padding:0 6px; gap:4px;
+  box-shadow:0 -2px 12px rgba(0,0,0,.7);
+}
+
+#start-btn {
+  height:28px; padding:0 14px;
+  background: linear-gradient(180deg,#5a2ab0 0%,#3a1278 60%,#280c60 100%);
+  border:1px solid rgba(140,80,255,.5);
+  color:#e0d0ff;
+  font-family:'Tahoma',sans-serif; font-size:11px; font-weight:bold;
+  cursor:pointer; transition:all .15s;
+  box-shadow:inset 0 1px 0 rgba(200,160,255,.2);
+  white-space:nowrap; flex-shrink:0;
+  letter-spacing:.5px;
+}
+#start-btn:hover {
+  background:linear-gradient(180deg,#7a3adc 0%,#5a1a9a 60%,#3a0e80 100%);
+  box-shadow:inset 0 1px 0 rgba(220,180,255,.3),0 0 10px rgba(120,60,220,.4);
+}
+
+.tb-sep { width:1px; height:28px; background:rgba(80,45,140,.4); flex-shrink:0; }
+
+/* Taskbar items - Win7 style */
+.tb-item {
+  height:30px; padding:0 8px;
+  background:transparent; border:1px solid transparent;
+  color:var(--dim); font-family:'Tahoma',sans-serif; font-size:10px;
+  cursor:pointer; transition:all .1s;
+  display:none; align-items:center; gap:4px;
+  max-width:120px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+  border-radius:2px;
+}
+.tb-item.open { display:flex; }
+.tb-item:hover {
+  background:rgba(80,50,160,.2);
+  border-color:rgba(100,60,180,.3);
+  color:var(--text);
+}
+.tb-item.focused {
+  background: linear-gradient(180deg,rgba(80,45,160,.35) 0%,rgba(40,20,100,.5) 100%);
+  border-color:rgba(120,70,200,.4);
+  color:var(--text);
+  box-shadow:inset 0 1px 0 rgba(180,130,255,.1);
+}
+
+#clock {
+  font-family:'Tahoma',sans-serif; font-size:10px;
+  color:#b0a0d8;
+  padding:0 8px; text-align:right; white-space:nowrap;
+  line-height:1.5;
+}
+
+/* mini music player in taskbar */
+#tb-mini-player {
+  display:flex; align-items:center; gap:5px;
+  padding:0 10px;
+  border-left:1px solid rgba(80,45,140,.4);
+  height:28px;
+  max-width:180px; overflow:hidden;
+}
+#tb-mini-name {
+  font-family:'Tahoma',sans-serif; font-size:10px;
+  color:var(--a1);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  max-width:140px;
+  animation: tb-scroll 8s linear infinite;
+}
+#tb-mini-icon { font-size:11px; flex-shrink:0; }
+@keyframes tb-scroll {
+  0%,20%   { transform:translateX(0); }
+  80%,100% { transform:translateX(calc(-100% + 120px)); }
+}
+
+/* ═════════════════════════════
+   START MENU — Win7 style
+   ═════════════════════════════ */
+#start-menu {
+  position:fixed; bottom:40px; left:0; width:220px;
+  background:linear-gradient(180deg,rgba(20,10,45,.99) 0%,rgba(12,6,28,.99) 100%);
+  border:1px solid rgba(90,50,160,.5);
+  border-bottom:none;
+  box-shadow:4px -4px 20px rgba(0,0,0,.7),inset 1px 0 0 rgba(140,90,255,.05);
+  z-index:9500; display:none; flex-direction:column;
+  animation:slideUp .12s ease;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.sm-head {
+  background:linear-gradient(90deg,#3d1878,#6a28c0,#3d1878);
+  padding:12px 14px;
+  font-family:'VT323',monospace; font-size:20px; letter-spacing:2px; color:#e8d8ff;
+  border-bottom:1px solid rgba(120,70,200,.3);
+}
+.sm-item {
+  padding:7px 12px; font-size:10px; color:#b0a0cc;
+  cursor:pointer; display:flex; align-items:center; gap:8px;
+  border-bottom:1px solid rgba(60,35,100,.3);
+  transition:background .1s; letter-spacing:.3px;
+  font-family:'Tahoma',sans-serif;
+}
+.sm-item:hover { background:rgba(80,50,160,.25); color:var(--text); }
+.sm-item .si { font-size:14px; }
+.sm-divider { height:1px; background:rgba(80,45,150,.4); margin:2px 0; }
+
+/* ═════════════════════════════
+   ABOUT ME CONTENT
+   ═════════════════════════════ */
+#about-inner { padding:14px; }
+
+.ab-top { display:flex; gap:12px; margin-bottom:14px; }
+.ab-avatar {
+  width:76px; height:76px; flex-shrink:0;
+  border:2px solid var(--win-border2);
+  background:linear-gradient(135deg,#0e0428,#1e0850);
+  display:flex; align-items:center; justify-content:center;
+  font-size:32px; overflow:hidden;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.6), 0 0 16px rgba(140,80,255,.2);
+  animation:ava-glow 3s infinite alternate;
+}
+.ab-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+@keyframes ava-glow{from{box-shadow:inset 0 2px 8px rgba(0,0,0,.6),0 0 10px rgba(140,80,255,.15)}to{box-shadow:inset 0 2px 8px rgba(0,0,0,.6),0 0 22px rgba(200,100,200,.35)}}
+.ab-name {
+  font-family:'VT323',monospace; font-size:30px; letter-spacing:2px; line-height:1;
+  background:linear-gradient(135deg,var(--a1),var(--a2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.ab-pro { color:var(--a3); font-size:9px; letter-spacing:2px; margin-top:2px; font-family:'Share Tech Mono',monospace; }
+.ab-status {
+  margin-top:6px; padding:4px 8px;
+  background:rgba(80,40,140,.15);
+  border-left:2px solid var(--a1);
+  font-size:10px; color:var(--dim);
+  font-family:'Share Tech Mono',monospace;
+}
+
+/* Win7 style section headers */
+.ab-sec { margin-bottom:12px; }
+.ab-sec h3 {
+  font-family:'Tahoma',sans-serif; font-size:11px; font-weight:bold;
+  color:#c0a0ff;
+  background:linear-gradient(90deg,rgba(80,40,140,.3),transparent);
+  padding:3px 8px;
+  border-left:3px solid var(--a1);
+  margin-bottom:6px; letter-spacing:.5px;
+}
+.ab-sec p { color:var(--dim); font-size:10px; line-height:1.8; padding:0 2px; }
+
+.ab-tags { display:flex; flex-wrap:wrap; gap:3px; margin-top:4px; }
+.ab-tag {
+  background:linear-gradient(180deg,rgba(60,30,110,.5),rgba(30,12,70,.7));
+  border:1px solid rgba(100,60,180,.35);
+  color:#b090e8; font-size:9px; padding:2px 7px;
+  font-family:'Tahoma',sans-serif;
+  box-shadow:inset 0 1px 0 rgba(180,140,255,.08);
+}
+
+.stat-row { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.stat-lbl { font-size:9px; color:var(--a3); width:65px; flex-shrink:0; font-family:'Share Tech Mono',monospace; }
+.stat-track {
+  flex:1; height:8px;
+  background:rgba(10,5,25,.8);
+  border:1px solid rgba(60,35,100,.4);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.5);
+}
+.stat-fill { height:100%; background:linear-gradient(90deg,#6a28c0,#be185d); }
+
+.ab-socials { display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; }
+.ab-social {
+  background:var(--btn-face);
+  border:1px solid var(--btn-border);
+  color:#d0c0f8; font-family:'Tahoma',sans-serif; font-size:10px;
+  padding:4px 10px; cursor:pointer; text-decoration:none;
+  transition:all .1s;
+  box-shadow:inset 0 1px 0 rgba(180,140,255,.1);
+}
+.ab-social:hover { background:var(--btn-hover); border-color:var(--a1); color:#fff; }
+
+/* ── BUTTON ZONE ── */
+.btn-zone {
+  background:rgba(20,10,40,.5);
+  border:1px solid rgba(60,35,100,.4);
+  padding:10px; margin-bottom:12px;
+}
+.btn-zone-title {
+  font-family:'Tahoma',sans-serif; font-size:10px; font-weight:bold;
+  color:var(--a1); letter-spacing:.5px; margin-bottom:8px;
+  border-bottom:1px solid rgba(80,40,140,.3); padding-bottom:4px;
+}
+.btn-preview-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:6px; }
+#my-btn-canvas {
+  border:1px solid var(--win-border);
+  image-rendering:pixelated; flex-shrink:0;
+  box-shadow:0 2px 6px rgba(0,0,0,.5);
+  cursor:pointer;
+}
+.btn-copy-wrap { flex:1; }
+.btn-code {
+  width:100%; height:60px;
+  background:rgba(5,3,14,.8);
+  border:1px solid rgba(60,35,100,.4);
+  border-inset:1px solid rgba(80,50,130,.3);
+  color:var(--a3); font-family:'Share Tech Mono',monospace; font-size:8px;
+  padding:4px; resize:none; outline:none; line-height:1.5;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.4);
+  word-break:break-all;
+}
+.btn-copy {
+  margin-top:4px;
+  background:var(--btn-face); border:1px solid var(--btn-border);
+  color:#d0c0f8; font-family:'Tahoma',sans-serif; font-size:10px;
+  padding:3px 10px; cursor:pointer; transition:all .1s;
+  box-shadow:inset 0 1px 0 rgba(180,140,255,.1);
+}
+.btn-copy:hover { background:var(--btn-hover); border-color:var(--a1); }
+.btn-hint { font-size:8.5px; color:var(--dim); margin-top:4px; font-family:'Share Tech Mono',monospace; }
+
+/* ── BUTTONS GRID ── */
+.btns-section { margin-bottom:12px; }
+.btns-section-title {
+  font-family:'Tahoma',sans-serif; font-size:10px; font-weight:bold;
+  color:#c0a0ff; margin-bottom:3px;
+  padding:3px 8px;
+  background:linear-gradient(90deg,rgba(80,40,140,.3),transparent);
+  border-left:3px solid var(--a2);
+}
+.btns-note { font-size:8.5px; color:var(--dim); margin-bottom:6px; font-family:'Share Tech Mono',monospace; }
+.btns-grid { display:flex; flex-wrap:wrap; gap:3px; }
+.nb { display:inline-flex; align-items:center; justify-content:center; width:88px; height:31px; text-decoration:none; border:1px solid rgba(255,255,255,.1); overflow:hidden; flex-shrink:0; cursor:pointer; transition:filter .15s; image-rendering:pixelated; }
+.nb:hover { filter:brightness(1.2) saturate(1.2); }
+.nb img { width:88px; height:31px; display:block; image-rendering:pixelated; }
+.nb-ph { background:linear-gradient(135deg,#0a001a,#1a003a); font-family:'Tahoma',sans-serif; font-size:9px; color:rgba(180,130,255,.4); }
+
+/* ═════════════════════════════
+   MUSIC PLAYER CONTENT
+   ═════════════════════════════ */
+#music-inner { padding:14px; display:flex; flex-direction:column; gap:10px; }
+
+.mp-top { display:flex; gap:12px; align-items:flex-start; }
+#mp-art {
+  width:88px; height:88px; flex-shrink:0;
+  background:linear-gradient(135deg,#080020,#150035);
+  border:1px solid var(--win-border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:32px; overflow:hidden;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.6);
+}
+#mp-art img { width:88px; height:88px; object-fit:cover; display:block; }
+.mp-info { flex:1; }
+.mp-trk { font-family:'VT323',monospace; font-size:20px; color:var(--a1); line-height:1.1; word-break:break-word; letter-spacing:1px; }
+.mp-art2 { color:var(--dim); font-size:10px; margin-top:2px; }
+.mp-alb { color:rgba(120,100,160,.6); font-size:9px; margin-top:1px; }
+
+/* Win-style progress bar */
+.mp-pw { cursor:pointer; user-select:none; }
+.mp-bar {
+  width:100%; height:12px;
+  background:rgba(5,3,14,.8);
+  border:1px solid rgba(60,35,100,.4);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.5);
+  position:relative; overflow:hidden;
+}
+.mp-fill {
+  height:100%;
+  background:linear-gradient(180deg,#8040e0 0%,#5020a0 50%,#6030c0 100%);
+  width:0%; transition:width .3s linear;
+  box-shadow:inset 0 1px 0 rgba(200,160,255,.3);
+}
+.mp-times { display:flex; justify-content:space-between; font-size:9px; color:var(--dim); margin-top:2px; font-family:'Share Tech Mono',monospace; }
+
+.mp-ctrls { display:flex; align-items:center; justify-content:center; gap:4px; }
+.mpb {
+  background:var(--btn-face); border:1px solid var(--btn-border);
+  color:#c8b8f0; width:30px; height:24px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:11px; transition:all .1s;
+  box-shadow:inset 0 1px 0 rgba(180,140,255,.1);
+}
+.mpb:hover { background:var(--btn-hover); border-color:var(--a1); }
+.mpb:active { transform:translateY(1px); }
+.mpb.on { background:linear-gradient(180deg,#4a1a90,#2a0a58); border-color:var(--a1); color:var(--a1); }
+.mp-play-btn { width:38px; height:30px; font-size:14px; }
+
+#mp-vol {
+  -webkit-appearance:none; appearance:none;
+  width:65px; height:8px;
+  background:rgba(10,5,25,.8);
+  border:1px solid rgba(60,35,100,.4);
+  outline:none; cursor:pointer;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.4);
+}
+#mp-vol::-webkit-slider-thumb {
+  -webkit-appearance:none; width:14px; height:14px;
+  background:linear-gradient(180deg,#8040e0,#4820a0);
+  border:1px solid rgba(160,100,255,.5); cursor:pointer;
+  box-shadow:0 1px 3px rgba(0,0,0,.5);
+}
+
+.mp-drop {
+  border: 2px dashed rgba(100,60,180,.4);
+  background: rgba(20,10,40,.4);
+  color: var(--dim); font-family:'Share Tech Mono',monospace; font-size:11px;
+  padding: 14px; text-align:center; transition:all .15s; cursor:pointer;
+  line-height:1.7;
+}
+.mp-drop.drag-over {
+  border-color: var(--a1);
+  background: rgba(100,60,180,.15);
+  color: var(--a1);
+}
+#mp-file { display:none; }
+
+.mp-pl { display:flex; flex-direction:column; gap:0; max-height:150px; overflow-y:auto; border:1px solid rgba(60,35,100,.3); }
+.mp-pi {
+  display:flex; align-items:center; gap:6px; padding:4px 8px;
+  border-bottom:1px solid rgba(40,20,80,.4);
+  font-size:10px; color:var(--dim); cursor:pointer; transition:background .08s;
+  font-family:'Tahoma',sans-serif;
+}
+.mp-pi:hover { background:rgba(60,35,120,.3); color:var(--text); }
+.mp-pi.now { color:var(--a1); background:rgba(80,40,160,.15); }
+.pl-n { width:16px; color:rgba(80,50,130,.6); font-size:9px; flex-shrink:0; }
+.pl-t { flex:1; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.mp-empty { color:var(--dim); font-size:9px; text-align:center; padding:16px; font-family:'Share Tech Mono',monospace; }
+
+/* ═════════════════════════════
+   CHAT CONTENT
+   ═════════════════════════════ */
+#chat-inner { width:100%; height:100%; }
+#chat-inner iframe { width:100%; height:100%; border:none; }
+
+/* ═════════════════════════════
+   WELCOME CONTENT
+   ═════════════════════════════ */
+#welcome-inner { padding:18px; }
+.w-ascii {
+  font-family:'VT323',monospace; font-size:13px; color:var(--a1);
+  line-height:1.4; white-space:pre; text-align:center; margin-bottom:14px;
+}
+.w-body { font-size:10px; line-height:1.9; color:var(--dim); font-family:'Tahoma',sans-serif; }
+.w-body .hi-name { color:var(--a2); font-weight:bold; font-size:11px; }
+.w-body span.hl { color:var(--a1); }
+.w-badges { display:flex; flex-wrap:wrap; gap:3px; margin-top:12px; }
+.w-badge {
+  background:var(--btn-face); border:1px solid var(--btn-border);
+  color:#a090cc; font-size:8.5px; padding:2px 7px;
+  font-family:'Tahoma',sans-serif;
+  box-shadow:inset 0 1px 0 rgba(180,140,255,.08);
+}
+
+/* ═════════════════════════════
+   GALLERY CONTENT
+   ═════════════════════════════ */
+#gallery-inner { padding:12px; }
+.gal-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
+.gal-item {
+  aspect-ratio:1;
+  background:rgba(15,8,35,.8); border:1px solid rgba(60,35,100,.4);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .1s;
+  font-family:'Tahoma',sans-serif; font-size:9px; color:var(--dim);
+  text-align:center; overflow:hidden;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.4);
+}
+.gal-item:hover { border-color:var(--a1); background:rgba(60,35,120,.2); color:var(--a1); }
+.gal-item img { width:100%; height:100%; object-fit:cover; }
+
+/* ═══════════════════════════════════════════════════
+   ██  MOBILE VERSION  ██
+   ═══════════════════════════════════════════════════ */
+#mobile-page { display:none; position:fixed; inset:0; z-index:400; overflow-y:auto; }
+
+.mob-stars-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+.mob-body {
+  position:relative; z-index:1;
+  min-height:100vh;
+  padding:0 0 20px 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 30% 30%, rgba(80,30,160,.18) 0%, transparent 70%),
+    var(--bg);
+}
+
+/* Mobile top banner */
+.mob-banner {
+  background:linear-gradient(180deg,rgba(60,30,130,.9),rgba(20,8,50,.95));
+  border-bottom:1px solid rgba(90,50,160,.4);
+  padding:20px 16px;
+  text-align:center;
+}
+.mob-logo {
+  font-family:'VT323',monospace; font-size:48px; letter-spacing:4px;
+  background:linear-gradient(135deg,var(--a1),var(--a2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  line-height:1;
+}
+.mob-logo-sub { color:var(--dim); font-size:10px; letter-spacing:2px; margin-top:4px; font-family:'Share Tech Mono',monospace; }
+.mob-hi { color:var(--a2); font-size:12px; margin-top:8px; font-family:'Share Tech Mono',monospace; }
+
+/* Mobile nav tabs */
+.mob-nav {
+  display:flex; overflow-x:auto; gap:0;
+  background:rgba(15,8,35,.95);
+  border-bottom:1px solid rgba(60,35,100,.4);
+  scrollbar-width:none;
+}
+.mob-nav::-webkit-scrollbar { display:none; }
+.mob-tab {
+  padding:10px 14px; white-space:nowrap;
+  font-family:'Tahoma',sans-serif; font-size:10px; font-weight:bold;
+  color:var(--dim); cursor:pointer; border-bottom:2px solid transparent;
+  transition:all .15s; flex-shrink:0;
+  border-right:1px solid rgba(50,25,90,.4);
+}
+.mob-tab.active { color:var(--a1); border-bottom-color:var(--a1); background:rgba(80,40,160,.1); }
+
+.mob-section { padding:14px; display:none; }
+.mob-section.active { display:block; }
+
+/* Mobile about */
+.mob-profile { display:flex; gap:12px; align-items:flex-start; margin-bottom:14px; }
+.mob-avatar {
+  width:64px; height:64px; flex-shrink:0;
+  border:2px solid var(--win-border2);
+  background:linear-gradient(135deg,#0e0428,#1e0850);
+  display:flex; align-items:center; justify-content:center; font-size:28px;
+  box-shadow:0 0 12px rgba(140,80,255,.2);
+  animation:ava-glow 3s infinite alternate;
+}
+.mob-name { font-family:'VT323',monospace; font-size:28px; color:var(--a1); line-height:1; }
+.mob-pro { color:var(--a3); font-size:9px; letter-spacing:1.5px; margin-top:2px; font-family:'Share Tech Mono',monospace; }
+.mob-status { margin-top:5px; padding:3px 7px; background:rgba(80,40,140,.15); border-left:2px solid var(--a1); font-size:9px; color:var(--dim); font-family:'Share Tech Mono',monospace; }
+
+.mob-sec { margin-bottom:12px; }
+.mob-sec h3 { font-family:'Tahoma',sans-serif; font-size:10px; font-weight:bold; color:#c0a0ff; background:linear-gradient(90deg,rgba(80,40,140,.3),transparent); padding:3px 8px; border-left:3px solid var(--a1); margin-bottom:6px; }
+.mob-sec p { color:var(--dim); font-size:10px; line-height:1.8; font-family:'Tahoma',sans-serif; }
+
+/* Mobile music player */
+.mob-mp-art {
+  width:100%; max-width:200px; aspect-ratio:1;
+  margin:0 auto 12px;
+  background:linear-gradient(135deg,#080020,#150035);
+  border:1px solid var(--win-border);
+  display:flex; align-items:center; justify-content:center; font-size:48px;
+  overflow:hidden;
+}
+.mob-mp-art img { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* Mobile button style */
+.mob-btn {
+  display:block; width:100%;
+  background:var(--btn-face); border:1px solid var(--btn-border);
+  color:#c8b8f0; font-family:'Tahoma',sans-serif; font-size:11px;
+  padding:10px; text-align:center; cursor:pointer; transition:all .1s; margin-bottom:6px;
+  box-shadow:inset 0 1px 0 rgba(180,140,255,.1);
+}
+.mob-btn:hover { background:var(--btn-hover); border-color:var(--a1); }
+
+/* Mobile chat iframe */
+.mob-chat-wrap { height:400px; border:1px solid rgba(60,35,100,.4); overflow:hidden; }
+.mob-chat-wrap iframe { width:100%; height:100%; border:none; }
+
+/* Shared component styles */
+.share-ab-tags { display:flex; flex-wrap:wrap; gap:3px; margin-top:5px; }
+.share-stat-row { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.share-socials { display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; }
+.share-btns-grid { display:flex; flex-wrap:wrap; gap:3px; margin-top:6px; }
+
+/* LIGHTBOX */
+#lightbox {
+  display:none; position:fixed; inset:0; z-index:99999;
+  background:rgba(0,0,0,.88);
+  align-items:center; justify-content:center;
+  cursor:zoom-out;
+}
+#lightbox.open { display:flex; }
+#lb-inner {
+  position:relative; max-width:90vw; max-height:90vh;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+}
+#lb-img {
+  max-width:90vw; max-height:80vh;
+  object-fit:contain;
+  border:1px solid var(--win-border2);
+  box-shadow:0 0 60px rgba(0,0,0,.9), 0 0 20px rgba(140,80,255,.2);
+  display:block;
+}
+#lb-close {
+  position:absolute; top:-36px; right:0;
+  background:linear-gradient(180deg,#a02030,#600d18);
+  border:1px solid rgba(200,60,80,.4);
+  color:#ffd0d8; font-size:14px; font-weight:bold;
+  width:28px; height:28px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:filter .1s;
+}
+#lb-close:hover { filter:brightness(1.3); }
+#lb-caption {
+  font-family:'Share Tech Mono',monospace; font-size:10px;
+  color:var(--dim); letter-spacing:1px;
+}
+
+/* Gallery */
 </style>
 </head>
 <body>
-<!-- LOADING -->
-<div id="loadingScreen" style="position:fixed;inset:0;z-index:9000;background:#080809;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s">
-  <div style="width:44px;height:44px;border-radius:12px;border:2px solid rgba(255,255,255,.08);border-top-color:rgba(255,255,255,.55);animation:spin .8s linear infinite"></div>
-  <div style="font-family:'Sora',sans-serif;font-size:.75rem;color:rgba(255,255,255,.35);letter-spacing:.08em">جاري التحميل...</div>
+
+<canvas id="stars-canvas"></canvas>
+<div id="bg-glow"></div>
+<div class="scanlines"></div>
+
+<!-- TRANSITION -->
+<div id="tov">
+  <div class="tov-t">LOADING...</div>
+  <div class="tov-b"><div class="tov-f"></div></div>
 </div>
-<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 
-<canvas id="bgCanvas"></canvas>
-<div class="bg-img" id="bgImg"></div>
-<div class="bg-vid" id="bgVid"><video id="bgVideo" autoplay loop muted playsinline></video></div>
-<div class="bg-vig"></div>
-<div class="bg-grid" id="bgGrid"></div>
-<button class="bgtog" id="bgTogBtn">★</button>
-
-<div class="card gl">
-  <div class="ava-w" id="avaW">
-    <img class="ava-img" id="avaImg" src="" alt="">
-    <div class="cdots">
-      <div class="cdot" id="cd0"></div><div class="cdot" id="cd1"></div><div class="cdot" id="cd2"></div>
-      <div class="cdot" id="cd3"></div><div class="cdot" id="cd4"></div><div class="cdot" id="cd5"></div><div class="cdot" id="cd6"></div>
+<!-- ══════════ LOGIN ══════════ -->
+<div id="login-page">
+  <div class="login-box">
+    <div class="l-titlebar">
+      <div class="l-title-left">
+        <span class="l-icon">✦</span>
+        <span class="l-title-text">FAA site — login</span>
+      </div>
+      <button class="l-close-btn" onclick="document.getElementById('login-page').style.opacity='.5'">✕</button>
+    </div>
+    <div class="l-body">
+      <div class="l-logo-area">
+        <div class="l-logo">FAA SITE</div>
+        <div class="l-logo-sub">// enter anything to continue</div>
+      </div>
+      <div class="l-field"><label>USERNAME</label><input type="text" id="l-user" placeholder="enter your name..." autocomplete="off"></div>
+      <div class="l-field"><label>PASSWORD</label><input type="password" id="l-pass" placeholder="••••••••" autocomplete="off"></div>
+      <button class="l-btn" onclick="doLogin()">Log In</button>
+      <div class="l-note">best viewed on desktop · 1920×1080<br><span class="blink">_</span></div>
     </div>
   </div>
-  <div class="uname" id="disp-name">Your Name</div>
-  <div class="ubio" id="disp-bio">Your bio here.</div>
-  <div class="sep"></div>
-  <div class="soc" id="socG"></div>
-  <div class="sep"></div>
-  <div id="playerWrap"></div>
 </div>
 
-<!-- DASHBOARD -->
-<div class="ov" id="ov">
-  <div class="dp gl">
-    <div class="dh"><span class="dh-t">Dashboard</span><button class="dx" id="dcls">✕</button></div>
-    <div id="lsc">
-      <div class="lbox">
-        <div class="lico">🔒</div><h2>Control Panel</h2><p>Enter your password</p>
-        <input type="password" class="pwin" id="pwin" placeholder="••••••" autocomplete="off">
-        <br><button class="pbtn" id="lbtn">Unlock</button>
-        <div class="perr" id="perr">Wrong password</div>
+<!-- ══════════ DESKTOP ══════════ -->
+<div id="desktop">
+  <div class="desk-icons">
+    <div class="dicon" onclick="openWin('about')">
+      <div class="di">✦</div><div class="dl">About Me</div>
+    </div>
+    <div class="dicon" onclick="openWin('music')">
+      <div class="di">🎵</div><div class="dl">Music Player</div>
+    </div>
+    <div class="dicon" onclick="openWin('chat')">
+      <div class="di">💬</div><div class="dl">Chat Box</div>
+    </div>
+    <div class="dicon" onclick="openWin('welcome')">
+      <div class="di">🌙</div><div class="dl">Welcome</div>
+    </div>
+    <div class="dicon" onclick="openWin('gallery')">
+      <div class="di">🖼️</div><div class="dl">Gallery</div>
+    </div>
+  </div>
+
+  <!-- ─────── ABOUT ME ─────── -->
+  <div class="win" id="win-about" style="width:440px;height:560px;top:40px;left:100px">
+    <div class="win-tb" onmousedown="dragStart(event,'win-about')">
+      <div class="win-tl"><span class="wico">✦</span><span class="wtitle">About Me</span></div>
+      <div class="win-btns">
+        <button class="wbtn bm" onclick="minWin('about')">−</button>
+        <button class="wbtn bx" onclick="maxWin('win-about')">□</button>
+        <button class="wbtn bc" onclick="closeWin('about')">✕</button>
       </div>
     </div>
-    <div id="dcon" style="display:none">
-      <div class="dtabs">
-        <button class="dtb on" data-dp="profile">Profile</button>
-        <button class="dtb" data-dp="socials">Socials</button>
-        <button class="dtb" data-dp="mp3">MP3</button>
-        <button class="dtb" data-dp="bg">Background</button>
-        <button class="dtb" data-dp="settings">Settings</button>
-      </div>
+    <div class="win-menu"><span>File</span><span>Edit</span><span>View</span><span>Help</span></div>
+    <div class="win-body"><div id="about-inner">
 
-      <!-- PROFILE -->
-      <div class="dpane on" id="dpane-profile">
-        <div class="dsub">Photo</div>
-        <div class="avu" id="avuA"><img id="avuP" src="" alt=""><div class="avu-info"><p>Click to change photo</p><p>PNG / JPG → Nhost Storage</p></div></div>
-        <input type="file" id="avuF" accept="image/*" style="display:none">
-        <div class="prog-bar-w" id="avuProg"><div class="prog-bar-fill" id="avuProgFill"></div></div>
-        <button class="sbtn danger" id="avuDelBtn" style="margin-top:0;margin-bottom:4px">🗑 Delete Photo</button>
-        <div class="dsub">Info</div>
-        <div class="df"><label>Name</label><input class="di" id="d-name"></div>
-        <div class="df"><label>Bio</label><textarea class="dta" id="d-bio"></textarea></div>
-        <div class="df"><label>Page Title</label><input class="di" id="d-pt"></div>
-      </div>
-
-      <!-- SOCIALS -->
-      <div class="dpane" id="dpane-socials">
-        <div class="dsub">Social Links</div>
-        <p style="font-size:.68rem;color:var(--t2);margin-bottom:10px">Paste URL → toggle ON to show.</p>
-        <div id="socEd"></div>
-      </div>
-
-      <!-- MP3 -->
-      <div class="dpane" id="dpane-mp3">
-        <div class="dsub">Tracks</div>
-        <div id="songList"></div>
-        <div class="upzone" id="addSongZone"><div class="uz-ico">＋</div><p>Add MP3 Track</p><span>Uploads to Nhost Storage</span></div>
-        <input type="file" id="mp3FileIn" accept="audio/mp3,audio/mpeg,.mp3" style="display:none">
-        <div class="prog-bar-w" id="mp3Prog"><div class="prog-bar-fill" id="mp3ProgFill"></div></div>
-        <div class="dsub">Display</div>
-        <div class="tog-row"><label>Show music player</label><button class="tog on" id="playerTogBtn">ON</button></div>
-        <div class="dsub">Controls</div>
-        <div class="tog-row"><label>Show Shuffle button</label><button class="tog on" id="setShuffleBtn">ON</button></div>
-        <div class="tog-row"><label>Show Repeat button</label><button class="tog on" id="setRepeatBtn">ON</button></div>
-        <div class="tog-row"><label>Autoplay on load</label><button class="tog on" id="setAutoplayBtn">ON</button></div>
-      </div>
-
-      <!-- BACKGROUND -->
-      <div class="dpane" id="dpane-bg">
-        <div class="dsub">Mode</div>
-        <div class="bg-opts">
-          <button class="bgo on" id="bgOptStars">★ Stars</button>
-          <button class="bgo" id="bgOptImage">🖼 Image</button>
-          <button class="bgo" id="bgOptVideo">▶ Video</button>
+      <div class="ab-top">
+        <div class="ab-avatar" id="ab-avatar-el"><span id="ab-avatar-fallback">✦</span></div>
+        <div>
+          <!-- ★ CHANGE YOUR NAME HERE ★ -->
+          <div class="ab-name">FAA</div>
+          <div class="ab-pro">he / him · male</div>
+          <div class="ab-status">✦ currently: existing on the internet</div>
         </div>
-        <div class="dsub">Media</div>
-        <div class="bg-preview" id="bgPreview"><div class="bg-preview-ph">🖼<br>No media</div></div>
-        <div class="upzone" id="bgUpZone"><div class="uz-ico">↑</div><p>Upload Image or MP4</p><span>Saved to Nhost</span></div>
-        <input type="file" id="bgFileIn" accept="image/*,video/mp4,.mp4" style="display:none">
-        <div class="prog-bar-w" id="bgProg"><div class="prog-bar-fill" id="bgProgFill"></div></div>
-        <button class="sbtn danger" id="bgDelBtn" style="margin-top:0;margin-bottom:4px">🗑 Delete Background</button>
-        <div class="dsub">Toggle Button</div>
-        <div class="tog-row"><label>Show ★ toggle for visitors</label><button class="tog on" id="bgBtnToggle">ON</button></div>
       </div>
 
-      <!-- SETTINGS -->
-      <div class="dpane" id="dpane-settings">
-        <div class="dsub">Nhost Connection</div>
-        <div class="nh-box">
-          <div class="nh-status"><span class="nh-dot off" id="nhDot"></span><span id="nhTxt">Not connected</span></div>
-          <div class="nh-hint">
-كيف تنشئ مشروع Nhost مجاني:<br>
-١. روح <a href="https://nhost.io" target="_blank">nhost.io</a> → New Project<br>
-٢. بعد ما يتهيأ المشروع، روح <b>Database → SQL Editor</b> وشغّل:<br>
-<code>create table if not exists profile (
-  id int primary key default 1,
-  data jsonb
-);
-insert into profile (id, data) values (1, '{}')
-  on conflict (id) do nothing;</code>
-٣. روح <b>Hasura Console → Data → profile → Permissions</b><br>
-   → أضف role اسمه <b>public</b> → فعّل select وinsert وupdate<br>
-٤. روح <b>Storage</b> → Buckets → default → فعّل <b>Public</b><br>
-   ثم Policies → Allow all operations for public role<br>
-٥. من Dashboard الصفحة الرئيسية، انسخ <b>Subdomain</b> و <b>Region</b>
+      <div class="ab-sec"><h3>Who am I</h3>
+        <p>hey !! welcome to my site. i'm just a guy who spends too much time online making things. this is my personal space on the web 。◕‿◕。<br><br>feel free to look around & leave a message in the chat !!</p>
+      </div>
+
+      <div class="ab-sec"><h3>Interests</h3>
+        <!-- ★ EDIT YOUR INTERESTS ★ -->
+        <div class="ab-tags">
+          <span class="ab-tag">anime</span><span class="ab-tag">music</span><span class="ab-tag">web design</span>
+          <span class="ab-tag">art</span><span class="ab-tag">games</span><span class="ab-tag">coding</span>
+          <span class="ab-tag">night sky</span><span class="ab-tag">pixel art</span>
+        </div>
+      </div>
+
+      <div class="ab-sec"><h3>Stats</h3>
+        <div class="stat-row"><span class="stat-lbl">online</span><div class="stat-track"><div class="stat-fill" style="width:95%"></div></div></div>
+        <div class="stat-row"><span class="stat-lbl">chaotic</span><div class="stat-track"><div class="stat-fill" style="width:78%"></div></div></div>
+        <div class="stat-row"><span class="stat-lbl">sleepy</span><div class="stat-track"><div class="stat-fill" style="width:70%"></div></div></div>
+        <div class="stat-row"><span class="stat-lbl">gamer</span><div class="stat-track"><div class="stat-fill" style="width:85%"></div></div></div>
+      </div>
+
+      <div class="ab-sec"><h3>Find Me</h3>
+        <!-- ★ ADD YOUR LINKS ★ -->
+        <div class="ab-socials">
+          <a class="ab-social" href="https://www.instagram.com/faares.8/?igsh=ZTkyOGdiZ2hrMm0z&utm_source=qr" target="_blank">Instagram</a>
+          <a class="ab-social" href="https://www.snapchat.com/@faares.9" target="_blank">Snapchat</a>
+          <a class="ab-social" href="https://open.spotify.com/user/31vjxguunsbsgrhrmo6gg23i3zma?si=6f99944d6f55414a" target="_blank">Spotify</a>
+          <a class="ab-social" href="https://steamcommunity.com/profiles/76561199503547319/" target="_blank">Steam</a>
+          <a class="ab-social" href="https://github.com/faares01" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <!-- MY BUTTON -->
+      <div class="btn-zone">
+        <div class="btn-zone-title">My Button — FAA site</div>
+        <div class="btn-preview-row">
+          <canvas id="my-btn-canvas" width="88" height="31" title="Right-click → Save image as button.gif"></canvas>
+          <div class="btn-copy-wrap">
+            <div style="font-size:8.5px;color:var(--dim);margin-bottom:3px;font-family:'Share Tech Mono',monospace">Copy code to add to your site ↓</div>
+            <textarea class="btn-code" id="btn-code-area" readonly></textarea>
+            <button class="btn-copy" onclick="copyBtnCode()">Copy Code</button>
           </div>
         </div>
-        <div class="drow">
-          <div class="df"><label>Subdomain</label><input class="di" id="nh-sub" placeholder="xxxxxxxx"></div>
-          <div class="df"><label>Region</label><input class="di" id="nh-reg" placeholder="eu-central-1"></div>
-        </div>
-        <button class="sbtn" id="nhConnectBtn">🔗 Connect Nhost</button>
-
-        <div class="dsub" style="margin-top:14px">Change Password</div>
-        <div class="df"><label>Current</label><input class="di" type="password" id="d-old"></div>
-        <div class="drow">
-          <div class="df"><label>New</label><input class="di" type="password" id="d-new"></div>
-          <div class="df"><label>Confirm</label><input class="di" type="password" id="d-conf"></div>
-        </div>
-        <button class="sbtn" id="chpwB">Update Password</button>
-        <div class="dsub" style="margin-top:14px">Danger</div>
-        <button class="sbtn danger" id="rstB">Reset All Local Data</button>
+        <div class="btn-hint">// right-click the button → "Save image" → upload as button.png to your site</div>
       </div>
 
-      <button class="sbtn" id="saveB" style="margin-top:4px">💾 Save Changes</button>
+
+      <!-- FRIENDS BUTTONS -->
+      <div class="btns-section">
+        <div class="btns-section-title">Friends &amp; Cool Sites</div>
+        <div class="btns-note">// click to visit!</div>
+        <div class="btns-grid">
+          <!-- ★★★ ADD FRIEND BUTTONS HERE ★★★ -->
+          <!-- <a class="nb" href="SITE_URL" target="_blank"><img src="BUTTON_URL" alt="Site"></a> -->
+          <a class="nb" href="https://ventablack.neocities.org" target="_blank">
+            <div style="width:88px;height:31px;background:linear-gradient(135deg,#0a0015,#1a003a);display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:12px;color:#c084fc;letter-spacing:1px">ventablack</div>
+          </a>
+          <a class="nb" href="https://calzonie.neocities.org" target="_blank">
+            <div style="width:88px;height:31px;background:linear-gradient(135deg,#001510,#003020);display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:12px;color:#34d399;letter-spacing:1px">calzonie</div>
+          </a>
+          <a class="nb" href="https://justbecaws.neocities.org" target="_blank">
+            <div style="width:88px;height:31px;background:linear-gradient(135deg,#15001a,#350040);display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:12px;color:#f472b6;letter-spacing:1px">justbecaws</div>
+          </a>
+          <div class="nb nb-ph">+ add</div>
+          <div class="nb nb-ph">+ add</div>
+        </div>
+      </div>
+
+    </div></div>
+  </div>
+
+  <!-- ─────── MUSIC ─────── -->
+  <div class="win" id="win-music" style="width:370px;height:480px;top:55px;left:580px">
+    <div class="win-tb" onmousedown="dragStart(event,'win-music')">
+      <div class="win-tl"><span class="wico">🎵</span><span class="wtitle">Music Player</span></div>
+      <div class="win-btns">
+        <button class="wbtn bm" onclick="minWin('music')">−</button>
+        <button class="wbtn bx" onclick="maxWin('win-music')">□</button>
+        <button class="wbtn bc" onclick="closeWin('music')">✕</button>
+      </div>
     </div>
+    <div class="win-menu"><span>File</span><span>Playlist</span><span>View</span></div>
+    <div class="win-body"><div id="music-inner">
+      <div class="mp-top">
+        <div id="mp-art"><span style="font-size:32px">🎵</span></div>
+        <div class="mp-info">
+          <div class="mp-trk" id="mp-trk">No track loaded</div>
+          <div class="mp-art2" id="mp-art2">—</div>
+          <div class="mp-alb" id="mp-alb"></div>
+        </div>
+      </div>
+      <div class="mp-pw" onclick="seekAudio(event)">
+        <div class="mp-bar"><div class="mp-fill" id="mp-prog"></div></div>
+        <div class="mp-times"><span id="mp-cur">0:00</span><span id="mp-dur">0:00</span></div>
+      </div>
+      <div class="mp-ctrls">
+        <div class="mpb" id="btn-shuf" onclick="toggleShuffle()" title="Shuffle">⇌</div>
+        <div class="mpb" onclick="prevTrack()" title="Previous">⏮</div>
+        <div class="mpb mp-play-btn" id="btn-play" onclick="togglePlay()">▶</div>
+        <div class="mpb" onclick="nextTrack()" title="Next">⏭</div>
+        <div class="mpb" id="btn-rep" onclick="toggleRepeat()" title="Repeat">↻</div>
+        <input type="range" id="mp-vol" min="0" max="1" step="0.05" value="0.8" oninput="setVol(this.value)" title="Volume">
+      </div>
+      <div class="mp-pl" id="mp-pl"><div class="mp-empty">// loading songs...</div></div>
+    </div></div>
+  </div>
+
+  <!-- ─────── CHAT ─────── -->
+  <div class="win" id="win-chat" style="width:300px;height:400px;top:80px;left:960px">
+    <div class="win-tb" onmousedown="dragStart(event,'win-chat')">
+      <div class="win-tl"><span class="wico">💬</span><span class="wtitle">Chat Box</span></div>
+      <div class="win-btns">
+        <button class="wbtn bm" onclick="minWin('chat')">−</button>
+        <button class="wbtn bx" onclick="maxWin('win-chat')">□</button>
+        <button class="wbtn bc" onclick="closeWin('chat')">✕</button>
+      </div>
+    </div>
+    <div class="win-body" id="chat-inner">
+      <iframe src="https://my.cbox.ws/FAARES" allowtransparency="true" title="Cbox"></iframe>
+    </div>
+  </div>
+
+  <!-- ─────── WELCOME ─────── -->
+  <div class="win" id="win-welcome" style="width:430px;height:400px;top:160px;left:280px">
+    <div class="win-tb" onmousedown="dragStart(event,'win-welcome')">
+      <div class="win-tl"><span class="wico">🌙</span><span class="wtitle">Welcome</span></div>
+      <div class="win-btns">
+        <button class="wbtn bm" onclick="minWin('welcome')">−</button>
+        <button class="wbtn bx" onclick="maxWin('win-welcome')">□</button>
+        <button class="wbtn bc" onclick="closeWin('welcome')">✕</button>
+      </div>
+    </div>
+    <div class="win-menu"><span>File</span><span>View</span></div>
+    <div class="win-body"><div id="welcome-inner">
+      <div class="w-ascii">
+ ╔═══════════════════════════════════╗
+ ║  ✦  welcome to FAA site  ✦        ║
+ ║     make yourself at home  ♡      ║
+ ╚═══════════════════════════════════╝</div>
+      <div class="w-body">
+        <span id="welcome-greeting">hey !! thanks for visiting ˘ᵕ˘</span><br><br>
+        this site is my personal space on the internet. i put stuff here
+        that i like and want to share with the world.<br><br>
+        feel free to look around !! you can chat with me using the
+        <span class="hl">chatbox</span>, or check out my
+        <span class="hl">about me</span> to know more.<br><br>
+        this site is always being updated so check back for new stuff <span class="hl">✦</span><br><br>
+        <span class="hl">// best viewed at 1920×1080 · not mobile friendly</span>
+      </div>
+      <div class="w-badges">
+        <span class="w-badge">MADE WITH ♡</span>
+        <span class="w-badge">NEOCITIES</span>
+        <span class="w-badge">HTML · CSS · JS</span>
+        <span class="w-badge">INDIE WEB</span>
+        <span class="w-badge">BEST VIEWED DARK</span>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ─────── GALLERY ─────── -->
+  <div class="win" id="win-gallery" style="width:340px;height:360px;top:120px;left:500px">
+    <div class="win-tb" onmousedown="dragStart(event,'win-gallery')">
+      <div class="win-tl"><span class="wico">🖼️</span><span class="wtitle">Gallery</span></div>
+      <div class="win-btns">
+        <button class="wbtn bm" onclick="minWin('gallery')">−</button>
+        <button class="wbtn bx" onclick="maxWin('win-gallery')">□</button>
+        <button class="wbtn bc" onclick="closeWin('gallery')">✕</button>
+      </div>
+    </div>
+    <div class="win-menu"><span>File</span><span>View</span><span>Sort</span></div>
+    <div class="win-body"><div id="gallery-inner">
+      <div style="font-size:9px;color:var(--dim);margin-bottom:8px;font-family:'Share Tech Mono',monospace">// add your images here</div>
+      <div class="gal-grid" id="gallery-grid">
+        <!-- auto-loaded from pics/ folder via CONFIG -->
+      </div>
+    </div></div>
+  </div>
+</div><!-- end desktop -->
+
+<!-- ══════════ TASKBAR ══════════ -->
+<div id="taskbar">
+  <button id="start-btn" onclick="toggleStart()">✦ Start</button>
+  <div class="tb-sep"></div>
+  <div class="tb-item" id="tb-about"   onclick="tbClick('about')">✦ About Me</div>
+  <div class="tb-item" id="tb-music"   onclick="tbClick('music')">🎵 Music</div>
+  <div class="tb-item" id="tb-chat"    onclick="tbClick('chat')">💬 Chat</div>
+  <div class="tb-item" id="tb-welcome" onclick="tbClick('welcome')">🌙 Welcome</div>
+  <div class="tb-item" id="tb-gallery" onclick="tbClick('gallery')">🖼️ Gallery</div>
+  <div style="flex:1"></div>
+  <div id="clock"></div>
+  <div class="tb-sep"></div>
+  <!-- MINI MUSIC PLAYER in taskbar -->
+  <div id="tb-mini-player">
+    <span id="tb-mini-icon">🎵</span>
+    <span id="tb-mini-name">no track</span>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-<audio id="aud" crossorigin="anonymous"></audio>
+<!-- ══════════ START MENU ══════════ -->
+<div id="start-menu">
+  <div class="sm-head">✦ FAA SITE</div>
+  <div class="sm-item" onclick="openWin('about');toggleStart()"><span class="si">✦</span>About Me</div>
+  <div class="sm-item" onclick="openWin('music');toggleStart()"><span class="si">🎵</span>Music Player</div>
+  <div class="sm-item" onclick="openWin('chat');toggleStart()"><span class="si">💬</span>Chat Box</div>
+  <div class="sm-item" onclick="openWin('welcome');toggleStart()"><span class="si">🌙</span>Welcome</div>
+  <div class="sm-item" onclick="openWin('gallery');toggleStart()"><span class="si">🖼️</span>Gallery</div>
+  <div class="sm-divider"></div>
+  <div class="sm-item" style="color:var(--a2)" onclick="logout()"><span class="si">🔒</span>Log Out</div>
+</div>
 
-<svg style="display:none">
-  <symbol id="ic-play"     viewBox="0 0 24 24"><path d="M8 5.14v14l11-7z"/></symbol>
-  <symbol id="ic-pause"    viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></symbol>
-  <symbol id="ic-prev"     viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></symbol>
-  <symbol id="ic-next"     viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zm2-8.14 5.5 3.14L8 16.14V9.86zM16 6h2v12h-2z"/></symbol>
-  <symbol id="ic-shuffle"  viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></symbol>
-  <symbol id="ic-repeat"   viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></symbol>
-  <symbol id="ic-volH"     viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></symbol>
-  <symbol id="ic-volL"     viewBox="0 0 24 24"><path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5z"/></symbol>
-  <symbol id="ic-volM"     viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z"/></symbol>
-  <symbol id="ic-music"    viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></symbol>
-  <symbol id="ic-twitter"   viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.951-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></symbol>
-  <symbol id="ic-instagram" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></symbol>
-  <symbol id="ic-tiktok"    viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9a8.17 8.17 0 0 0 4.78 1.52V7.07a4.85 4.85 0 0 1-1.01-.38z"/></symbol>
-  <symbol id="ic-snapchat"  viewBox="0 0 24 24"><path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.029c.735 1.648 2.428 2.989 3.585 3.029.2.015.359.135.39.331.045.2-.061.39-.245.48-.599.298-1.588.48-2.473.48-.269 0-.524-.015-.749-.045-.45-.06-.854-.186-1.168-.337-.032 0-.06.015-.09.03.015.208.025.419.025.629 0 .645-.076 1.258-.213 1.829-.419 1.668-1.588 3.046-3.181 3.898-.42.224-.886.404-1.363.533C13.49 23.92 12.851 24 12.206 24c-.645 0-1.289-.08-1.89-.24a8.83 8.83 0 0 1-1.364-.534c-1.588-.851-2.757-2.229-3.175-3.897a10.16 10.16 0 0 1-.214-1.824c0-.215.01-.42.03-.629-.032-.015-.06-.03-.09-.03-.315.15-.719.278-1.168.338-.226.03-.479.045-.748.045-.884 0-1.873-.18-2.473-.481-.184-.09-.29-.283-.244-.48.029-.196.188-.316.389-.33 1.158-.04 2.851-1.382 3.586-3.03l.015-.03c.181-.344.21-.644.12-.868-.195-.45-.884-.674-1.332-.81-.136-.044-.255-.09-.345-.12C.749 11.327.345 10.937.345 10.488c0-.36.285-.689.735-.838.149-.06.329-.09.509-.09.12 0 .3.016.464.105.375.18.734.284 1.033.3.2 0 .33-.044.404-.09l-.031-.51c-.104-1.629-.229-3.654.3-4.848C5.856 1.071 9.212.793 10.203.793h.993z"/></symbol>
-  <symbol id="ic-youtube"   viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></symbol>
-  <symbol id="ic-discord"   viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></symbol>
-  <symbol id="ic-spotify"   viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></symbol>
-  <symbol id="ic-apple"     viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></symbol>
-  <symbol id="ic-steam"     viewBox="0 0 24 24"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0z"/></symbol>
-  <symbol id="ic-telegram"  viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></symbol>
-  <symbol id="ic-github"    viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
-  <symbol id="ic-twitch"    viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></symbol>
-  <symbol id="ic-linkedin"  viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></symbol>
-</svg>
+<!-- ══════════════════════════════
+     MOBILE PAGE
+     ══════════════════════════════ -->
+<div id="mobile-page">
+  <canvas class="mob-stars-canvas" id="mob-stars"></canvas>
+  <div class="mob-body">
+
+    <div class="mob-banner">
+      <div class="mob-logo">FAA SITE</div>
+      <div class="mob-logo-sub">// personal corner of the internet</div>
+      <div class="mob-hi" id="mob-hi-name"></div>
+    </div>
+
+    <div class="mob-nav">
+      <div class="mob-tab active" onclick="mobTab('about',this)">✦ About</div>
+      <div class="mob-tab" onclick="mobTab('music',this)">🎵 Music</div>
+      <div class="mob-tab" onclick="mobTab('chat',this)">💬 Chat</div>
+      <div class="mob-tab" onclick="mobTab('welcome',this)">🌙 Welcome</div>
+      <div class="mob-tab" onclick="mobTab('buttons',this)">🔗 Buttons</div>
+    </div>
+
+    <!-- ABOUT TAB -->
+    <div class="mob-section active" id="mob-about">
+      <div class="mob-profile">
+        <div class="mob-avatar" id="mob-avatar-el">✦</div>
+        <div>
+          <div class="mob-name">FAA</div>
+          <div class="mob-pro">he / him · male</div>
+          <div class="mob-status">✦ currently: existing on the internet</div>
+        </div>
+      </div>
+      <div class="mob-sec"><h3>Who am I</h3>
+        <p>hey !! welcome to my site. i'm just a guy who spends too much time online making things. feel free to look around & leave a message in the chat !!</p>
+      </div>
+      <div class="mob-sec"><h3>Interests</h3>
+        <div class="ab-tags">
+          <span class="ab-tag">anime</span><span class="ab-tag">music</span><span class="ab-tag">web design</span>
+          <span class="ab-tag">art</span><span class="ab-tag">games</span><span class="ab-tag">coding</span>
+          <span class="ab-tag">night sky</span><span class="ab-tag">pixel art</span>
+        </div>
+      </div>
+      <div class="mob-sec"><h3>Stats</h3>
+        <div class="stat-row"><span class="stat-lbl">online</span><div class="stat-track"><div class="stat-fill" style="width:95%"></div></div></div>
+        <div class="stat-row"><span class="stat-lbl">chaotic</span><div class="stat-track"><div class="stat-fill" style="width:78%"></div></div></div>
+        <div class="stat-row"><span class="stat-lbl">sleepy</span><div class="stat-track"><div class="stat-fill" style="width:70%"></div></div></div>
+        <div class="stat-row"><span class="stat-lbl">gamer</span><div class="stat-track"><div class="stat-fill" style="width:85%"></div></div></div>
+      </div>
+      <div class="mob-sec"><h3>Find Me</h3>
+        <div class="ab-socials">
+          <a class="ab-social" href="https://www.instagram.com/faares.8/?igsh=ZTkyOGdiZ2hrMm0z&utm_source=qr" target="_blank">Instagram</a>
+          <a class="ab-social" href="https://www.snapchat.com/@faares.9" target="_blank">Snapchat</a>
+          <a class="ab-social" href="https://open.spotify.com/user/31vjxguunsbsgrhrmo6gg23i3zma?si=6f99944d6f55414a" target="_blank">Spotify</a>
+          <a class="ab-social" href="https://steamcommunity.com/profiles/76561199503547319/" target="_blank">Steam</a>
+          <a class="ab-social" href="https://github.com/faares01" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MUSIC TAB -->
+    <div class="mob-section" id="mob-music">
+      <div class="mob-mp-art" id="mob-art"><span>🎵</span></div>
+      <div style="text-align:center;margin-bottom:12px">
+        <div style="font-family:'VT323',monospace;font-size:22px;color:var(--a1)" id="mob-trk">No track loaded</div>
+        <div style="font-size:10px;color:var(--dim)" id="mob-art2">—</div>
+      </div>
+      <div class="mp-pw" onclick="seekAudio(event)" style="margin-bottom:8px">
+        <div class="mp-bar"><div class="mp-fill" id="mob-prog"></div></div>
+        <div class="mp-times"><span id="mob-cur">0:00</span><span id="mob-dur">0:00</span></div>
+      </div>
+      <div class="mp-ctrls" style="margin-bottom:10px">
+        <div class="mpb" onclick="prevTrack()">⏮</div>
+        <div class="mpb mp-play-btn" id="mob-play-btn" onclick="togglePlay()">▶</div>
+        <div class="mpb" onclick="nextTrack()">⏭</div>
+        <div class="mpb" id="mob-rep" onclick="toggleRepeat()" title="Repeat">↻</div>
+        <input type="range" id="mob-vol" min="0" max="1" step="0.05" value="0.8" oninput="setVol(this.value)">
+      </div>
+      <div class="mp-pl" id="mob-pl"><div class="mp-empty">// loading songs...</div></div>
+    </div>
+
+    <!-- CHAT TAB -->
+    <div class="mob-section" id="mob-chat">
+      <div class="mob-chat-wrap">
+        <iframe src="https://my.cbox.ws/FAARES" allowtransparency="true" title="Cbox"></iframe>
+      </div>
+    </div>
+
+    <!-- WELCOME TAB -->
+    <div class="mob-section" id="mob-welcome">
+      <div style="background:rgba(20,10,40,.5);border:1px solid rgba(60,35,100,.4);padding:16px;margin-bottom:12px;font-family:'Tahoma',sans-serif">
+        <div style="font-family:'VT323',monospace;font-size:24px;color:var(--a1);letter-spacing:2px;margin-bottom:10px">✦ FAA SITE</div>
+        <div style="font-size:10px;color:var(--dim);line-height:1.9" id="mob-welcome-txt">
+          hey !! thanks for visiting my little corner of the internet ˘ᵕ˘<br><br>
+          this site is my personal space on the internet. feel free to look around !!<br><br>
+          <span style="color:var(--a1)">// this site is best viewed on desktop!</span>
+        </div>
+      </div>
+      <div class="w-badges">
+        <span class="w-badge">MADE WITH ♡</span>
+        <span class="w-badge">NEOCITIES</span>
+        <span class="w-badge">INDIE WEB</span>
+        <span class="w-badge">HTML · CSS · JS</span>
+      </div>
+    </div>
+
+    <!-- BUTTONS TAB -->
+    <div class="mob-section" id="mob-buttons">
+      <div class="mob-sec"><h3>Friends &amp; Cool Sites</h3>
+        <div class="btns-grid">
+          <a class="nb" href="https://ventablack.neocities.org" target="_blank">
+            <div style="width:88px;height:31px;background:linear-gradient(135deg,#0a0015,#1a003a);display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:12px;color:#c084fc">ventablack</div>
+          </a>
+          <a class="nb" href="https://calzonie.neocities.org" target="_blank">
+            <div style="width:88px;height:31px;background:linear-gradient(135deg,#001510,#003020);display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:12px;color:#34d399">calzonie</div>
+          </a>
+          <div class="nb nb-ph">+ add</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- end mobile-page -->
 
 <script>
-const $=id=>document.getElementById(id);
-const svgU=(id,w,h)=>`<svg width="${w||14}" height="${h||14}" viewBox="0 0 24 24" style="fill:currentColor;display:block"><use href="#ic-${id}"/></svg>`;
-const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+// ══════════════════════════════════════════════════
+//  ★★★  CONFIG — عدّل هنا فقط  ★★★
+// ══════════════════════════════════════════════════
+const CONFIG = {
 
-/* ══ NHOST API ══ */
-let NH = { subdomain: 'nlbllfpowhdjugrkrvcr', region: 'eu-central-1' };
+  // اسم مستخدم GitHub
+  githubUser: 'faares01',
 
-const nhUrl = (svc, path) =>
-  `https://${NH.subdomain}.${svc}.${NH.region}.nhost.run/v1${path}`;
+  // اسم الريبو (نفس اسم الموقع على GitHub Pages)
+  // مثال: لو الرابط faares01.github.io/mysite  →  'mysite'
+  //        لو الرابط faares01.github.io          →  'faares01.github.io'
+  githubRepo: 'faaa.space',
 
-// GraphQL query
-async function nhGql(query, variables={}) {
-  const r = await fetch(nhUrl('hasura', '/graphql'), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-hasura-role': 'public' },
-    body: JSON.stringify({ query, variables })
-  });
-  const d = await r.json();
-  if (d.errors) throw new Error(d.errors[0].message);
-  return d.data;
-}
+  // اسم ملف الأفاتار (بجانب index.html)
+  avatar: 'ava.png',
 
-// Upload file to Nhost Storage → returns public URL
-async function nhUpload(name, file) {
-  const fd = new FormData();
-  fd.append('file[]', file, name);
-  fd.append('metadata[]', JSON.stringify({ name }));
-  const r = await fetch(nhUrl('storage', '/files'), {
-    method: 'POST', body: fd
-  });
-  if (!r.ok) { const t=await r.text(); throw new Error(t); }
-  const d = await r.json();
-  const fileId = (d.processedFiles||d)[0]?.id;
-  if (!fileId) throw new Error('No file ID returned');
-  return { id: fileId, url: nhUrl('storage', `/files/${fileId}`) };
-}
-
-// Delete file from Nhost Storage
-async function nhDeleteFile(fileId) {
-  if (!NH || !fileId) return;
-  await fetch(nhUrl('storage', `/files/${fileId}`), { method: 'DELETE' }).catch(()=>{});
-}
-
-// Save profile data via GraphQL
-async function nhSave() {
-  if (!NH) return false;
-  const { nhConfig, ...rest } = C;
-  try {
-    await nhGql(`
-      mutation UpsertProfile($data: jsonb!) {
-        insert_profile_one(
-          object: { id: 1, data: $data }
-          on_conflict: { constraint: profile_pkey, update_columns: [data] }
-        ) { id }
-      }
-    `, { data: rest });
-    return true;
-  } catch(e) { toast('⚠ Cloud save failed: ' + e.message); return false; }
-}
-
-// Load profile data via GraphQL
-async function nhLoad() {
-  if (!NH) return null;
-  try {
-    const d = await nhGql(`query { profile_by_pk(id: 1) { data } }`);
-    return d?.profile_by_pk?.data || null;
-  } catch(e) { return null; }
-}
-
-/* ══ CONFIG ══ */
-const DEF = {
-  name:'Your Name', bio:'Your bio here.', pageTitle:'Profile', password:'1234',
-  showPlayer:true, showShuffle:true, showRepeat:true, autoplay:true,
-  bgType:'stars', bgShowToggle:true,
-  avatarURL:null, avatarFileId:null,
-  bgMediaURL:null, bgMediaFileId:null,
-  nhConfig:null,
-  socials:[
-    {id:'twitter',   label:'X',           visible:true,  url:''},
-    {id:'instagram', label:'Instagram',   visible:true,  url:''},
-    {id:'tiktok',    label:'TikTok',      visible:true,  url:''},
-    {id:'snapchat',  label:'Snapchat',    visible:true,  url:''},
-    {id:'youtube',   label:'YouTube',     visible:true,  url:''},
-    {id:'discord',   label:'Discord',     visible:true,  url:''},
-    {id:'spotify',   label:'Spotify',     visible:false, url:''},
-    {id:'apple',     label:'Apple Music', visible:false, url:''},
-    {id:'steam',     label:'Steam',       visible:false, url:''},
-    {id:'telegram',  label:'Telegram',    visible:false, url:''},
-    {id:'github',    label:'GitHub',      visible:false, url:''},
-    {id:'twitch',    label:'Twitch',      visible:false, url:''},
-    {id:'linkedin',  label:'LinkedIn',    visible:false, url:''},
-  ],
-  songs: []
 };
-let C = {};
+// ══════════════════════════════════════════════════
 
-const loadLocal = () => {
-  try { const s=localStorage.getItem('pCfgNH'); C=s?{...DEF,...JSON.parse(s)}:{...DEF}; }
-  catch(e) { C={...DEF}; }
-  if(!C.socials) C.socials=JSON.parse(JSON.stringify(DEF.socials));
-  if(!C.songs)   C.songs=[];
-};
-const saveLocal = () => localStorage.setItem('pCfgNH', JSON.stringify(C));
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MOBILE DETECTION
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+const isMobile = () => window.innerWidth < 900 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-/* ══ RENDER ══ */
-let bgViewMode='stars', tracks=[], cur=0, isShuffle=false, isRepeat=false;
-
-function render() {
-  $('pg-title').textContent = C.pageTitle||'Profile';
-  $('disp-name').textContent = C.name||'Your Name';
-  $('disp-bio').textContent  = C.bio||'';
-  $('avaImg').src = C.avatarURL ||
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(C.name||'U')}&background=111115&color=ffffff&size=200&bold=true&rounded=false&format=svg`;
-  renderSoc();
-  tracks = (C.songs||[]).filter(s=>s.audioURL).map(s=>({...s}));
-  renderPlayer();
-  bgViewMode = (C.bgType!=='stars' && C.bgMediaURL) ? 'custom' : 'stars';
-  applyBg();
-  updateFavicon();
-}
-
-function renderSoc() {
-  const g=$('socG'); g.innerHTML='';
-  (C.socials||[]).filter(s=>s.visible&&s.url).forEach(s=>{
-    const a=document.createElement('a');
-    a.className='sl'; a.href=s.url; a.target='_blank'; a.rel='noopener noreferrer';
-    a.innerHTML=`${svgU(s.id,13,13)}<span>${s.label}</span>`;
-    g.appendChild(a);
-  });
-}
-
-function updateFavicon() {
-  if(!C.avatarURL) return;
-  const cv=document.createElement('canvas'); cv.width=cv.height=64;
-  const ctx=cv.getContext('2d'), img=new Image(); img.crossOrigin='anonymous';
-  img.onload=()=>{
-    const r=14; ctx.beginPath(); ctx.moveTo(r,0); ctx.lineTo(64-r,0); ctx.quadraticCurveTo(64,0,64,r);
-    ctx.lineTo(64,64-r); ctx.quadraticCurveTo(64,64,64-r,64); ctx.lineTo(r,64); ctx.quadraticCurveTo(0,64,0,64-r);
-    ctx.lineTo(0,r); ctx.quadraticCurveTo(0,0,r,0); ctx.closePath(); ctx.clip(); ctx.drawImage(img,0,0,64,64);
-    const f=$('favicon'); if(f) f.href=cv.toDataURL('image/png');
-  }; img.src=C.avatarURL;
-}
-
-/* ══ PLAYER ══ */
-function renderPlayer() {
-  const wrap=$('playerWrap');
-  if(!C.showPlayer||!tracks.length){wrap.innerHTML='';return;}
-  wrap.innerHTML=`<div class="player">
-    <div class="ptop">
-      <div class="cover" id="coverEl"><span class="cph">${svgU('music',20,20)}</span><img id="coverImg" src="" alt="" crossorigin="anonymous"></div>
-      <div class="tinfo"><div class="tname" id="tName">—</div><div class="tartist" id="tArtist">—</div></div>
-    </div>
-    <div class="prog-w" id="progW"><div class="pbar"><div class="pfill" id="pFill"></div></div><div class="ptimes"><span id="tCur">0:00</span><span id="tTot">0:00</span></div></div>
-    <div class="ctrl">
-      <button class="cb ${C.showShuffle?'':'hidden'}" id="bShuf">${svgU('shuffle')}</button>
-      <button class="cb" id="bPrev">${svgU('prev',16,16)}</button>
-      <button class="cb main" id="bPlay"><span id="pIco">${svgU('play',16,16)}</span></button>
-      <button class="cb" id="bNext">${svgU('next',16,16)}</button>
-      <button class="cb ${C.showRepeat?'':'hidden'}" id="bRep">${svgU('repeat')}</button>
-    </div>
-    <div class="vrow"><span class="vico" id="vIco">${svgU('volH',13,13)}</span><div class="vtrack" id="vTrack"><div class="vfill" id="vFill"></div></div></div>
-    <div class="plist" id="plist"></div>
-  </div>`;
-  cur=0; bindPlayer();
-}
-
-function bindPlayer() {
-  const aud=$('aud'); aud.volume=0.8;
-  let muted=false, lastV=0.8;
-  const fmt=s=>!s||isNaN(s)?'0:00':Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
-  const setPI=p=>{const e=$('pIco');if(e)e.innerHTML=svgU(p?'pause':'play',16,16);};
-  const updV=()=>{const v=$('vIco');if(v)v.innerHTML=svgU(muted||aud.volume===0?'volM':aud.volume<.5?'volL':'volH',13,13);};
-  function plist(){
-    const pl=$('plist'); if(!pl||tracks.length<=1){if(pl)pl.innerHTML='';return;}
-    pl.innerHTML=tracks.map((t,i)=>`<div class="pi ${i===cur?'cur':''}" data-i="${i}"><span class="pi-n">${i+1}</span><span class="pi-name">${esc(t.name)}</span></div>`).join('');
-    pl.querySelectorAll('.pi').forEach(el=>el.onclick=()=>loadT(+el.dataset.i,true));
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+// STARS (shared for both)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+function initStars(canvas) {
+  const ctx = canvas.getContext('2d');
+  let W, H, stars = [], shoots = [];
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
   }
-  function loadT(i,play){
-    if(!tracks.length)return;
-    cur=((i%tracks.length)+tracks.length)%tracks.length;
-    const t=tracks[cur]; aud.src=t.audioURL;
-    const tn=$('tName');if(tn)tn.textContent=t.name;
-    const ta=$('tArtist');if(ta)ta.textContent=t.artist||'';
-    const ci=$('coverImg'),cp=document.querySelector('#coverEl .cph');
-    if(t.coverURL){if(ci){ci.src=t.coverURL;ci.style.display='block';}if(cp)cp.style.display='none';}
-    else{if(ci)ci.style.display='none';if(cp)cp.style.display='';}
-    if($('pFill'))$('pFill').style.width='0%';
-    plist(); if(play)aud.play().catch(()=>{}); else setPI(false);
+  resize();
+  window.addEventListener('resize', resize);
+
+  // draw a 4-pointed star shape (sparkle)
+  function drawSparkle(ctx, x, y, r, color, alpha) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    // 4-point star: thin cross with diagonal slightly shorter
+    const o = r * 0.18; // inner radius
+    ctx.moveTo(x, y - r);
+    ctx.quadraticCurveTo(x + o, y - o, x + r, y);
+    ctx.quadraticCurveTo(x + o, y + o, x, y + r);
+    ctx.quadraticCurveTo(x - o, y + o, x - r, y);
+    ctx.quadraticCurveTo(x - o, y - o, x, y - r);
+    ctx.closePath();
+    ctx.fill();
+    // tiny center glow dot
+    ctx.globalAlpha = alpha * 0.9;
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(x, y, r * 0.15, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
   }
-  aud.onplay=()=>setPI(true); aud.onpause=()=>setPI(false);
-  aud.onended=()=>{if(isRepeat){aud.currentTime=0;aud.play();return;}loadT(isShuffle?Math.floor(Math.random()*tracks.length):cur+1,true);};
-  aud.ontimeupdate=()=>{if(!aud.duration)return;if($('pFill'))$('pFill').style.width=(aud.currentTime/aud.duration*100)+'%';if($('tCur'))$('tCur').textContent=fmt(aud.currentTime);if($('tTot'))$('tTot').textContent=fmt(aud.duration);};
-  const bp=$('bPlay');if(bp)bp.onclick=()=>aud.paused?aud.play().catch(()=>{}):aud.pause();
-  const bpr=$('bPrev');if(bpr)bpr.onclick=()=>{if(aud.currentTime>3){aud.currentTime=0;return;}loadT(cur-1,!aud.paused);};
-  const bn=$('bNext');if(bn)bn.onclick=()=>loadT(isShuffle?Math.floor(Math.random()*tracks.length):cur+1,!aud.paused);
-  const bs=$('bShuf');if(bs)bs.onclick=()=>{isShuffle=!isShuffle;bs.classList.toggle('on',isShuffle);};
-  const br=$('bRep');if(br)br.onclick=()=>{isRepeat=!isRepeat;br.classList.toggle('on',isRepeat);};
-  const pw=$('progW');if(pw)pw.onclick=e=>{if(!aud.duration)return;const r=pw.getBoundingClientRect();aud.currentTime=((e.clientX-r.left)/r.width)*aud.duration;};
-  const vt=$('vTrack');if(vt)vt.onclick=e=>{const r=vt.getBoundingClientRect();const v=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));aud.volume=v;lastV=v;const vf=$('vFill');if(vf)vf.style.width=(v*100)+'%';if(v>0){muted=false;updV();}};
-  const vi=$('vIco');if(vi)vi.onclick=()=>{muted=!muted;aud.volume=muted?0:lastV;const vf=$('vFill');if(vf)vf.style.width=muted?'0%':(lastV*100)+'%';updV();};
-  loadT(0,C.autoplay===true); plist();
-}
 
-/* ══ BACKGROUND ══ */
-function applyBg(){
-  const has=!!C.bgMediaURL,tb=$('bgTogBtn');
-  if(has&&C.bgShowToggle){tb.classList.add('vis');tb.textContent=bgViewMode==='stars'?'◉':'★';}
-  else tb.classList.remove('vis');
-  applyBgMode((has&&bgViewMode==='custom')?C.bgType:'stars');
-}
-function applyBgMode(mode){
-  const cv=$('bgCanvas'),imgEl=$('bgImg'),vid=$('bgVideo'),vidEl=$('bgVid'),grid=$('bgGrid');
-  if(mode==='stars'||!C.bgMediaURL){cv.style.opacity='1';imgEl.style.opacity='0';vidEl.style.opacity='0';try{vid.pause();}catch(e){}grid.classList.add('show');}
-  else if(mode==='image'){cv.style.opacity='0';imgEl.style.cssText=`position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url(${C.bgMediaURL});background-size:cover;background-position:center;opacity:1;transition:opacity .8s`;vidEl.style.opacity='0';try{vid.pause();}catch(e){}grid.classList.remove('show');}
-  else if(mode==='video'){cv.style.opacity='0';imgEl.style.opacity='0';if(vid.src!==C.bgMediaURL)vid.src=C.bgMediaURL;vid.play().catch(()=>{});vidEl.style.opacity='1';grid.classList.remove('show');}
-}
-$('bgTogBtn').onclick=()=>{bgViewMode=bgViewMode==='stars'?'custom':'stars';applyBg();};
-
-/* ══ STARS ══ */
-(()=>{
-  const c=$('bgCanvas'),ctx=c.getContext('2d');let stars=[],shoots=[],W,H;
-  const resize=()=>{W=c.width=innerWidth;H=c.height=innerHeight;};
-  const mkS=()=>{stars=[];for(let i=0;i<280;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.15,a:Math.random()*.8+.15,d:(Math.random()-.5)*.012});};
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    stars.forEach(s=>{s.a+=s.d;if(s.a<=.08||s.a>=.95)s.d=-s.d;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='#fff';ctx.globalAlpha=s.a;ctx.fill();});
-    if(Math.random()>.978)shoots.push({x:Math.random()*W*.5,y:Math.random()*H*.35,len:Math.random()*120+60,spd:Math.random()*8+5,a:1,ang:Math.PI/4+(Math.random()-.5)*.3});
-    shoots=shoots.filter(s=>s.a>.02);
-    shoots.forEach(s=>{ctx.save();ctx.globalAlpha=s.a;const g=ctx.createLinearGradient(s.x,s.y,s.x-Math.cos(s.ang)*s.len,s.y-Math.sin(s.ang)*s.len);g.addColorStop(0,'rgba(255,255,255,.9)');g.addColorStop(1,'transparent');ctx.strokeStyle=g;ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x-Math.cos(s.ang)*s.len,s.y-Math.sin(s.ang)*s.len);ctx.stroke();ctx.restore();s.x+=Math.cos(s.ang)*s.spd;s.y+=Math.sin(s.ang)*s.spd;s.a-=.022;});
-    ctx.globalAlpha=1;requestAnimationFrame(draw);
-  }
-  window.addEventListener('resize',()=>{resize();mkS();});resize();mkS();draw();
-})();
-
-/* ══ 7-CLICK ══ */
-let cc=0,ct=null;
-$('avaW').onclick=()=>{
-  cc++;clearTimeout(ct);
-  for(let i=0;i<7;i++)$('cd'+i).classList.toggle('lit',i<cc);
-  ct=setTimeout(()=>{cc=0;for(let i=0;i<7;i++)$('cd'+i).classList.remove('lit');},3200);
-  if(cc>=7){cc=0;clearTimeout(ct);for(let i=0;i<7;i++)$('cd'+i).classList.remove('lit');openDash();}
-};
-
-/* ══ DASHBOARD ══ */
-const openDash=()=>{$('ov').classList.add('open');$('lsc').style.display='block';$('dcon').style.display='none';$('pwin').value='';$('perr').style.display='none';};
-const closeDash=()=>$('ov').classList.remove('open');
-$('dcls').onclick=closeDash;
-$('ov').onclick=e=>{if(e.target===$('ov'))closeDash();};
-function doLogin(){
-  if($('pwin').value===(C.password||'1234')){$('lsc').style.display='none';$('dcon').style.display='block';popDash();}
-  else{$('perr').style.display='block';$('pwin').value='';}
-}
-$('lbtn').onclick=doLogin; $('pwin').onkeydown=e=>{if(e.key==='Enter')doLogin();};
-document.querySelectorAll('.dtb').forEach(t=>{t.onclick=()=>{document.querySelectorAll('.dtb').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.dpane').forEach(x=>x.classList.remove('on'));t.classList.add('on');$('dpane-'+t.dataset.dp).classList.add('on');};});
-
-const setTog=(id,val)=>{const el=$(id);if(!el)return;el.textContent=val?'ON':'OFF';el.classList.toggle('on',val);};
-
-function updateNhStatus(){
-  const d=$('nhDot'),t=$('nhTxt');if(!d||!t)return;
-  d.className='nh-dot ok';t.textContent='Connected to Nhost ✓ (hardcoded)';
-}
-
-function popDash(){
-  $('d-name').value=C.name||''; $('d-bio').value=C.bio||''; $('d-pt').value=C.pageTitle||'';
-  $('avuP').src=C.avatarURL||`https://ui-avatars.com/api/?name=${encodeURIComponent(C.name||'U')}&background=111115&color=ffffff&size=200&bold=true&rounded=false&format=svg`;
-  mkSocEd(); mkSongList(); mkBgPane();
-  setTog('playerTogBtn',C.showPlayer!==false); setTog('setShuffleBtn',C.showShuffle!==false);
-  setTog('setRepeatBtn',C.showRepeat!==false); setTog('setAutoplayBtn',C.autoplay!==false);
-  const nh=C.nhConfig||{};
-  $('nh-sub').value=nh.subdomain||''; $('nh-reg').value=nh.region||'';
-  updateNhStatus();
-}
-
-/* AVATAR */
-$('avuA').onclick=()=>$('avuF').click();
-$('avuDelBtn').onclick=async()=>{
-  if(!C.avatarURL){toast('No photo to delete');return;}
-  if(!confirm('Delete profile photo?'))return;
-  if(C.avatarFileId) await nhDeleteFile(C.avatarFileId);
-  C.avatarURL=null; C.avatarFileId=null;
-  $('avaImg').src=`https://ui-avatars.com/api/?name=${encodeURIComponent(C.name||'U')}&background=111115&color=ffffff&size=200&bold=true&rounded=false&format=svg`;
-  $('avuP').src=$('avaImg').src; $('favicon').href='data:,';
-  saveLocal(); await nhSave(); toast('✓ Photo deleted');
-};
-$('avuF').onchange=async e=>{
-  const f=e.target.files[0]; if(!f)return;
-  if(!NH){toast('⚠ Connect Nhost first (Settings tab)');e.target.value='';return;}
-  $('avuProg').style.display='block'; $('avuProgFill').style.width='30%'; toast('Uploading photo…');
-  try{
-    if(C.avatarFileId) await nhDeleteFile(C.avatarFileId);
-    const ext=f.name.split('.').pop()||'jpg';
-    const {id,url}=await nhUpload(`avatar_${Date.now()}.${ext}`,f);
-    $('avuProgFill').style.width='100%';
-    C.avatarURL=url; C.avatarFileId=id;
-    $('avuP').src=url; $('avaImg').src=url; updateFavicon();
-    saveLocal(); await nhSave(); toast('✓ Photo uploaded');
-  }catch(err){toast('⚠ Upload failed: '+err.message);}
-  setTimeout(()=>{$('avuProg').style.display='none';$('avuProgFill').style.width='0%';},500); e.target.value='';
-};
-
-/* SOCIALS */
-function mkSocEd(){
-  const el=$('socEd'); el.innerHTML='';
-  (C.socials||[]).forEach((s,i)=>{
-    const d=document.createElement('div'); d.className='si';
-    d.innerHTML=`<span class="si-i">${svgU(s.id,14,14)}</span><span class="si-l">${s.label}</span><input class="si-u" data-si="${i}" value="${esc(s.url||'')}" placeholder="https://..."><button class="tog ${s.visible?'on':''}" data-si="${i}">${s.visible?'ON':'OFF'}</button>`;
-    el.appendChild(d);
-  });
-  el.querySelectorAll('.si-u').forEach(x=>x.oninput=e=>{C.socials[+e.target.dataset.si].url=e.target.value;});
-  el.querySelectorAll('[data-si].tog').forEach(b=>b.onclick=e=>{
-    const i=+e.target.dataset.si; C.socials[i].visible=!C.socials[i].visible;
-    e.target.textContent=C.socials[i].visible?'ON':'OFF'; e.target.classList.toggle('on',C.socials[i].visible);
-  });
-}
-
-/* MP3 */
-function mkSongList(){
-  const el=$('songList'); el.innerHTML='';
-  (C.songs||[]).forEach((s,i)=>{
-    const d=document.createElement('div'); d.className='song-item';
-    const cov=s.coverURL?`<img src="${esc(s.coverURL)}" alt="">`:`<span style="opacity:.2">${svgU('music',14,14)}</span>`;
-    d.innerHTML=`<div class="song-cov" data-sci="${i}">${cov}<div class="song-cov-hint">Cover</div></div><div class="song-info"><input class="song-name-inp" data-ni="${i}" value="${esc(s.name||'')}" placeholder="Track name"><div class="song-meta">tap to rename</div></div><span class="song-rm" data-rm="${i}">✕</span><input type="file" id="scov-${s.id}" accept="image/*" style="display:none">`;
-    el.appendChild(d);
-  });
-  el.querySelectorAll('.song-name-inp').forEach(x=>x.onchange=e=>{const i=+e.target.dataset.ni;C.songs[i].name=e.target.value;const t=tracks.find(t=>t.id===C.songs[i].id);if(t)t.name=e.target.value;});
-  el.querySelectorAll('.song-cov').forEach(d=>d.onclick=()=>{if(!NH){toast('⚠ Connect Nhost first');return;}$('scov-'+C.songs[+d.dataset.sci].id).click();});
-  C.songs.forEach((s,i)=>{
-    const inp=$('scov-'+s.id); if(!inp)return;
-    inp.onchange=async e=>{
-      const f=e.target.files[0]; if(!f)return;
-      toast('Uploading cover…');
-      try{
-        if(s.coverFileId) await nhDeleteFile(s.coverFileId);
-        const ext=f.name.split('.').pop()||'jpg';
-        const {id,url}=await nhUpload(`cover_${s.id}_${Date.now()}.${ext}`,f);
-        C.songs[i].coverURL=url; C.songs[i].coverFileId=id;
-        const t=tracks.find(t=>t.id===s.id); if(t){t.coverURL=url;}
-        mkSongList(); saveLocal(); await nhSave();
-        if(t&&tracks[cur]&&tracks[cur].id===s.id){const ci=$('coverImg');if(ci){ci.src=url;ci.style.display='block';}}
-        toast('✓ Cover updated');
-      }catch(err){toast('⚠ Cover upload failed: '+err.message);}
-      e.target.value='';
+  function mkS() {
+    const size = Math.random() * 2.4 + 0.4; // mostly tiny
+    const colors = ['#ffffff','#f0eaff','#ddd0ff','#c084fc','#f9a8d4','#bae6fd'];
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: size,
+      // twinkle phase — each star at random point in cycle
+      phase: Math.random() * Math.PI * 2,
+      speed: Math.random() * 0.018 + 0.005, // twinkle speed
+      maxAlpha: Math.random() * 0.65 + 0.25,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      // slight drift
+      vx: (Math.random() - 0.5) * 0.03,
+      vy: (Math.random() - 0.5) * 0.015,
     };
-  });
-  el.querySelectorAll('[data-rm]').forEach(b=>b.onclick=async e=>{
-    const i=+e.target.dataset.rm, s=C.songs[i];
-    if(!confirm('Remove this track?'))return;
-    if(s.audioFileId) await nhDeleteFile(s.audioFileId);
-    if(s.coverFileId) await nhDeleteFile(s.coverFileId);
-    tracks=tracks.filter(t=>t.id!==s.id);
-    C.songs.splice(i,1);
-    saveLocal(); await nhSave(); mkSongList(); renderPlayer(); toast('✓ Track removed');
-  });
-}
-$('addSongZone').onclick=()=>{if(!NH){toast('⚠ Connect Nhost first (Settings tab)');return;}$('mp3FileIn').click();};
-$('mp3FileIn').onchange=async e=>{
-  const f=e.target.files[0]; if(!f)return;
-  $('mp3Prog').style.display='block'; $('mp3ProgFill').style.width='20%'; toast('Uploading track…');
-  try{
-    const songId='s'+Date.now();
-    $('mp3ProgFill').style.width='60%';
-    const {id,url}=await nhUpload(`audio_${songId}.mp3`,f);
-    $('mp3ProgFill').style.width='100%';
-    const name=f.name.replace(/\.mp3$/i,'').replace(/_/g,' ');
-    const song={id:songId,name,artist:'',audioURL:url,audioFileId:id,coverURL:null,coverFileId:null};
-    C.songs.push(song); tracks.push({...song});
-    saveLocal(); await nhSave(); mkSongList(); renderPlayer(); toast('✓ Track uploaded!');
-  }catch(err){toast('⚠ Upload failed: '+err.message);}
-  setTimeout(()=>{$('mp3Prog').style.display='none';$('mp3ProgFill').style.width='0%';},500); e.target.value='';
-};
-$('playerTogBtn').onclick=()=>{C.showPlayer=!C.showPlayer;setTog('playerTogBtn',C.showPlayer);};
-$('setShuffleBtn').onclick=()=>{C.showShuffle=!C.showShuffle;setTog('setShuffleBtn',C.showShuffle);};
-$('setRepeatBtn').onclick=()=>{C.showRepeat=!C.showRepeat;setTog('setRepeatBtn',C.showRepeat);};
-$('setAutoplayBtn').onclick=()=>{C.autoplay=!C.autoplay;setTog('setAutoplayBtn',C.autoplay);};
-
-/* BACKGROUND */
-function mkBgPane(){
-  $('bgOptStars').classList.toggle('on',C.bgType==='stars');
-  $('bgOptImage').classList.toggle('on',C.bgType==='image');
-  $('bgOptVideo').classList.toggle('on',C.bgType==='video');
-  const pr=$('bgPreview');
-  if(C.bgMediaURL){pr.innerHTML=C.bgType==='video'?`<video src="${C.bgMediaURL}" autoplay loop muted playsinline></video>`:`<img src="${C.bgMediaURL}" alt="">`;}
-  else pr.innerHTML='<div class="bg-preview-ph">🖼<br>No media uploaded</div>';
-  setTog('bgBtnToggle',C.bgShowToggle!==false);
-}
-['Stars','Image','Video'].forEach(t=>{
-  const el=$('bgOpt'+t); if(el)el.onclick=()=>{C.bgType=t.toLowerCase();bgViewMode=t==='Stars'?'stars':'custom';mkBgPane();applyBg();};
-});
-$('bgUpZone').onclick=()=>{if(!NH){toast('⚠ Connect Nhost first (Settings tab)');return;}$('bgFileIn').click();};
-$('bgFileIn').onchange=async e=>{
-  const f=e.target.files[0]; if(!f)return;
-  $('bgProg').style.display='block'; $('bgProgFill').style.width='30%'; toast('Uploading background…');
-  try{
-    if(C.bgMediaFileId) await nhDeleteFile(C.bgMediaFileId);
-    const isVid=f.type.startsWith('video');
-    const ext=isVid?'mp4':(f.name.split('.').pop()||'jpg');
-    const {id,url}=await nhUpload(`bg_${Date.now()}.${ext}`,f);
-    $('bgProgFill').style.width='100%';
-    C.bgMediaURL=url; C.bgMediaFileId=id; C.bgType=isVid?'video':'image'; bgViewMode='custom';
-    saveLocal(); await nhSave(); mkBgPane(); applyBg(); toast('✓ Background uploaded!');
-  }catch(err){toast('⚠ Upload failed: '+err.message);}
-  setTimeout(()=>{$('bgProg').style.display='none';$('bgProgFill').style.width='0%';},500); e.target.value='';
-};
-$('bgBtnToggle').onclick=()=>{C.bgShowToggle=!C.bgShowToggle;setTog('bgBtnToggle',C.bgShowToggle);applyBg();};
-$('bgDelBtn').onclick=async()=>{
-  if(!C.bgMediaURL){toast('No media to delete');return;}
-  if(!confirm('Delete background?'))return;
-  if(C.bgMediaFileId) await nhDeleteFile(C.bgMediaFileId);
-  C.bgMediaURL=null; C.bgMediaFileId=null; C.bgType='stars'; bgViewMode='stars';
-  saveLocal(); await nhSave(); mkBgPane(); applyBg(); toast('✓ Background deleted');
-};
-
-/* NHOST CONNECT */
-$('nhConnectBtn').onclick=async()=>{
-  const sub=($('nh-sub').value||'').trim();
-  const reg=($('nh-reg').value||'').trim();
-  if(!sub||!reg){toast('Enter Subdomain and Region');return;}
-  NH={subdomain:sub, region:reg};
-  toast('Connecting…');
-  try{
-    // Test with a simple query
-    const d=await nhGql(`query { profile_by_pk(id: 1) { id } }`);
-    C.nhConfig={subdomain:sub,region:reg};
-    saveLocal(); updateNhStatus();
-    toast('Loading cloud data…');
-    const cloud=await nhLoad();
-    if(cloud){
-      const nhc=C.nhConfig;
-      C={...DEF,...cloud,nhConfig:nhc};
-      saveLocal(); render(); popDash(); toast('✓ Connected & synced!');
-    } else {
-      await nhSave(); toast('✓ Nhost connected!');
-    }
-  }catch(err){
-    NH=null;
-    $('nhDot').className='nh-dot err';
-    $('nhTxt').textContent='Error: '+err.message;
-    toast('⚠ Connection failed: '+err.message);
   }
-};
 
-/* SAVE */
-$('saveB').onclick=async()=>{
-  C.name=$('d-name').value; C.bio=$('d-bio').value; C.pageTitle=$('d-pt').value;
-  saveLocal();
-  if(NH){toast('Saving…');const ok=await nhSave();if(ok)toast('✓ Saved to cloud ☁');}
-  else toast('✓ Saved locally (connect Nhost to sync)');
-  render();
-};
+  function mkSh(){
+    return {
+      x: Math.random() * W * 0.7 + W * 0.1,
+      y: Math.random() * H * 0.4,
+      len: Math.random() * 80 + 40,
+      spd: Math.random() * 5 + 3,
+      ang: Math.PI / 4 + (Math.random() - 0.5) * 0.5,
+      life: 1
+    };
+  }
 
-/* CHANGE PASSWORD */
-$('chpwB').onclick=async()=>{
-  const o=$('d-old').value, n=$('d-new').value, cf=$('d-conf').value;
-  if(o!==C.password){toast('Wrong current password');return;}
-  if(!n){toast('New password empty');return;}
-  if(n!==cf){toast('Passwords do not match');return;}
-  C.password=n; saveLocal(); await nhSave();
-  ['d-old','d-new','d-conf'].forEach(id=>$(id).value=''); toast('✓ Password updated');
-};
+  // Spread stars across full canvas
+  for (let i = 0; i < 280; i++) stars.push(mkS());
 
-/* RESET */
-$('rstB').onclick=async()=>{
-  if(!confirm('Reset all local data?'))return;
-  localStorage.removeItem('pCfgNH');
-  const nhc=C.nhConfig; C={...DEF,nhConfig:nhc}; tracks=[]; bgViewMode='stars';
-  saveLocal(); render(); popDash(); toast('✓ Reset done');
-};
+  let st = 0;
+  function anim() {
+    ctx.clearRect(0, 0, W, H);
 
-/* KEYBOARD */
-document.onkeydown=e=>{
-  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
-  const bp=$('bPlay'); if(e.code==='Space'&&bp){e.preventDefault();bp.click();}
-  const a=$('aud');
-  if(e.code==='ArrowRight')a.currentTime=Math.min(a.duration||0,a.currentTime+5);
-  if(e.code==='ArrowLeft')a.currentTime=Math.max(0,a.currentTime-5);
-};
+    for (let s of stars) {
+      s.phase += s.speed;
+      // sine wave alpha — smooth twinkle
+      const alpha = ((Math.sin(s.phase) + 1) / 2) * s.maxAlpha;
+      s.x += s.vx;
+      s.y += s.vy;
+      // wrap around edges
+      if (s.x < -10) s.x = W + 10;
+      if (s.x > W + 10) s.x = -10;
+      if (s.y < -10) s.y = H + 10;
+      if (s.y > H + 10) s.y = -10;
 
-/* TOAST */
-let _tt;
-function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2700);}
-
-/* ══ INIT ══ */
-function hideLoading(){
-  const l=$('loadingScreen');
-  if(!l)return;
-  l.style.opacity='0';
-  setTimeout(()=>l.style.display='none',500);
-}
-
-async function init(){
-  loadLocal();
-  // Always use hardcoded Nhost config
-  C.nhConfig={subdomain:'nlbllfpowhdjugrkrvcr',region:'eu-central-1'};
-  try{
-    const cloud=await nhLoad();
-    if(cloud){
-      const nhc=C.nhConfig;
-      C={...DEF,...cloud,nhConfig:nhc};
-      saveLocal();
+      if (alpha > 0.01) {
+        drawSparkle(ctx, s.x, s.y, s.r, s.color, alpha);
+      }
     }
-  }catch(e){console.warn('Cloud load failed:',e);}
-  render();
-  hideLoading();
+
+    // occasional shooting star
+    if (++st > 300 && Math.random() < 0.025) {
+      shoots.push(mkSh()); st = 0;
+    }
+    shoots = shoots.filter(s => s.life > 0);
+    for (let s of shoots) {
+      s.life -= 0.022;
+      const dx = Math.cos(s.ang) * s.spd;
+      const dy = Math.sin(s.ang) * s.spd;
+      ctx.save();
+      ctx.globalAlpha = s.life * 0.75;
+      const g = ctx.createLinearGradient(s.x, s.y, s.x - dx*12, s.y - dy*12);
+      g.addColorStop(0, 'rgba(255,255,255,.95)');
+      g.addColorStop(1, 'rgba(192,132,252,0)');
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(s.x, s.y);
+      ctx.lineTo(s.x - Math.cos(s.ang)*s.len, s.y - Math.sin(s.ang)*s.len);
+      ctx.stroke();
+      // sparkle at head
+      drawSparkle(ctx, s.x, s.y, 2, '#fff', s.life * 0.9);
+      ctx.restore();
+      s.x += dx; s.y += dy;
+    }
+
+    requestAnimationFrame(anim);
+  }
+  anim();
 }
-init();
+initStars(document.getElementById('stars-canvas'));
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LOGIN → DETECT MOBILE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+let username = '';
+function doLogin() {
+  username = document.getElementById('l-user').value.trim();
+  const ov = document.getElementById('tov');
+  ov.style.display = 'flex';
+  setTimeout(() => {
+    ov.style.display = 'none';
+    document.getElementById('login-page').style.display = 'none';
+    if (isMobile()) {
+      startMobile();
+    } else {
+      startDesktop();
+    }
+  }, 1300);
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login-page').style.display !== 'none') doLogin();
+});
+
+function startDesktop() {
+  document.getElementById('taskbar').style.display = 'flex';
+  document.getElementById('desktop').style.display = 'block';
+  // set welcome greeting
+  const greet = username ? `hey, <span class="hi-name">${username}</span> !! thanks for visiting ˘ᵕ˘` : `hey !! thanks for visiting ˘ᵕ˘`;
+  document.getElementById('welcome-greeting').innerHTML = greet;
+  openWin('welcome');
+  drawMyBtn();
+
+  // ── LOAD AVATAR ──
+  loadAvatar();
+
+  // ── AUTO-SCAN Music/ and pics/ from GitHub ──
+  autoScanGitHub();
+}
+
+function startMobile() {
+  const mp = document.getElementById('mobile-page');
+  mp.style.display = 'block';
+  // init mobile stars
+  const mc = document.getElementById('mob-stars');
+  mc.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%';
+  initStars(mc);
+  // greeting
+  if (username) {
+    document.getElementById('mob-hi-name').textContent = `welcome back, ${username} !!`;
+    document.getElementById('mob-welcome-txt').innerHTML =
+      `hey, <strong style="color:var(--a2)">${username}</strong> !! thanks for visiting my little corner of the internet ˘ᵕ˘<br><br>this site is my personal space. feel free to look around !!<br><br><span style="color:var(--a1)">// this site is best viewed on desktop!</span>`;
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CLOCK
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+function updateClock() {
+  const n = new Date();
+  const h = n.getHours().toString().padStart(2,'0');
+  const m = n.getMinutes().toString().padStart(2,'0');
+  const d = n.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  document.getElementById('clock').innerHTML = `${d}<br>${h}:${m}`;
+}
+updateClock(); setInterval(updateClock,10000);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+// WINDOW MANAGEMENT
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+const WINS = ['about','music','chat','welcome','gallery'];
+const wSt={}, wPv={}, wMx={};
+WINS.forEach(k=>{wSt[k]=false;wMx[k]=false});
+
+function openWin(id){const el=document.getElementById('win-'+id),tb=document.getElementById('tb-'+id);wSt[id]=true;el.style.display='flex';tb.classList.add('open');focusWin(id)}
+function closeWin(id){document.getElementById('win-'+id).style.display='none';document.getElementById('tb-'+id).classList.remove('open','focused');wSt[id]=false}
+function minWin(id){document.getElementById('win-'+id).style.display='none';document.getElementById('tb-'+id).classList.remove('focused')}
+function focusWin(id){WINS.forEach(k=>{document.getElementById('win-'+k).classList.remove('active');document.getElementById('tb-'+k).classList.remove('focused')});document.getElementById('win-'+id).classList.add('active');document.getElementById('tb-'+id).classList.add('focused')}
+function tbClick(id){const el=document.getElementById('win-'+id);if(!wSt[id]){openWin(id);return}if(el.style.display==='none'){el.style.display='flex';focusWin(id)}else minWin(id)}
+function maxWin(elId){const id=elId.replace('win-',''),el=document.getElementById(elId);if(!wMx[id]){wPv[id]={left:el.style.left,top:el.style.top,width:el.style.width,height:el.style.height};Object.assign(el.style,{left:'0',top:'0',width:'100vw',height:'calc(100vh - 40px)'});wMx[id]=true}else{Object.assign(el.style,wPv[id]);wMx[id]=false}}
+function logout(){document.getElementById('desktop').style.display='none';document.getElementById('mobile-page').style.display='none';document.getElementById('login-page').style.display='flex';WINS.forEach(k=>{wSt[k]=false});stopAudio()}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+// DRAG
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+let dEl=null,dOX=0,dOY=0;
+function dragStart(e,id){if(e.target.classList.contains('wbtn'))return;dEl=document.getElementById(id);const r=dEl.getBoundingClientRect();dOX=e.clientX-r.left;dOY=e.clientY-r.top;focusWin(id.replace('win-',''));document.onmousemove=dMove;document.onmouseup=dEnd}
+function dMove(e){if(!dEl)return;dEl.style.left=Math.max(0,Math.min(e.clientX-dOX,window.innerWidth-dEl.offsetWidth))+'px';dEl.style.top=Math.max(0,Math.min(e.clientY-dOY,window.innerHeight-40-dEl.offsetHeight))+'px'}
+function dEnd(){dEl=null;document.onmousemove=null;document.onmouseup=null}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+// START MENU
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+const smenu=document.getElementById('start-menu');
+function toggleStart(){smenu.style.display=smenu.style.display==='flex'?'none':'flex'}
+document.addEventListener('click',e=>{if(!e.target.closest('#start-menu')&&!e.target.closest('#start-btn'))smenu.style.display='none'});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MOBILE TABS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+function mobTab(name, el) {
+  document.querySelectorAll('.mob-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.mob-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('mob-'+name).classList.add('active');
+  el.classList.add('active');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 88x31 ANIMATED BUTTON GENERATOR
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let btnFrame = 0, btnAnim = null;
+function drawMyBtn() {
+  const c = document.getElementById('my-btn-canvas');
+  const x = c.getContext('2d');
+  if (btnAnim) cancelAnimationFrame(btnAnim);
+
+  function frame() {
+    btnFrame = (btnFrame + 0.04) % (Math.PI * 2);
+    x.clearRect(0,0,88,31);
+
+    // animated bg gradient
+    const hue = Math.sin(btnFrame) * 0.5 + 0.5;
+    const g = x.createLinearGradient(0,0,88,0);
+    g.addColorStop(0, `hsl(${270 + hue*40},70%,10%)`);
+    g.addColorStop(0.5, `hsl(${290 + hue*30},60%,15%)`);
+    g.addColorStop(1, `hsl(${270 + hue*40},70%,10%)`);
+    x.fillStyle = g;
+    x.fillRect(0,0,88,31);
+
+    // animated shimmer bar
+    const shimX = ((btnFrame / (Math.PI*2)) * 140) - 20;
+    const sg = x.createLinearGradient(shimX, 0, shimX+20, 0);
+    sg.addColorStop(0,'rgba(200,160,255,0)');
+    sg.addColorStop(0.5,'rgba(200,160,255,0.12)');
+    sg.addColorStop(1,'rgba(200,160,255,0)');
+    x.fillStyle = sg;
+    x.fillRect(0,0,88,31);
+
+    // outer border — animated glow
+    const glow = Math.sin(btnFrame*2)*0.5+0.5;
+    x.strokeStyle = `rgba(${180+Math.floor(glow*40)},${100+Math.floor(glow*30)},255,${0.6+glow*0.3})`;
+    x.lineWidth = 1;
+    x.strokeRect(.5,.5,87,30);
+
+    // inner border
+    x.strokeStyle = 'rgba(160,110,240,0.2)';
+    x.strokeRect(2.5,2.5,83,26);
+
+    // top pixel row decoration
+    x.fillStyle = `rgba(180,120,255,${0.3+glow*0.2})`;
+    for(let i=6;i<82;i+=5){ x.fillRect(i,1,2,1); }
+
+    // star left — pulse
+    const ps = 0.8 + Math.sin(btnFrame*3)*0.2;
+    x.save();
+    x.translate(6,16); x.scale(ps,ps);
+    x.fillStyle = `rgba(244,114,182,${0.7+glow*0.3})`;
+    x.font = 'bold 10px serif';
+    x.textBaseline = 'middle'; x.textAlign = 'center';
+    x.fillText('✦', 0, 0);
+    x.restore();
+
+    // star right — pulse offset
+    const ps2 = 0.8 + Math.sin(btnFrame*3+Math.PI)*0.2;
+    x.save();
+    x.translate(82,16); x.scale(ps2,ps2);
+    x.fillStyle = `rgba(192,132,252,${0.7+glow*0.3})`;
+    x.font = 'bold 10px serif';
+    x.textBaseline = 'middle'; x.textAlign = 'center';
+    x.fillText('✦', 0, 0);
+    x.restore();
+
+    // SITE NAME — glow text
+    const tg = x.createLinearGradient(0,0,88,0);
+    tg.addColorStop(0,'#c084fc');
+    tg.addColorStop(0.5,'#f472b6');
+    tg.addColorStop(1,'#c084fc');
+    x.save();
+    x.shadowColor = `rgba(192,132,252,${0.4+glow*0.4})`;
+    x.shadowBlur = 4 + glow*3;
+    x.fillStyle = tg;
+    x.font = 'bold 10px monospace';
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillText('FAA SITE', 44, 16);
+    x.restore();
+
+    btnAnim = requestAnimationFrame(frame);
+  }
+  frame();
+
+  // Update code textarea
+  // ★ CHANGE YOUR SITE URL BELOW ★
+  const siteUrl = 'https://faaa.space'; // ← CHANGE THIS
+  document.getElementById('btn-code-area').value =
+`<a href="https://faaa.space" target="_blank" style="display:inline-block;width:88px;height:31px;text-decoration:none;overflow:hidden;border:1px solid #a855f7;box-shadow:0 0 6px rgba(168,85,247,.4);animation:faa-glow 2s infinite alternate"><style>@keyframes faa-glow{from{box-shadow:0 0 4px rgba(168,85,247,.4)}to{box-shadow:0 0 10px rgba(244,114,182,.7),0 0 4px rgba(168,85,247,.5)}}@keyframes faa-shim{from{transform:translateX(-100%)}to{transform:translateX(200%)}}.faa-btn{position:relative;width:88px;height:31px;background:linear-gradient(135deg,#08001a,#18004a);display:flex;align-items:center;justify-content:center;overflow:hidden}.faa-btn::after{content:'';position:absolute;top:0;left:0;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(200,160,255,.15),transparent);animation:faa-shim 2.5s infinite}.faa-btn span{font-family:monospace;font-size:10px;font-weight:bold;background:linear-gradient(90deg,#c084fc,#f472b6,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;position:relative;z-index:1}.faa-star{color:#f472b6;font-size:9px;position:relative;z-index:1;animation:faa-glow 1.5s infinite alternate}</style><div class="faa-btn"><span class="faa-star">✦</span>&nbsp;<span>FAA SITE</span>&nbsp;<span class="faa-star">✦</span></div></a>`;
+}
+
+function copyBtnCode() {
+  const ta = document.getElementById('btn-code-area');
+  navigator.clipboard.writeText(ta.value).catch(()=>{ta.select();document.execCommand('copy')});
+  const btn = document.querySelector('.btn-copy');
+  btn.textContent = 'Copied!'; setTimeout(()=>btn.textContent='Copy Code',1500);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MUSIC PLAYER
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+const aud = new Audio();
+let tracks=[], curI=0, shuffleOn=false, repeatOn=false, shuffled=[];
+
+function syncMobAudio() {
+  // sync mobile UI with desktop player
+  const t = tracks[curI];
+  if (!t) return;
+  const mel = document.getElementById('mob-trk');
+  const ael = document.getElementById('mob-art2');
+  const artEl = document.getElementById('mob-art');
+  if(mel) mel.textContent = t.name;
+  if(ael) ael.textContent = t.artist;
+  if(artEl) artEl.innerHTML = t.art ? `<img src="${t.art}" alt="art">` : '<span>🎵</span>';
+}
+
+aud.addEventListener('timeupdate', () => {
+  const pct = aud.duration ? (aud.currentTime/aud.duration*100) : 0;
+  const cur = fmtT(aud.currentTime);
+  document.getElementById('mp-prog').style.width = pct+'%';
+  document.getElementById('mp-cur').textContent = cur;
+  const mp2=document.getElementById('mob-prog'), mc=document.getElementById('mob-cur');
+  if(mp2) mp2.style.width=pct+'%';
+  if(mc) mc.textContent=cur;
+});
+aud.addEventListener('loadedmetadata', () => {
+  const d = fmtT(aud.duration);
+  document.getElementById('mp-dur').textContent = d;
+  const md=document.getElementById('mob-dur'); if(md) md.textContent=d;
+});
+aud.addEventListener('ended', onEnded);
+
+function fmtT(s){if(!s||isNaN(s))return'0:00';return`${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`}
+
+function seekAudio(e) {
+  if(!aud.duration) return;
+  const bar = e.currentTarget.querySelector('.mp-bar');
+  const r = bar.getBoundingClientRect();
+  aud.currentTime = ((e.clientX-r.left)/r.width)*aud.duration;
+}
+
+function loadSongs(inp) {
+  const files = Array.from(inp.files);
+  if(!files.length) return;
+  let done=0; const arr=new Array(files.length);
+  files.forEach((file,i)=>{
+    const url=URL.createObjectURL(file);
+    function finish(name,artist,album,artUrl){
+      arr[i]={name,artist,album,art:artUrl,url};
+      if(++done===files.length){tracks=[...tracks,...arr.filter(Boolean)];buildShuffle();renderPL();if(tracks.length&&!aud.src)playTrack(0)}
+    }
+    if(typeof jsmediatags!=='undefined'){
+      jsmediatags.read(file,{
+        onSuccess(tag){
+          const t=tag.tags;let artUrl=null;
+          if(t.picture){const b=new Blob([new Uint8Array(t.picture.data)],{type:t.picture.format});artUrl=URL.createObjectURL(b)}
+          finish(t.title||file.name.replace(/\.\w+$/,''),t.artist||'Unknown',t.album||'',artUrl);
+        },
+        onError(){finish(file.name.replace(/\.\w+$/,''),'Unknown','',null)}
+      });
+    } else { finish(file.name.replace(/\.\w+$/,''),'Unknown','',null) }
+  });
+}
+
+function buildShuffle(){shuffled=[...Array(tracks.length).keys()].sort(()=>Math.random()-.5)}
+
+function renderPL(){
+  const tmpl = i => `<div class="mp-pi ${i===curI?'now':''}" onclick="playTrack(${i})"><span class="pl-n">${(i+1).toString().padStart(2,'0')}</span><span class="pl-t">${tracks[i].name}${tracks[i].artist&&tracks[i].artist!=='Unknown'?' — '+tracks[i].artist:''}</span></div>`;
+  const html = tracks.length ? tracks.map((_,i)=>tmpl(i)).join('') : '<div class="mp-empty">// no tracks loaded</div>';
+  document.getElementById('mp-pl').innerHTML = html;
+  const mpl=document.getElementById('mob-pl'); if(mpl) mpl.innerHTML=html.replace(/playTrack/g,'playTrack');
+}
+
+function playTrack(i){
+  if(i<0||i>=tracks.length) return;
+  curI=i; const t=tracks[i];
+  aud.src=t.url; aud.volume=parseFloat(document.getElementById('mp-vol').value); aud.play();
+  document.getElementById('mp-trk').textContent=t.name;
+  document.getElementById('mp-art2').textContent=t.artist;
+  document.getElementById('mp-alb').textContent=t.album;
+  document.getElementById('btn-play').textContent='⏸';
+  // update mini player
+  const mn = document.getElementById('tb-mini-name');
+  if (mn) mn.textContent = t.name + (t.artist && t.artist!=='Unknown' ? ' — '+t.artist : '');
+  const artEl=document.getElementById('mp-art');
+  artEl.innerHTML=t.art?`<img src="${t.art}" alt="album art">`:'<span style="font-size:32px">🎵</span>';
+  const mb=document.getElementById('mob-play-btn'); if(mb) mb.textContent='⏸';
+  syncMobAudio(); renderPL();
+}
+function togglePlay(){
+  if(!tracks.length) return;
+  if(aud.paused){aud.play();document.getElementById('btn-play').textContent='⏸';const mb=document.getElementById('mob-play-btn');if(mb)mb.textContent='⏸'}
+  else{aud.pause();document.getElementById('btn-play').textContent='▶';const mb=document.getElementById('mob-play-btn');if(mb)mb.textContent='▶'}
+}
+function stopAudio(){aud.pause();aud.src=''}
+function prevTrack(){if(tracks.length)playTrack((curI-1+tracks.length)%tracks.length)}
+function nextTrack(){if(!tracks.length)return;if(shuffleOn){const si=shuffled.indexOf(curI);playTrack(shuffled[(si+1)%shuffled.length])}else playTrack((curI+1)%tracks.length)}
+function onEnded(){if(repeatOn){aud.currentTime=0;aud.play()}else nextTrack()}
+function toggleShuffle(){shuffleOn=!shuffleOn;buildShuffle();document.getElementById('btn-shuf').classList.toggle('on',shuffleOn)}
+function toggleRepeat(){repeatOn=!repeatOn;document.getElementById('btn-rep').classList.toggle('on',repeatOn);const mr=document.getElementById('mob-rep');if(mr)mr.classList.toggle('on',repeatOn)}
+function setVol(v){aud.volume=parseFloat(v);const mv=document.getElementById('mob-vol');if(mv)mv.value=v}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LOAD AVATAR
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━
+function loadAvatar() {
+  if (!CONFIG.avatar) return;
+  const img = new Image();
+  img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+  img.onload = () => {
+    const el = document.getElementById('ab-avatar-el');
+    if (el) { el.innerHTML = ''; el.appendChild(img.cloneNode(true)); }
+    const mel = document.getElementById('mob-avatar-el');
+    if (mel) { mel.innerHTML = ''; mel.appendChild(img.cloneNode(true)); }
+  };
+  img.onerror = () => {
+    // image not found — keep the ✦ star fallback, do nothing
+  };
+  img.src = CONFIG.avatar;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// AUTO-SCAN GITHUB FOLDERS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const AUDIO_EXT = /\.(mp3|flac|ogg|wav|m4a|aac|opus)$/i;
+const IMAGE_EXT = /\.(jpg|jpeg|png|gif|webp|avif|bmp|svg)$/i;
+
+function ghApiUrl(folder) {
+  return `https://api.github.com/repos/${CONFIG.githubUser}/${CONFIG.githubRepo}/contents/${folder}`;
+}
+
+async function autoScanGitHub() {
+  // Scan Music/
+  try {
+    const res = await fetch(ghApiUrl('Music'));
+    if (res.ok) {
+      const files = await res.json();
+      const audioFiles = files.filter(f => f.type === 'file' && AUDIO_EXT.test(f.name));
+      if (audioFiles.length) {
+        loadSongsFromPaths(audioFiles.map(f => ({
+          path: 'Music/' + f.name,
+          url: f.download_url,
+          name: f.name
+        })));
+      } else {
+        document.getElementById('mp-pl').innerHTML = '<div class="mp-empty">// no audio files found in Music/</div>';
+      }
+    }
+  } catch(e) {
+    document.getElementById('mp-pl').innerHTML = '<div class="mp-empty">// could not load Music/ folder</div>';
+  }
+
+  // Scan pics/
+  try {
+    const res = await fetch(ghApiUrl('pics'));
+    if (res.ok) {
+      const files = await res.json();
+      const imgFiles = files.filter(f => f.type === 'file' && IMAGE_EXT.test(f.name));
+      if (imgFiles.length) loadGallery(imgFiles.map(f => f.name));
+    }
+  } catch(e) { /* gallery stays empty */ }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LOAD MUSIC FROM PATH LIST
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function loadSongsFromPaths(items) {
+  if (!items.length) return;
+  let done = 0;
+  const arr = new Array(items.length);
+  // Show loading state
+  document.getElementById('mp-pl').innerHTML = '<div class="mp-empty">// loading tracks...</div>';
+
+  items.forEach((item, i) => {
+    const url = item.url || item.path;
+    const displayName = item.name.replace(/\.\w+$/, '').replace(/[_-]/g, ' ');
+
+    function finish(name, artist, album, artUrl) {
+      arr[i] = { name, artist, album, art: artUrl, url };
+      if (++done === items.length) {
+        tracks = [...tracks, ...arr.filter(Boolean)];
+        buildShuffle(); renderPL();
+        // auto-play first track
+        if (tracks.length && !aud.src) playTrack(0);
+      }
+    }
+
+    fetch(url)
+      .then(r => r.blob())
+      .then(blob => {
+        if (typeof jsmediatags !== 'undefined') {
+          jsmediatags.read(blob, {
+            onSuccess(tag) {
+              const t = tag.tags; let artUrl = null;
+              if (t.picture) {
+                const b = new Blob([new Uint8Array(t.picture.data)], { type: t.picture.format });
+                artUrl = URL.createObjectURL(b);
+              }
+              finish(t.title || displayName, t.artist || '', t.album || '', artUrl);
+            },
+            onError() { finish(displayName, '', '', null); }
+          });
+        } else { finish(displayName, '', '', null); }
+      })
+      .catch(() => finish(displayName, '', '', null));
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LOAD GALLERY
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function loadGallery(files) {
+  const grid = document.getElementById('gallery-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  files.forEach(f => {
+    const div = document.createElement('div');
+    div.className = 'gal-item';
+    const img = document.createElement('img');
+    img.src = 'pics/' + f;
+    img.alt = f.replace(/\.\w+$/, '');
+    img.loading = 'lazy';
+    img.onerror = () => { div.innerHTML = ''; div.textContent = f.replace(/\.\w+$/,''); };
+    div.appendChild(img);
+    div.onclick = () => openLightbox('pics/' + f, f.replace(/\.\w+$/,''));
+    grid.appendChild(div);
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LIGHTBOX
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function openLightbox(src, caption) {
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lb-caption').textContent = caption;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lb-img').src = '';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+
 </script>
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <div id="lb-inner">
+    <button id="lb-close" onclick="closeLightbox()">✕</button>
+    <img id="lb-img" src="" alt="">
+    <div id="lb-caption"></div>
+  </div>
+</div>
+
 </body>
 </html>
