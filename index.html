@@ -833,6 +833,38 @@ body {
 /* Gallery */
 
 /* ═══════════════════════════════
+   VISITOR COUNTER
+   ═══════════════════════════════ */
+.visitor-counter {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--a1);
+  padding: 4px 10px;
+  border: 1px solid rgba(192,132,252,.2);
+  background: rgba(15,8,35,.7);
+  letter-spacing: 2px;
+  margin-top: 8px;
+}
+.visitor-counter .vc-num {
+  color: var(--a2);
+  font-size: 13px;
+  letter-spacing: 3px;
+  min-width: 52px;
+  text-align: center;
+}
+.visitor-counter .vc-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--a1);
+  animation: vc-pulse 2s infinite;
+  flex-shrink: 0;
+}
+@keyframes vc-pulse {
+  0%,100% { opacity:1; box-shadow:0 0 4px var(--a1); }
+  50%      { opacity:.3; box-shadow:none; }
+}
+
+/* ═══════════════════════════════
    DISCORD STATUS
    ═══════════════════════════════ */
 .dc-status-box {
@@ -1033,7 +1065,7 @@ body {
       <button class="l-btn" onclick="doLogin()">Log In</button>
       <!-- ★ زر "نسخة الجوال" — انسخه والصقه أي مكان في صفحتك ★ -->
       <div class="l-note">best viewed on desktop · 1920×1080<br>
-        <a href="https://faaa.space/old/" target="_blank" id="mob-ver-btn" class="mob-btn">OLD SITE</a>
+        <a href="https://faaa.space/old/" target="_blank" id="mob-ver-btn" class="mob-btn">Mobile version. (And it's old.)</a>
         <style>
         #mob-ver-btn {
           display: inline-block;
@@ -1058,6 +1090,13 @@ body {
         
         
         <span class="blink">✦✦✦✦✦</span></div>
+      <div style="text-align:center;margin-top:8px">
+        <div class="visitor-counter" id="login-counter">
+          <span class="vc-dot"></span>
+          <span>visitors</span>
+          <span class="vc-num" id="login-vc-num">——</span>
+        </div>
+      </div>
       
 
 
@@ -1286,6 +1325,13 @@ body {
         <span class="w-badge">HTML · CSS · JS</span>
         <span class="w-badge">INDIE WEB</span>
         <span class="w-badge">hmmmmm</span>
+      </div>
+      <div style="margin-top:10px">
+        <div class="visitor-counter">
+          <span class="vc-dot"></span>
+          <span>visitors</span>
+          <span class="vc-num" id="welcome-vc-num">——</span>
+        </div>
       </div>
     </div></div>
   </div>
@@ -2483,6 +2529,51 @@ async function mobBlogDelete(id) {
   } catch(e) {}
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// VISITOR COUNTER
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function fmtCount(n) {
+  return String(n).padStart(5, '0');
+}
+
+function setCounterDisplay(n) {
+  const fmt = fmtCount(n);
+  const a = document.getElementById('login-vc-num');
+  const b = document.getElementById('welcome-vc-num');
+  if (a) a.textContent = fmt;
+  if (b) b.textContent = fmt;
+}
+
+async function registerVisit() {
+  try {
+    // Insert a new visit row
+    await nhostQuery(`
+      mutation {
+        insert_visitors_one(object: {page: "home"}) { id }
+      }
+    `);
+  } catch(e) { /* silent */ }
+}
+
+async function fetchVisitorCount() {
+  try {
+    const res = await nhostQuery(`
+      query {
+        visitors { id }
+      }
+    `);
+    const count = res?.data?.visitors?.length ?? 0;
+    setCounterDisplay(count);
+  } catch(e) {
+    setCounterDisplay('????');
+  }
+}
+
+// On page load: register + fetch count right away
+(async () => {
+  await registerVisit();
+  await fetchVisitorCount();
+})();
 
 
 </script>
