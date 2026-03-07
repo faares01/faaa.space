@@ -2920,10 +2920,13 @@ async function mobSigStartChat(chatId,partnerName){
   mobSigEl('mob-sig-chat-with').textContent='chatting with  '+partnerName+' ✦';
   mobSigEl('mob-sig-messages').innerHTML='';
   mobSigShow('chat');
-  await nhostQuery(
-    `mutation($c:String!,$m:String!){insert_signal_messages_one(object:{chat_id:$c,sender_name:"system",content:$m}){id}}`,
-    {c:chatId,m:SIG_RULES}
-  );
+  const _mChk = await nhostQuery(`query($c:String!){signal_messages(where:{chat_id:{_eq:$c}},limit:1){id}}`,{c:chatId});
+  if(!(_mChk?.data?.signal_messages?.length)){
+    await nhostQuery(
+      `mutation($c:String!,$m:String!){insert_signal_messages_one(object:{chat_id:$c,sender_name:"system",content:$m}){id}}`,
+      {c:chatId,m:SIG_RULES}
+    );
+  }
   mobSig.chatPollTimer=setInterval(mobSigPollChat,1500);
   mobSigPollChat();
   mobSigEl('mob-sig-msg').addEventListener('keydown',e=>{if(e.key==='Enter')mobSigSendMsg();});
@@ -3455,11 +3458,14 @@ async function sigStartChat(chatId, partnerName) {
   sigEl('sig-chat-with').textContent = `chatting with  ${partnerName} ✦`;
   sigEl('sig-messages').innerHTML = '';
   sigShow('chat');
-  // send rules as system message
-  await nhostQuery(
-    `mutation($c:String!,$m:String!){insert_signal_messages_one(object:{chat_id:$c,sender_name:"system",content:$m}){id}}`,
-    {c:chatId, m:SIG_RULES}
-  );
+  // send rules only once (check if chat already has messages)
+  const _chkMsgs = await nhostQuery(`query($c:String!){signal_messages(where:{chat_id:{_eq:$c}},limit:1){id}}`,{c:chatId});
+  if(!(_chkMsgs?.data?.signal_messages?.length)){
+    await nhostQuery(
+      `mutation($c:String!,$m:String!){insert_signal_messages_one(object:{chat_id:$c,sender_name:"system",content:$m}){id}}`,
+      {c:chatId, m:SIG_RULES}
+    );
+  }
   sigState.chatPollTimer = setInterval(sigPollChat, 1500);
   sigPollChat();
   sigEl('sig-msg-input').addEventListener('keydown', e => { if(e.key==='Enter') sigSendMsg(); });
