@@ -868,21 +868,23 @@ body {
    SIGNAL APP
    ═══════════════════════════════════════ */
 #signal-inner {
-  display:flex; flex-direction:column; height:100%;
+  display:flex; flex-direction:column;
+  height:100%; overflow:hidden;
   font-family:'Tahoma',sans-serif;
 }
 
 /* ── Join screen ── */
 #sig-join {
   flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:center; gap:14px; padding:20px;
+  align-items:center; justify-content:center; gap:16px; padding:30px 20px 20px;
 }
 .sig-logo {
-  font-family:'VT323',monospace; font-size:36px; letter-spacing:4px;
-  background:linear-gradient(135deg,var(--a1),var(--a2));
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  font-family:'VT323',monospace; font-size:52px; letter-spacing:8px;
+  color:#e0d0ff;
+  text-shadow: 0 0 20px rgba(192,132,252,.6), 0 0 40px rgba(192,132,252,.2);
+  line-height:1;
 }
-.sig-logo-sub { font-size:9px; color:var(--dim); letter-spacing:2px; font-family:'Share Tech Mono',monospace; margin-top:-10px; }
+.sig-logo-sub { font-size:9px; color:var(--dim); letter-spacing:3px; font-family:'Share Tech Mono',monospace; }
 #sig-name-input {
   width:200px; background:rgba(15,8,35,.9);
   border:1px solid rgba(60,35,100,.5); color:var(--text);
@@ -907,7 +909,7 @@ body {
   background:rgba(15,8,35,.5); display:flex; align-items:center; gap:8px; flex-shrink:0;
 }
 .sig-header-name { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--a1); flex:1; }
-.sig-online-dot { width:8px; height:8px; border-radius:50%; background:#3ba55c; box-shadow:0 0 6px #3ba55c; flex-shrink:0; animation:vc-pulse 2s infinite; }
+.sig-online-dot { width:7px; height:7px; border-radius:50%; background:#3ba55c; flex-shrink:0; animation:vc-pulse 3s infinite; }
 .sig-online-count { font-size:9px; color:var(--dim); font-family:'Share Tech Mono',monospace; }
 .sig-leave-btn {
   font-size:9px; padding:2px 8px; cursor:pointer;
@@ -916,23 +918,27 @@ body {
 }
 .sig-leave-btn:hover { background:rgba(220,50,70,.3); }
 
-.sig-lobby-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; gap:12px; }
+.sig-lobby-body {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding:20px; gap:20px;
+}
 .sig-status-msg {
-  font-family:'Share Tech Mono',monospace; font-size:11px;
-  color:var(--dim); text-align:center; letter-spacing:1px; line-height:1.8;
+  font-family:'Share Tech Mono',monospace; font-size:10px;
+  color:var(--dim); text-align:center; letter-spacing:1px; line-height:2;
+  max-width:240px;
 }
 .sig-send-btn {
-  padding:8px 24px;
-  background:linear-gradient(180deg,#5a2ab0,#3a1278);
-  border:1px solid rgba(140,80,255,.4); color:#e0d0ff;
-  font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:2px;
-  cursor:pointer; transition:all .15s; animation:sig-glow 2s infinite alternate;
+  padding:8px 28px;
+  background:rgba(30,15,60,.6);
+  border:1px solid rgba(140,80,255,.35); color:var(--a1);
+  font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:3px;
+  cursor:pointer; transition:all .2s;
 }
-.sig-send-btn:hover { background:linear-gradient(180deg,#7a3adc,#5a1a9a); }
-.sig-send-btn:disabled { opacity:.4; cursor:default; animation:none; }
+.sig-send-btn:hover { background:rgba(90,42,176,.3); border-color:var(--a1); color:#fff; }
+.sig-send-btn:disabled { opacity:.3; cursor:default; }
 @keyframes sig-glow {
-  from { box-shadow:0 0 4px rgba(192,132,252,.2); }
-  to   { box-shadow:0 0 16px rgba(192,132,252,.5); }
+  from { box-shadow:0 0 4px rgba(192,132,252,.15); }
+  to   { box-shadow:0 0 12px rgba(192,132,252,.35); }
 }
 
 /* ── Incoming signal ── */
@@ -966,7 +972,7 @@ body {
 .sig-reject-btn:hover { background:linear-gradient(180deg,#8a1e30,#4f0f1c); }
 
 /* ── Chat screen ── */
-#sig-chat { flex:1; display:none; flex-direction:column; }
+#sig-chat { display:none; flex-direction:column; height:100%; overflow:hidden; }
 .sig-chat-header {
   padding:6px 12px; border-bottom:1px solid rgba(60,35,100,.4);
   background:rgba(15,8,35,.5); display:flex; align-items:center; gap:8px; flex-shrink:0;
@@ -975,10 +981,12 @@ body {
 .sig-chat-end-btn {
   font-size:9px; padding:2px 8px; cursor:pointer;
   background:rgba(180,40,60,.15); border:1px solid rgba(200,50,70,.3); color:#f87171;
-  font-family:'Tahoma',sans-serif;
+  font-family:'Tahoma',sans-serif; flex-shrink:0;
 }
 .sig-messages {
-  flex:1; overflow-y:auto; padding:10px 12px; display:flex; flex-direction:column; gap:6px;
+  flex:1; overflow-y:auto; padding:10px 12px;
+  display:flex; flex-direction:column; gap:6px;
+  min-height:0; /* critical for flex scroll fix */
 }
 .sig-messages::-webkit-scrollbar { width:4px; }
 .sig-messages::-webkit-scrollbar-track { background:rgba(10,5,25,.5); }
@@ -1014,6 +1022,50 @@ body {
   font-size:14px; transition:background .1s;
 }
 .sig-msg-send:hover { background:linear-gradient(180deg,#7a3adc,#5a1a9a); }
+
+/* ═══════════════════════════════════════
+   STATUS WINDOW
+   ═══════════════════════════════════════ */
+#status-inner { padding:14px; display:flex; flex-direction:column; gap:12px; height:100%; overflow-y:auto; }
+#status-inner::-webkit-scrollbar { width:4px; }
+#status-inner::-webkit-scrollbar-track { background:rgba(10,5,25,.5); }
+#status-inner::-webkit-scrollbar-thumb { background:rgba(80,45,140,.5); }
+.st-profile { display:flex; gap:12px; align-items:center; padding:12px; background:rgba(88,101,242,.06); border:1px solid rgba(88,101,242,.2); }
+.st-avatar-wrap { position:relative; flex-shrink:0; }
+.st-avatar { width:64px; height:64px; border-radius:50%; border:2px solid rgba(88,101,242,.4); object-fit:cover; display:block; }
+.st-avatar-fallback { width:64px; height:64px; border-radius:50%; border:2px solid rgba(88,101,242,.4); background:linear-gradient(135deg,#3a1878,#5865f2); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0; }
+.st-status-dot { position:absolute; bottom:2px; right:2px; width:14px; height:14px; border-radius:50%; border:2.5px solid var(--win-bg); background:#747f8d; }
+.st-status-dot.online { background:#3ba55c; } .st-status-dot.idle { background:#faa61a; } .st-status-dot.dnd { background:#ed4245; }
+.st-profile-info { flex:1; min-width:0; }
+.st-display-name { font-family:'VT323',monospace; font-size:22px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.1; }
+.st-username { font-size:9px; color:var(--dim); font-family:'Share Tech Mono',monospace; margin-bottom:4px; }
+.st-status-badge { display:inline-flex; align-items:center; gap:5px; font-size:9px; padding:2px 8px; border-radius:2px; font-family:'Tahoma',sans-serif; }
+.st-status-badge.online  { background:rgba(59,165,92,.15);  color:#3ba55c; border:1px solid rgba(59,165,92,.3); }
+.st-status-badge.idle    { background:rgba(250,166,26,.15);  color:#faa61a; border:1px solid rgba(250,166,26,.3); }
+.st-status-badge.dnd     { background:rgba(237,66,69,.15);   color:#ed4245; border:1px solid rgba(237,66,69,.3); }
+.st-status-badge.offline { background:rgba(116,127,141,.1);  color:#747f8d; border:1px solid rgba(116,127,141,.2); }
+.st-dot-sm { width:7px; height:7px; border-radius:50%; display:inline-block; }
+.st-dot-sm.online { background:#3ba55c; } .st-dot-sm.idle { background:#faa61a; } .st-dot-sm.dnd { background:#ed4245; } .st-dot-sm.offline { background:#747f8d; }
+.st-sec-label { font-family:'Share Tech Mono',monospace; font-size:8px; color:var(--dim); letter-spacing:2px; text-transform:uppercase; margin-bottom:4px; }
+.st-custom-status { padding:8px 10px; background:rgba(15,8,35,.6); border:1px solid rgba(60,35,100,.35); font-size:10px; color:var(--text); font-family:'Share Tech Mono',monospace; display:none; }
+.st-activity-card { padding:10px 12px; background:rgba(15,8,35,.6); border:1px solid rgba(60,35,100,.35); display:flex; gap:10px; align-items:flex-start; }
+.st-act-icon { width:48px; height:48px; flex-shrink:0; object-fit:cover; border:1px solid rgba(60,35,100,.4); background:rgba(30,15,60,.5); display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--dim); overflow:hidden; }
+.st-act-icon img { width:100%; height:100%; object-fit:cover; display:block; }
+.st-act-info { flex:1; min-width:0; }
+.st-act-type { font-size:8px; color:var(--dim); letter-spacing:1px; margin-bottom:2px; font-family:'Share Tech Mono',monospace; }
+.st-act-name { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--a1); font-weight:bold; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.st-act-detail { font-size:9px; color:var(--dim); line-height:1.7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.st-spotify-card { padding:10px 12px; background:rgba(29,185,84,.05); border:1px solid rgba(29,185,84,.2); display:flex; gap:10px; align-items:flex-start; }
+.st-sp-art { width:52px; height:52px; flex-shrink:0; border:1px solid rgba(29,185,84,.2); background:rgba(15,30,15,.5); display:flex; align-items:center; justify-content:center; font-size:20px; overflow:hidden; }
+.st-sp-art img { width:100%; height:100%; object-fit:cover; display:block; }
+.st-sp-info { flex:1; min-width:0; }
+.st-sp-track { font-family:'Share Tech Mono',monospace; font-size:11px; color:#1db954; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.st-sp-artist { font-size:9px; color:var(--dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.st-sp-album  { font-size:8px; color:rgba(29,185,84,.5); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.st-sp-bar { height:2px; background:rgba(29,185,84,.15); border-radius:1px; margin-top:6px; overflow:hidden; }
+.st-sp-prog { height:100%; background:#1db954; transition:width .5s linear; }
+.st-updated { font-size:8px; color:rgba(80,60,120,.5); font-family:'Share Tech Mono',monospace; text-align:right; }
+.st-empty { font-size:9px; color:rgba(80,60,120,.5); font-family:'Share Tech Mono',monospace; text-align:center; padding:8px; letter-spacing:1px; }
 
 .dc-status-box {
   display:flex; align-items:center; gap:8px;
@@ -1213,7 +1265,7 @@ body {
       <button class="l-btn" onclick="doLogin()">Log In</button>
       <!-- ★ زر "نسخة الجوال" — انسخه والصقه أي مكان في صفحتك ★ -->
       <div class="l-note">best viewed on desktop · 1920×1080<br>
-        <a href="https://faaa.space/old/" target="_blank" id="mob-ver-btn" class="mob-btn">OLD SITE</a>
+        <a href="https://faaa.space/old/" target="_blank" id="mob-ver-btn" class="mob-btn">Mobile version. (And it's old.)</a>
         <style>
         #mob-ver-btn {
           display: inline-block;
@@ -1276,6 +1328,9 @@ body {
     </div>
     <div class="dicon" onclick="openWin('signal')">
       <div class="di">📡</div><div class="dl">Signal</div>
+    </div>
+    <div class="dicon" onclick="openWin('status')">
+      <div class="di">🟢</div><div class="dl">Status</div>
     </div>
   </div>
 
@@ -1554,9 +1609,9 @@ body {
 
         <!-- JOIN SCREEN -->
         <div id="sig-join">
-          <div>
+          <div style="text-align:center;margin-bottom:8px">
             <div class="sig-logo">SIGNAL</div>
-            <div class="sig-logo-sub">// anonymous chat · connect with someone</div>
+            <div class="sig-logo-sub">// anonymous · connect with someone</div>
           </div>
           <input type="text" id="sig-name-input" placeholder="your name..." maxlength="20" autocomplete="off">
           <button class="sig-join-btn" onclick="sigJoin()">CONNECT ✦</button>
@@ -1605,6 +1660,51 @@ body {
     </div>
   </div>
 
+  <!-- ─────── STATUS ─────── -->
+  <div class="win" id="win-status" style="width:320px;height:480px;top:70px;left:350px">
+    <div class="win-tb" onmousedown="dragStart(event,'win-status')">
+      <div class="win-tl"><span class="wico">🟢</span><span class="wtitle">Status</span></div>
+      <div class="win-btns">
+        <button class="wbtn bm" onclick="minWin('status')">−</button>
+        <button class="wbtn bx" onclick="maxWin('win-status')">□</button>
+        <button class="wbtn bc" onclick="closeWin('status')">✕</button>
+      </div>
+    </div>
+    <div class="win-menu"><span>View</span><span>Refresh</span></div>
+    <div class="win-body" style="padding:0;overflow:hidden">
+      <div id="status-inner">
+        <div id="st-loading" class="st-empty">// fetching discord status...</div>
+
+        <!-- Profile -->
+        <div id="st-profile-card" class="st-profile" style="display:none">
+          <div class="st-avatar-wrap">
+            <div id="st-avatar-el" class="st-avatar-fallback">⚙</div>
+            <div class="st-status-dot" id="st-dot"></div>
+          </div>
+          <div class="st-profile-info">
+            <div class="st-display-name" id="st-display-name">—</div>
+            <div class="st-username" id="st-username">—</div>
+            <div class="st-status-badge offline" id="st-badge">
+              <span class="st-dot-sm offline" id="st-badge-dot"></span>
+              <span id="st-badge-text">Offline</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Status -->
+        <div id="st-custom-wrap" class="st-custom-status">
+          <div class="st-sec-label">// custom status</div>
+          <div id="st-custom-text">—</div>
+        </div>
+
+        <!-- Activities -->
+        <div id="st-activities"></div>
+
+        <div class="st-updated" id="st-updated"></div>
+      </div>
+    </div>
+  </div>
+
 </div><!-- end desktop -->
 
 <!-- ══════════ TASKBAR ══════════ -->
@@ -1618,6 +1718,7 @@ body {
   <div class="tb-item" id="tb-gallery" onclick="tbClick('gallery')">🖼️ Gallery</div>
   <div class="tb-item" id="tb-blog"    onclick="tbClick('blog')">📝 Blog</div>
   <div class="tb-item" id="tb-signal"  onclick="tbClick('signal')">📡 Signal</div>
+  <div class="tb-item" id="tb-status"  onclick="tbClick('status')">🟢 Status</div>
   <div style="flex:1"></div>
   <div id="clock"></div>
   <div class="tb-sep"></div>
@@ -1638,6 +1739,7 @@ body {
   <div class="sm-item" onclick="openWin('gallery');toggleStart()"><span class="si">🖼️</span>Gallery</div>
   <div class="sm-item" onclick="openWin('blog');toggleStart()"><span class="si">📝</span>Blog</div>
   <div class="sm-item" onclick="openWin('signal');toggleStart()"><span class="si">📡</span>Signal</div>
+  <div class="sm-item" onclick="openWin('status');toggleStart()"><span class="si">🟢</span>Status</div>
   <div class="sm-divider"></div>
   <div class="sm-item" onclick="window.open('https://faaa.space/old','_blank')"><span class="si">🕹️</span>Old Site</div>
   <div class="sm-divider"></div>
@@ -1662,6 +1764,8 @@ body {
       <div class="mob-tab" onclick="mobTab('music',this)">🎵 Music</div>
       <div class="mob-tab" onclick="mobTab('chat',this)">💬 Chat</div>
       <div class="mob-tab" onclick="mobTab('blog',this)">📝 Blog</div>
+      <div class="mob-tab" onclick="mobTab('signal',this)">📡 Signal</div>
+      <div class="mob-tab" onclick="mobTab('mstatus',this)">🟢 Status</div>
       <div class="mob-tab" onclick="mobTab('welcome',this)">🌙 Welcome</div>
       <div class="mob-tab" onclick="mobTab('buttons',this)">🔗 Buttons</div>
     </div>
@@ -1795,7 +1899,99 @@ body {
       </div>
     </div>
 
-    <!-- ── BUTTONS TAB ── -->
+    <!-- ── SIGNAL TAB ── -->
+    <div class="mob-section" id="mob-signal">
+      <div id="mob-signal-inner" style="display:flex;flex-direction:column;gap:14px">
+
+        <!-- JOIN -->
+        <div id="mob-sig-join" style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px 0">
+          <div style="text-align:center">
+            <div class="sig-logo">SIGNAL</div>
+            <div class="sig-logo-sub">// anonymous · connect with someone</div>
+          </div>
+          <input type="text" id="mob-sig-name" placeholder="your name..." maxlength="20" autocomplete="off"
+            style="width:200px;background:rgba(15,8,35,.9);border:1px solid rgba(60,35,100,.5);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;padding:8px 12px;outline:none;text-align:center;letter-spacing:2px">
+          <button class="sig-join-btn" onclick="mobSigJoin()">CONNECT ✦</button>
+        </div>
+
+        <!-- LOBBY -->
+        <div id="mob-sig-lobby" style="display:none;flex-direction:column;gap:12px">
+          <div class="sig-header">
+            <div class="sig-online-dot"></div>
+            <div class="sig-header-name" id="mob-sig-myname">—</div>
+            <div class="sig-online-count" id="mob-sig-count">0 online</div>
+            <button class="sig-leave-btn" onclick="mobSigLeave()">disconnect</button>
+          </div>
+          <div style="text-align:center;padding:20px 0">
+            <div class="sig-status-msg" id="mob-sig-status">scanning for signals...</div>
+            <br>
+            <button class="sig-send-btn" id="mob-sig-send-btn" onclick="mobSigSend()" style="margin-top:8px">⟶ SEND SIGNAL</button>
+          </div>
+          <!-- incoming overlay (inline for mobile) -->
+          <div id="mob-sig-incoming" style="display:none;background:rgba(5,2,15,.95);border:1px solid rgba(192,132,252,.3);padding:20px;text-align:center;flex-direction:column;align-items:center;gap:12px">
+            <div class="sig-incoming-title">⚡ INCOMING SIGNAL</div>
+            <div class="sig-from-name" id="mob-sig-from">—</div>
+            <div style="font-size:9px;color:var(--dim);font-family:'Share Tech Mono',monospace">wants to connect with you</div>
+            <div class="sig-inc-btns">
+              <button class="sig-accept-btn" onclick="mobSigAccept()">✓ ACCEPT</button>
+              <button class="sig-reject-btn" onclick="mobSigReject()">✕ REJECT</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHAT -->
+        <div id="mob-sig-chat" style="display:none;flex-direction:column;gap:0;border:1px solid rgba(60,35,100,.4)">
+          <div class="sig-chat-header">
+            <div class="sig-online-dot"></div>
+            <div class="sig-chat-with" id="mob-sig-chat-with">chatting with —</div>
+            <button class="sig-chat-end-btn" onclick="mobSigEndChat()">end chat</button>
+          </div>
+          <div class="sig-messages" id="mob-sig-messages" style="min-height:200px;max-height:280px"></div>
+          <div class="sig-chat-input-row">
+            <input type="text" id="mob-sig-msg" placeholder="type something..." maxlength="300" autocomplete="off"
+              style="flex:1;background:rgba(10,5,25,.9);border:none;outline:none;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:10px;padding:8px 10px">
+            <button class="sig-msg-send" onclick="mobSigSendMsg()">➤</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── STATUS TAB ── -->
+    <div class="mob-section" id="mob-mstatus">
+      <div id="mob-status-inner" style="display:flex;flex-direction:column;gap:12px">
+        <div id="mob-st-loading" class="st-empty">// fetching discord status...</div>
+
+        <!-- profile -->
+        <div id="mob-st-profile" class="st-profile" style="display:none">
+          <div class="st-avatar-wrap">
+            <div id="mob-st-avatar" class="st-avatar-fallback">⚙</div>
+            <div class="st-status-dot" id="mob-st-dot"></div>
+          </div>
+          <div class="st-profile-info">
+            <div class="st-display-name" id="mob-st-name">—</div>
+            <div class="st-username" id="mob-st-user">—</div>
+            <div class="st-status-badge offline" id="mob-st-badge">
+              <span class="st-dot-sm offline" id="mob-st-bdot"></span>
+              <span id="mob-st-btxt">Offline</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- custom status -->
+        <div id="mob-st-custom" class="st-custom-status">
+          <div class="st-sec-label">// custom status</div>
+          <div id="mob-st-custom-text">—</div>
+        </div>
+
+        <!-- activities -->
+        <div id="mob-st-activities"></div>
+
+        <div class="st-updated" id="mob-st-updated"></div>
+      </div>
+    </div>
+
+
     <div class="mob-section" id="mob-buttons">
       <div class="mob-sec"><h3>Cool Sites</h3>
         <div class="btns-grid">
@@ -2047,7 +2243,7 @@ updateClock(); setInterval(updateClock,10000);
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━
 // WINDOW MANAGEMENT
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━
-const WINS = ['about','music','chat','welcome','gallery','blog','signal'];
+const WINS = ['about','music','chat','welcome','gallery','blog','signal','status'];
 const wSt={}, wPv={}, wMx={};
 WINS.forEach(k=>{wSt[k]=false;wMx[k]=false});
 
@@ -2441,73 +2637,298 @@ async function fetchDiscordStatus() {
     const d = j.data;
     const status = d.discord_status || 'offline';
     const user   = d.discord_user;
-    const act    = d.activities?.find(a => a.type === 0);
-    const customStatus = d.activities?.find(a => a.type === 4);
+    const acts   = d.activities || [];
+    const customStatus = acts.find(a => a.type === 4);
+    const gameAct      = acts.find(a => a.type === 0);
+    const streamAct    = acts.find(a => a.type === 1);
+    const spotifyAct   = d.spotify;
+    const watchAct     = acts.find(a => a.type === 3);
     const statusLabels = { online:'Online', idle:'Idle', dnd:'Do Not Disturb', offline:'Offline' };
     const stateText    = customStatus?.state || statusLabels[status] || status;
-    const actText      = act ? `▶ ${act.name}` : '';
+    const actText      = gameAct ? `▶ ${gameAct.name}` : '';
 
-    // ── Avatar → About Me + both Discord widgets ──
+    // avatar
+    let avatarUrl = null;
     if (user?.avatar) {
-      const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
+      avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${user.avatar.startsWith('a_')?'gif':'png'}?size=128`;
+    }
 
-      // Desktop Discord widget
+    // about me + small widgets
+    if (avatarUrl) {
       const avEl = document.getElementById('dc-avatar-el');
       if (avEl) avEl.innerHTML = `<img class="dc-avatar" src="${avatarUrl}" alt="av" onerror="this.parentElement.textContent='⚙'">`;
-
-      // Desktop About Me avatar
       const abAvEl = document.getElementById('ab-avatar-el');
-      if (abAvEl) {
-        const img = new Image();
-        img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-        img.src = avatarUrl;
-        img.onload = () => { abAvEl.innerHTML = ''; abAvEl.appendChild(img); };
-      }
-
-      // Mobile avatar (top profile)
+      if (abAvEl) { const img = new Image(); img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;'; img.src=avatarUrl; img.onload=()=>{abAvEl.innerHTML='';abAvEl.appendChild(img);}; }
       const mobAvEl = document.getElementById('mob-avatar-el');
-      if (mobAvEl) {
-        const img2 = new Image();
-        img2.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;';
-        img2.src = avatarUrl;
-        img2.onload = () => { mobAvEl.innerHTML = ''; mobAvEl.appendChild(img2); };
-      }
-
-      // Mobile Discord widget avatar
+      if (mobAvEl) { const i2=new Image(); i2.style.cssText='width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;'; i2.src=avatarUrl; i2.onload=()=>{mobAvEl.innerHTML='';mobAvEl.appendChild(i2);}; }
       const mobDcAv = document.getElementById('mob-dc-avatar');
       if (mobDcAv) mobDcAv.innerHTML = `<img class="dc-avatar" src="${avatarUrl}" alt="av" onerror="this.parentElement.textContent='⚙'">`;
     }
+    const dot = document.getElementById('dc-dot'); if(dot) dot.className=`dc-dot ${status}`;
+    const dcName=document.getElementById('dc-name'); if(dcName) dcName.textContent=user?.display_name||user?.username||'faares0';
+    const dcState=document.getElementById('dc-state'); if(dcState) dcState.textContent=stateText;
+    const dcAct=document.getElementById('dc-activity'); if(dcAct) dcAct.textContent=actText;
+    const badge=document.getElementById('dc-badge'); if(badge){badge.className=`dc-badge ${status}`;badge.textContent=statusLabels[status]||status;}
+    const mDot=document.getElementById('mob-dc-dot'); if(mDot) mDot.className=`dc-dot ${status}`;
+    const mName=document.getElementById('mob-dc-name'); if(mName) mName.textContent=user?.display_name||user?.username||'faares0';
+    const mState=document.getElementById('mob-dc-state'); if(mState) mState.textContent=stateText;
+    const mAct=document.getElementById('mob-dc-activity'); if(mAct) mAct.textContent=actText;
+    const mBadge=document.getElementById('mob-dc-badge'); if(mBadge){mBadge.className=`dc-badge ${status}`;mBadge.textContent=statusLabels[status]||status;}
 
-    // ── Desktop Discord widget ──
-    const dot = document.getElementById('dc-dot');
-    if (dot) dot.className = `dc-dot ${status}`;
-    const dcName = document.getElementById('dc-name');
-    if (dcName) dcName.textContent = user?.display_name || user?.username || 'faares0';
-    const dcState = document.getElementById('dc-state');
-    if (dcState) dcState.textContent = stateText;
-    const dcAct = document.getElementById('dc-activity');
-    if (dcAct) dcAct.textContent = actText;
-    const badge = document.getElementById('dc-badge');
-    if (badge) { badge.className = `dc-badge ${status}`; badge.textContent = statusLabels[status] || status; }
+    // ── STATUS WINDOW ──
+    const stLoading = document.getElementById('st-loading');
+    if (stLoading) stLoading.style.display = 'none';
+    const stCard = document.getElementById('st-profile-card');
+    if (stCard) stCard.style.display = 'flex';
+    const stAv = document.getElementById('st-avatar-el');
+    if (stAv && avatarUrl) stAv.innerHTML = `<img class="st-avatar" src="${avatarUrl}" alt="av" onerror="this.parentElement.textContent='⚙'">`;
+    const stDN = document.getElementById('st-display-name'); if(stDN) stDN.textContent = user?.display_name||user?.username||'faares0';
+    const stUN = document.getElementById('st-username');     if(stUN) stUN.textContent = '@'+(user?.username||'faares0');
+    const stDot = document.getElementById('st-dot'); if(stDot) stDot.className=`st-status-dot ${status}`;
+    const stBadge=document.getElementById('st-badge'); if(stBadge) stBadge.className=`st-status-badge ${status}`;
+    const stBDot=document.getElementById('st-badge-dot'); if(stBDot) stBDot.className=`st-dot-sm ${status}`;
+    const stBTxt=document.getElementById('st-badge-text'); if(stBTxt) stBTxt.textContent=statusLabels[status]||status;
 
-    // ── Mobile Discord widget ──
-    const mDot = document.getElementById('mob-dc-dot');
-    if (mDot) mDot.className = `dc-dot ${status}`;
-    const mName = document.getElementById('mob-dc-name');
-    if (mName) mName.textContent = user?.display_name || user?.username || 'faares0';
-    const mState = document.getElementById('mob-dc-state');
-    if (mState) mState.textContent = stateText;
-    const mAct = document.getElementById('mob-dc-activity');
-    if (mAct) mAct.textContent = actText;
-    const mBadge = document.getElementById('mob-dc-badge');
-    if (mBadge) { mBadge.className = `dc-badge ${status}`; mBadge.textContent = statusLabels[status] || status; }
+    const stCW=document.getElementById('st-custom-wrap'); const stCT=document.getElementById('st-custom-text');
+    if (customStatus?.state) {
+      if(stCW) stCW.style.display='block';
+      if(stCT) stCT.textContent=(customStatus.emoji?.name?customStatus.emoji.name+'  ':'')+customStatus.state;
+    } else { if(stCW) stCW.style.display='none'; }
+
+    const stActs = document.getElementById('st-activities');
+    if (stActs) {
+      let html = '';
+      if (spotifyAct) {
+        const prog = spotifyAct.timestamps
+          ? Math.min(100,((Date.now()-spotifyAct.timestamps.start)/(spotifyAct.timestamps.end-spotifyAct.timestamps.start))*100) : 0;
+        html += `<div><div class="st-sec-label">// listening to spotify</div>
+          <div class="st-spotify-card">
+            <div class="st-sp-art">${spotifyAct.album_art_url?`<img src="${spotifyAct.album_art_url}" alt="art">`:'🎵'}</div>
+            <div class="st-sp-info">
+              <div class="st-sp-track">${escHtml(spotifyAct.song||'—')}</div>
+              <div class="st-sp-artist">${escHtml(spotifyAct.artist||'—')}</div>
+              <div class="st-sp-album">${escHtml(spotifyAct.album||'')}</div>
+              <div class="st-sp-bar"><div class="st-sp-prog" style="width:${prog.toFixed(1)}%"></div></div>
+            </div>
+          </div></div>`;
+      }
+      if (gameAct) {
+        const gIcon = gameAct.assets?.large_image
+          ? `https://cdn.discordapp.com/app-assets/${gameAct.application_id}/${gameAct.assets.large_image}.png` : null;
+        html += `<div><div class="st-sec-label">// playing</div>
+          <div class="st-activity-card">
+            <div class="st-act-icon">${gIcon?`<img src="${gIcon}" alt="g" onerror="this.parentElement.textContent='🎮'">`:'🎮'}</div>
+            <div class="st-act-info">
+              <div class="st-act-name">${escHtml(gameAct.name)}</div>
+              ${gameAct.details?`<div class="st-act-detail">${escHtml(gameAct.details)}</div>`:''}
+              ${gameAct.state?`<div class="st-act-detail">${escHtml(gameAct.state)}</div>`:''}
+            </div>
+          </div></div>`;
+      }
+      if (streamAct) {
+        html += `<div><div class="st-sec-label">// streaming</div>
+          <div class="st-activity-card">
+            <div class="st-act-icon">📺</div>
+            <div class="st-act-info">
+              <div class="st-act-name">${escHtml(streamAct.name)}</div>
+              ${streamAct.details?`<div class="st-act-detail">${escHtml(streamAct.details)}</div>`:''}
+              ${streamAct.state?`<div class="st-act-detail">${escHtml(streamAct.state)}</div>`:''}
+            </div>
+          </div></div>`;
+      }
+      if (watchAct) {
+        html += `<div><div class="st-sec-label">// watching</div>
+          <div class="st-activity-card">
+            <div class="st-act-icon">📺</div>
+            <div class="st-act-info">
+              <div class="st-act-name">${escHtml(watchAct.name)}</div>
+              ${watchAct.details?`<div class="st-act-detail">${escHtml(watchAct.details)}</div>`:''}
+              ${watchAct.state?`<div class="st-act-detail">${escHtml(watchAct.state)}</div>`:''}
+            </div>
+          </div></div>`;
+      }
+      if (!spotifyAct && !gameAct && !streamAct && !watchAct) {
+        html += `<div class="st-empty">// nothing active right now</div>`;
+      }
+      stActs.innerHTML = html;
+    }
+    const stUpd=document.getElementById('st-updated');
+    if(stUpd) stUpd.textContent='// updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+    // ── MOBILE STATUS ──
+    const mStLoad=document.getElementById('mob-st-loading'); if(mStLoad) mStLoad.style.display='none';
+    const mStCard=document.getElementById('mob-st-profile'); if(mStCard) mStCard.style.display='flex';
+    if(avatarUrl){const mStAv=document.getElementById('mob-st-avatar');if(mStAv) mStAv.innerHTML=`<img class="st-avatar" src="${avatarUrl}" alt="av" onerror="this.parentElement.textContent='⚙'">`;}
+    const mStN=document.getElementById('mob-st-name');     if(mStN) mStN.textContent=user?.display_name||user?.username||'faares0';
+    const mStU=document.getElementById('mob-st-user');     if(mStU) mStU.textContent='@'+(user?.username||'faares0');
+    const mStDot=document.getElementById('mob-st-dot');    if(mStDot) mStDot.className=`st-status-dot ${status}`;
+    const mStBadge=document.getElementById('mob-st-badge');if(mStBadge) mStBadge.className=`st-status-badge ${status}`;
+    const mStBDot=document.getElementById('mob-st-bdot');  if(mStBDot) mStBDot.className=`st-dot-sm ${status}`;
+    const mStBTxt=document.getElementById('mob-st-btxt');  if(mStBTxt) mStBTxt.textContent=statusLabels[status]||status;
+    const mStCust=document.getElementById('mob-st-custom');const mStCustTxt=document.getElementById('mob-st-custom-text');
+    if(customStatus?.state){if(mStCust)mStCust.style.display='block';if(mStCustTxt)mStCustTxt.textContent=(customStatus.emoji?.name?customStatus.emoji.name+'  ':'')+customStatus.state;}
+    else{if(mStCust)mStCust.style.display='none';}
+    const mStActs=document.getElementById('mob-st-activities');
+    if(mStActs) mStActs.innerHTML = stActs ? stActs.innerHTML : '';
+    const mStUpd=document.getElementById('mob-st-updated');
+    if(mStUpd) mStUpd.textContent='// updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 
   } catch(e) {
-    const els = ['dc-state','mob-dc-state'];
-    els.forEach(id => { const el = document.getElementById(id); if(el) el.textContent = 'could not fetch'; });
+    const els=['dc-state','mob-dc-state'];
+    els.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='could not fetch';});
   }
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MOBILE SIGNAL
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let mobSig = {
+  token:null, name:null, reqId:null, chatId:null, partnerName:null,
+  pollTimer:null, pingTimer:null, chatPollTimer:null, lastMsgCount:0
+};
+function mobSigEl(id){return document.getElementById(id);}
+function mobSigShow(screen){
+  mobSigEl('mob-sig-join').style.display   = screen==='join'   ? 'flex'  : 'none';
+  mobSigEl('mob-sig-lobby').style.display  = screen==='lobby'  ? 'flex'  : 'none';
+  mobSigEl('mob-sig-chat').style.display   = screen==='chat'   ? 'flex'  : 'none';
+}
+async function mobSigJoin(){
+  const name=mobSigEl('mob-sig-name').value.trim(); if(!name) return;
+  const token=Math.random().toString(36).slice(2)+Date.now().toString(36);
+  const res=await nhostQuery(`mutation($n:String!,$t:String!){insert_signal_online_one(object:{name:$n,token:$t}){id}}`,{n:name,t:token});
+  if(res?.errors){mobSigEl('mob-sig-name').placeholder='error — retry';return;}
+  mobSig.token=token; mobSig.name=name;
+  mobSigEl('mob-sig-myname').textContent='✦ '+name;
+  mobSigShow('lobby');
+  mobSigPing();
+  mobSig.pingTimer=setInterval(mobSigPing,8000);
+  mobSig.pollTimer=setInterval(mobSigPollLobby,2500);
+  mobSigPollLobby();
+}
+async function mobSigPing(){
+  if(!mobSig.token) return;
+  await nhostQuery(`mutation($t:String!,$n:timestamptz!){update_signal_online(where:{token:{_eq:$t}},_set:{last_ping:$n}){affected_rows}}`,{t:mobSig.token,n:new Date().toISOString()});
+  await nhostQuery(`mutation($c:timestamptz!){delete_signal_online(where:{last_ping:{_lt:$c}}){affected_rows}}`,{c:new Date(Date.now()-20000).toISOString()});
+}
+async function mobSigPollLobby(){
+  if(!mobSig.token) return;
+  const cutoff=new Date(Date.now()-18000).toISOString();
+  const res=await nhostQuery(`query($c:timestamptz!){signal_online(where:{last_ping:{_gte:$c}}){token name}}`,{c:cutoff});
+  const online=(res?.data?.signal_online||[]).filter(u=>u.token!==mobSig.token);
+  mobSigEl('mob-sig-count').textContent=online.length+' online';
+  if(!online.length){
+    mobSigEl('mob-sig-status').textContent='// no one in signal right now';
+    mobSigEl('mob-sig-send-btn').disabled=true;
+  } else {
+    mobSigEl('mob-sig-status').textContent=online.length===1?'// 1 person waiting ✦':`// ${online.length} people online ✦`;
+    mobSigEl('mob-sig-send-btn').disabled=false;
+  }
+  // incoming
+  const inc=await nhostQuery(`query($t:String!){signal_requests(where:{to_token:{_eq:$t},status:{_eq:"pending"}},order_by:{created_at:desc},limit:1){id from_name}}`,{t:mobSig.token});
+  const req=inc?.data?.signal_requests?.[0];
+  if(req&&!mobSig.reqId){
+    mobSig.reqId=req.id;
+    mobSigEl('mob-sig-from').textContent='signal from  '+req.from_name;
+    const incEl=mobSigEl('mob-sig-incoming'); incEl.style.display='flex'; incEl.style.flexDirection='column'; incEl.style.alignItems='center';
+  }
+  // accepted?
+  if(mobSig.reqId&&!mobSig.chatId){
+    const chk=await nhostQuery(`query($id:uuid!){signal_requests_by_pk(id:$id){status to_token}}`,{id:mobSig.reqId});
+    const s=chk?.data?.signal_requests_by_pk;
+    if(s?.status==='accepted'){
+      const pR=await nhostQuery(`query($t:String!,$c:timestamptz!){signal_online(where:{token:{_eq:$t},last_ping:{_gte:$c}}){name}}`,{t:s.to_token,c:cutoff});
+      mobSigStartChat(mobSig.reqId,pR?.data?.signal_online?.[0]?.name||'???');
+    } else if(s?.status==='rejected'){
+      mobSig.reqId=null;
+      mobSigEl('mob-sig-status').textContent='// signal rejected — try again';
+    }
+  }
+}
+async function mobSigSend(){
+  if(!mobSig.token) return;
+  mobSigEl('mob-sig-send-btn').disabled=true;
+  mobSigEl('mob-sig-status').textContent='// sending signal...';
+  const cutoff=new Date(Date.now()-18000).toISOString();
+  const res=await nhostQuery(`query($c:timestamptz!,$t:String!){signal_online(where:{last_ping:{_gte:$c},token:{_neq:$t}}){token name}}`,{c:cutoff,t:mobSig.token});
+  const online=res?.data?.signal_online||[];
+  if(!online.length){mobSigEl('mob-sig-status').textContent='// no one here anymore';return;}
+  const target=online[Math.floor(Math.random()*online.length)];
+  const rr=await nhostQuery(`mutation($fn:String!,$ft:String!,$tt:String!){insert_signal_requests_one(object:{from_name:$fn,from_token:$ft,to_token:$tt}){id}}`,{fn:mobSig.name,ft:mobSig.token,tt:target.token});
+  mobSig.reqId=rr?.data?.insert_signal_requests_one?.id;
+  mobSigEl('mob-sig-status').textContent=`// signal sent to ${target.name} — waiting...`;
+}
+async function mobSigAccept(){
+  if(!mobSig.reqId) return;
+  mobSigEl('mob-sig-incoming').style.display='none';
+  await nhostQuery(`mutation($id:uuid!){update_signal_requests_by_pk(pk_columns:{id:$id},_set:{status:"accepted"}){id}}`,{id:mobSig.reqId});
+  const r=await nhostQuery(`query($id:uuid!){signal_requests_by_pk(id:$id){from_name}}`,{id:mobSig.reqId});
+  mobSigStartChat(mobSig.reqId,r?.data?.signal_requests_by_pk?.from_name||'???');
+}
+async function mobSigReject(){
+  if(!mobSig.reqId) return;
+  mobSigEl('mob-sig-incoming').style.display='none';
+  await nhostQuery(`mutation($id:uuid!){update_signal_requests_by_pk(pk_columns:{id:$id},_set:{status:"rejected"}){id}}`,{id:mobSig.reqId});
+  mobSig.reqId=null;
+}
+function mobSigStartChat(chatId,partnerName){
+  clearInterval(mobSig.pollTimer);
+  mobSig.chatId=chatId; mobSig.partnerName=partnerName; mobSig.lastMsgCount=0;
+  mobSigEl('mob-sig-chat-with').textContent='chatting with  '+partnerName+' ✦';
+  mobSigEl('mob-sig-messages').innerHTML='';
+  mobSigShow('chat');
+  mobSig.chatPollTimer=setInterval(mobSigPollChat,1500);
+  mobSigPollChat();
+  mobSigEl('mob-sig-msg').addEventListener('keydown',e=>{if(e.key==='Enter')mobSigSendMsg();});
+}
+async function mobSigPollChat(){
+  if(!mobSig.chatId) return;
+  const res=await nhostQuery(`query($c:String!){signal_messages(where:{chat_id:{_eq:$c}},order_by:{sent_at:asc}){id sender_name content sent_at}}`,{c:mobSig.chatId});
+  const msgs=res?.data?.signal_messages||[];
+  if(msgs.length!==mobSig.lastMsgCount){
+    mobSig.lastMsgCount=msgs.length;
+    const box=mobSigEl('mob-sig-messages');
+    box.innerHTML=msgs.map(m=>{
+      const mine=m.sender_name===mobSig.name;
+      const t=new Date(m.sent_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      return `<div class="sig-msg ${mine?'mine':'theirs'}">
+        ${!mine?`<div class="sig-msg-name">${escHtml(m.sender_name)}</div>`:''}
+        <div>${escHtml(m.content)}</div>
+        <div class="sig-msg-time">${t}</div>
+      </div>`;
+    }).join('');
+    box.scrollTop=box.scrollHeight;
+  }
+}
+async function mobSigSendMsg(){
+  const input=mobSigEl('mob-sig-msg');
+  const content=input.value.trim(); if(!content||!mobSig.chatId) return;
+  input.value='';
+  await nhostQuery(`mutation($c:String!,$s:String!,$m:String!){insert_signal_messages_one(object:{chat_id:$c,sender_name:$s,content:$m}){id}}`,{c:mobSig.chatId,s:mobSig.name,m:content});
+}
+async function mobSigEndChat(){
+  clearInterval(mobSig.chatPollTimer);
+  if(mobSig.chatId){
+    await nhostQuery(`mutation($c:String!){delete_signal_messages(where:{chat_id:{_eq:$c}}){affected_rows}}`,{c:mobSig.chatId});
+    await nhostQuery(`mutation($id:uuid!){delete_signal_requests_by_pk(id:$id){id}}`,{id:mobSig.chatId});
+  }
+  mobSig.chatId=null; mobSig.reqId=null; mobSig.partnerName=null; mobSig.lastMsgCount=0;
+  mobSigShow('lobby');
+  mobSig.pollTimer=setInterval(mobSigPollLobby,2500);
+  mobSigPollLobby();
+}
+async function mobSigLeave(){
+  clearInterval(mobSig.pollTimer); clearInterval(mobSig.pingTimer); clearInterval(mobSig.chatPollTimer);
+  if(mobSig.token){
+    if(mobSig.chatId){
+      await nhostQuery(`mutation($c:String!){delete_signal_messages(where:{chat_id:{_eq:$c}}){affected_rows}}`,{c:mobSig.chatId});
+      await nhostQuery(`mutation($id:uuid!){delete_signal_requests_by_pk(id:$id){id}}`,{id:mobSig.chatId});
+    }
+    await nhostQuery(`mutation($t:String!){delete_signal_online(where:{token:{_eq:$t}}){affected_rows}}`,{t:mobSig.token});
+  }
+  mobSig={token:null,name:null,reqId:null,chatId:null,partnerName:null,pollTimer:null,pingTimer:null,chatPollTimer:null,lastMsgCount:0};
+  mobSigEl('mob-sig-name').value='';
+  mobSigShow('join');
+}
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // BLOG — Nhost GraphQL
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2806,9 +3227,9 @@ let sigState = {
 function sigEl(id) { return document.getElementById(id); }
 
 function sigShow(screen) {
-  sigEl('sig-join').style.display   = screen==='join'   ? 'flex'   : 'none';
-  sigEl('sig-lobby').style.display  = screen==='lobby'  ? 'flex'   : 'none';
-  sigEl('sig-chat').style.display   = screen==='chat'   ? 'flex'   : 'none';
+  sigEl('sig-join').style.display  = screen==='join'  ? 'flex' : 'none';
+  sigEl('sig-lobby').style.display = screen==='lobby' ? 'flex' : 'none';
+  sigEl('sig-chat').style.display  = screen==='chat'  ? 'flex' : 'none';
 }
 
 async function sigJoin() {
@@ -3019,10 +3440,21 @@ async function sigSendMsg() {
 
 async function sigEndChat() {
   clearInterval(sigState.chatPollTimer);
+  // delete all messages for this chat + the request
+  if (sigState.chatId) {
+    await nhostQuery(`
+      mutation($chat_id:String!){
+        delete_signal_messages(where:{chat_id:{_eq:$chat_id}}){affected_rows}
+      }`, { chat_id: sigState.chatId });
+    await nhostQuery(`
+      mutation($id:uuid!){
+        delete_signal_requests_by_pk(id:$id){id}
+      }`, { id: sigState.chatId });
+  }
   sigState.chatId = null; sigState.reqId = null; sigState.partnerName = null;
   sigState.lastMsgCount = 0;
   sigShow('lobby');
-  sigEl('sig-status-msg').textContent = 'scanning for signals...';
+  sigEl('sig-status-msg').textContent = '// back in lobby — send another signal ✦';
   sigState.pollTimer = setInterval(sigPollLobby, 2500);
   sigPollLobby();
 }
@@ -3032,9 +3464,12 @@ async function sigLeave() {
   clearInterval(sigState.pingTimer);
   clearInterval(sigState.chatPollTimer);
   if (sigState.token) {
-    await nhostQuery(`
-      mutation($token:String!){delete_signal_online(where:{token:{_eq:$token}}){affected_rows}}
-    `, { token: sigState.token });
+    // cleanup everything for this user
+    if (sigState.chatId) {
+      await nhostQuery(`mutation($c:String!){delete_signal_messages(where:{chat_id:{_eq:$c}}){affected_rows}}`,{c:sigState.chatId});
+      await nhostQuery(`mutation($id:uuid!){delete_signal_requests_by_pk(id:$id){id}}`,{id:sigState.chatId});
+    }
+    await nhostQuery(`mutation($token:String!){delete_signal_online(where:{token:{_eq:$token}}){affected_rows}}`,{token:sigState.token});
   }
   sigState = { token:null, name:null, reqId:null, chatId:null, partnerName:null,
     pollTimer:null, pingTimer:null, chatPollTimer:null, lastMsgCount:0 };
@@ -3044,10 +3479,9 @@ async function sigLeave() {
 
 // cleanup on tab close
 window.addEventListener('beforeunload', () => {
-  if (sigState.token) {
-    navigator.sendBeacon && navigator.sendBeacon('/beacon'); // fallback
-    nhostQuery(`mutation($t:String!){delete_signal_online(where:{token:{_eq:$t}}){affected_rows}}`,{t:sigState.token});
-  }
+  if (!sigState.token) return;
+  const gql = JSON.stringify({ query:`mutation($t:String!){delete_signal_online(where:{token:{_eq:$t}}){affected_rows}}`, variables:{t:sigState.token} });
+  navigator.sendBeacon(NHOST_GQL, new Blob([gql],{type:'application/json'}));
 });
 
 
