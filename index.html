@@ -787,8 +787,127 @@ body {
 .mob-btn:hover { background:var(--btn-hover); border-color:var(--a1); }
 
 /* Mobile chat iframe */
-.mob-chat-wrap { height:400px; border:1px solid rgba(60,35,100,.4); overflow:hidden; }
-.mob-chat-wrap iframe { width:100%; height:100%; border:none; }
+.mob-chat-wrap { height:400px; border:1px solid rgba(60,35,100,.4); overflow:hidden; display:flex; flex-direction:column; }
+
+/* ═══════════════════════════════════════
+   SITE CHAT
+   ═══════════════════════════════════════ */
+.sc-wrap {
+  display:flex; flex-direction:column; height:100%; overflow:hidden;
+  font-family:'Tahoma',sans-serif;
+}
+.sc-header {
+  padding:6px 10px; flex-shrink:0;
+  border-bottom:1px solid rgba(60,35,100,.4);
+  background:rgba(15,8,35,.5);
+  display:flex; align-items:center; gap:6px;
+}
+.sc-header-title { font-family:'Share Tech Mono',monospace; font-size:9px; color:var(--a1); flex:1; letter-spacing:1px; }
+.sc-online { font-size:8px; color:var(--dim); font-family:'Share Tech Mono',monospace; }
+.sc-messages {
+  flex:1; overflow-y:auto; padding:8px 10px;
+  display:flex; flex-direction:column; gap:5px;
+  min-height:0;
+}
+.sc-messages::-webkit-scrollbar { width:3px; }
+.sc-messages::-webkit-scrollbar-track { background:rgba(10,5,25,.5); }
+.sc-messages::-webkit-scrollbar-thumb { background:rgba(80,45,140,.4); border-radius:2px; }
+.sc-msg {
+  display:flex; flex-direction:column; gap:1px;
+  padding:5px 8px;
+  background:rgba(15,8,35,.5);
+  border-left:2px solid rgba(60,35,100,.4);
+  max-width:100%;
+}
+.sc-msg:hover { background:rgba(25,12,50,.6); }
+.sc-msg-header { display:flex; align-items:baseline; gap:6px; }
+.sc-msg-name { font-size:9px; font-weight:bold; color:var(--a1); flex-shrink:0; }
+.sc-msg-name.is-admin { color:var(--a2); }
+.sc-msg-time { font-size:7px; color:rgba(120,90,180,.5); font-family:'Share Tech Mono',monospace; }
+.sc-msg-actions { display:none; align-items:center; gap:4px; margin-left:auto; }
+.sc-msg:hover .sc-msg-actions { display:flex; }
+.sc-msg-del {
+  font-size:9px; cursor:pointer; padding:1px 5px;
+  background:rgba(220,50,50,.15); border:1px solid rgba(200,60,60,.3);
+  color:#f87171; line-height:1.4; border-radius:2px;
+  font-family:'Share Tech Mono',monospace; letter-spacing:.5px;
+}
+.sc-msg-del:hover { background:rgba(220,50,50,.35); color:#fff; }
+.sc-msg-reply-btn {
+  font-size:8px; cursor:pointer; padding:1px 5px;
+  background:rgba(192,132,252,.1); border:1px solid rgba(192,132,252,.25);
+  color:var(--a1); line-height:1.4; border-radius:2px;
+  font-family:'Share Tech Mono',monospace; letter-spacing:.5px;
+}
+.sc-msg-reply-btn:hover { background:rgba(192,132,252,.25); }
+.sc-msg-body { font-size:10px; color:var(--text); line-height:1.5; word-break:break-word; }
+.sc-msg-body a { color:var(--a3); }
+/* Reply quote — always visible above the message */
+.sc-reply-quote {
+  display:flex; align-items:stretch; gap:0; margin-bottom:5px;
+  cursor:pointer;
+}
+.sc-reply-quote:hover .sc-reply-quote-inner { background:rgba(244,114,182,.13); }
+.sc-reply-quote-bar {
+  width:2px; background:var(--a2); flex-shrink:0; border-radius:1px;
+  opacity:.7;
+}
+.sc-reply-quote-inner {
+  flex:1; padding:3px 7px;
+  background:rgba(244,114,182,.07);
+  border-top-right-radius:2px; border-bottom-right-radius:2px;
+}
+.sc-reply-quote-name {
+  font-size:8px; font-weight:bold; color:var(--a2);
+  font-family:'Share Tech Mono',monospace; letter-spacing:.5px; margin-bottom:1px;
+}
+.sc-reply-quote-text {
+  font-size:9px; color:var(--dim); line-height:1.4; word-break:break-word;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:200px;
+}
+/* Reply compose bar */
+#sc-replying-to {
+  display:none; padding:4px 10px;
+  background:rgba(192,132,252,.08); border-top:1px solid rgba(192,132,252,.2);
+  border-bottom:1px solid rgba(60,35,100,.3);
+  font-size:8px; color:var(--a1); font-family:'Share Tech Mono',monospace;
+  align-items:center; gap:6px;
+}
+#sc-replying-to.show { display:flex; }
+#sc-replying-to .sc-reply-cancel { cursor:pointer; color:var(--a2); margin-left:auto; font-size:10px; }
+.sc-system {
+  text-align:center; font-family:'Share Tech Mono',monospace;
+  font-size:8px; color:rgba(100,70,160,.5); padding:3px; letter-spacing:1px;
+}
+.sc-input-row {
+  display:flex; flex-direction:column; gap:0;
+  border-top:1px solid rgba(60,35,100,.4); flex-shrink:0;
+}
+.sc-name-row {
+  display:flex; align-items:center; gap:0;
+  border-bottom:1px solid rgba(60,35,100,.3);
+  background:rgba(192,132,252,.06);
+}
+.sc-name-label { font-size:8px; color:var(--a1); font-family:'Share Tech Mono',monospace; padding:0 8px; flex-shrink:0; letter-spacing:1px; }
+#sc-name-inp, #mob-sc-name-inp {
+  flex:1; background:transparent; border:none; outline:none;
+  color:var(--a1); font-family:'Share Tech Mono',monospace; font-size:10px;
+  padding:6px 6px; letter-spacing:1px; font-weight:bold;
+}
+#sc-name-inp::placeholder, #mob-sc-name-inp::placeholder { color:rgba(192,132,252,.3); font-weight:normal; }
+.sc-msg-row { display:flex; }
+#sc-msg-inp, #mob-sc-msg-inp {
+  flex:1; background:rgba(10,5,25,.8); border:none; outline:none;
+  color:var(--text); font-family:'Tahoma',sans-serif; font-size:10px;
+  padding:7px 10px;
+}
+.sc-send-btn {
+  padding:0 14px; cursor:pointer; flex-shrink:0;
+  background:linear-gradient(180deg,rgba(90,42,176,.5),rgba(30,15,60,.7));
+  border:none; border-left:1px solid rgba(140,80,255,.25); color:var(--a1);
+  font-size:13px; transition:background .1s;
+}
+.sc-send-btn:hover { background:linear-gradient(180deg,rgba(120,60,220,.6),rgba(60,25,120,.8)); }
 
 /* Shared component styles */
 .share-ab-tags { display:flex; flex-wrap:wrap; gap:3px; margin-top:5px; }
@@ -1523,8 +1642,29 @@ body {
         <button class="wbtn bc" onclick="closeWin('chat')">✕</button>
       </div>
     </div>
-    <div class="win-body" id="chat-inner">
-      <iframe src="https://my.cbox.ws/FAARES" allowtransparency="true" title="Cbox"></iframe>
+    <div class="win-body" id="chat-inner" style="padding:0;overflow:hidden">
+      <div class="sc-wrap">
+        <div class="sc-header">
+          <div class="sc-online-dot" style="width:6px;height:6px;border-radius:50%;background:#3ba55c;flex-shrink:0"></div>
+          <div class="sc-header-title">// faaa.space chat</div>
+          <div class="sc-online" id="sc-live-count"></div>
+        </div>
+        <div class="sc-messages" id="sc-messages"><div class="sc-system">// loading messages...</div></div>
+        <div class="sc-input-row">
+          <div id="sc-replying-to">
+            <span>↩ replying to: </span><span id="sc-reply-preview"></span>
+            <span class="sc-reply-cancel" onclick="scCancelReply()">✕</span>
+          </div>
+          <div class="sc-name-row">
+            <span class="sc-name-label">name ›</span>
+            <input id="sc-name-inp" maxlength="20" placeholder="your name..." autocomplete="off" spellcheck="false">
+          </div>
+          <div class="sc-msg-row">
+            <input id="sc-msg-inp" maxlength="300" placeholder="say something..." autocomplete="off" spellcheck="false">
+            <button class="sc-send-btn" onclick="scSend('desk')">➤</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1885,7 +2025,27 @@ body {
     <!-- ── CHAT TAB ── -->
     <div class="mob-section" id="mob-chat">
       <div class="mob-chat-wrap">
-        <iframe src="https://my.cbox.ws/FAARES" allowtransparency="true" title="Cbox"></iframe>
+        <div class="sc-wrap">
+          <div class="sc-header">
+            <div style="width:6px;height:6px;border-radius:50%;background:#3ba55c;flex-shrink:0"></div>
+            <div class="sc-header-title">// faaa.space chat</div>
+          </div>
+          <div class="sc-messages" id="mob-sc-messages"><div class="sc-system">// loading messages...</div></div>
+          <div class="sc-input-row">
+            <div id="mob-sc-replying-to" style="display:none;padding:4px 10px;background:rgba(192,132,252,.08);border-top:1px solid rgba(192,132,252,.2);border-bottom:1px solid rgba(60,35,100,.3);font-size:8px;color:var(--a1);font-family:'Share Tech Mono',monospace;align-items:center;gap:6px;">
+              <span>↩ replying to: </span><span id="mob-sc-reply-preview"></span>
+              <span style="cursor:pointer;color:var(--a2);margin-left:auto;font-size:10px;" onclick="scCancelReply()">✕</span>
+            </div>
+            <div class="sc-name-row">
+              <span class="sc-name-label">name ›</span>
+              <input id="mob-sc-name-inp" maxlength="20" placeholder="your name..." autocomplete="off" spellcheck="false">
+            </div>
+            <div class="sc-msg-row">
+              <input id="mob-sc-msg-inp" maxlength="300" placeholder="say something..." autocomplete="off" spellcheck="false">
+              <button class="sc-send-btn" onclick="scSend('mob')">➤</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2240,6 +2400,9 @@ function startDesktop() {
 
   // ── BLOG ──
   blogInit();
+
+  // ── SITE CHAT ──
+  scInit();
 }
 
 function startMobile() {
@@ -2258,6 +2421,7 @@ function startMobile() {
   setInterval(fetchDiscordStatus, 30000);
   autoScanGitHub();
   mobBlogInit();
+  scInit();
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -3563,6 +3727,168 @@ async function sigLeave() {
     pollTimer:null, pingTimer:null, chatPollTimer:null, lastMsgCount:0 };
   sigEl('sig-name-input').value = '';
   sigShow('join');
+}
+
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SITE CHAT
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let scPollTimer = null;
+let scLastCount = -1;
+let scNameCache = '';
+
+function scGetName(src) {
+  const inp = document.getElementById(src==='mob' ? 'mob-sc-name-inp' : 'sc-name-inp');
+  const v = inp?.value.trim();
+  if (v) { scNameCache = v; return v; }
+  return scNameCache || 'anon';
+}
+
+function scRender(msgs, boxId) {
+  const box = document.getElementById(boxId);
+  if (!box) return;
+  const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 40;
+  box.innerHTML = msgs.length ? msgs.map(m => {
+    const time = new Date(m.created_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    const nameClass = m.username === 'FAA' ? 'sc-msg-name is-admin' : 'sc-msg-name';
+    const safeUser = escHtml(m.username).replace(/"/g,'&quot;');
+    const safeContent = escHtml(m.content||'').replace(/"/g,'&quot;').replace(/\n/g,' ').substring(0,60);
+    const actions = isAdmin
+      ? `<span style="display:inline-flex;align-items:center;gap:4px;margin-left:auto">
+          <span class="sc-msg-reply-btn" onclick="scSetReply('${m.id}',this)">↩ reply</span>
+          <span class="sc-msg-del" onclick="scDelete('${m.id}')">✕ del</span>
+        </span>`
+      : '';
+    const replySection = m.reply_to_content
+      ? `<div class="sc-reply-quote" onclick="scScrollToMsg(this)" data-content="${escHtml(m.reply_to_content).replace(/"/g,'&quot;')}">
+          <div class="sc-reply-quote-bar"></div>
+          <div class="sc-reply-quote-inner">
+            <div class="sc-reply-quote-name">${escHtml(m.reply_to_username||'')}</div>
+            <div class="sc-reply-quote-text">${escHtml(m.reply_to_content)}</div>
+          </div>
+        </div>`
+      : '';
+    // store data on element for reply
+    return `<div class="sc-msg" id="scm-${m.id}" data-id="${m.id}" data-user="${safeUser}" data-content="${safeContent}">
+      <div class="sc-msg-header">
+        <span class="${nameClass}">${escHtml(m.username)}</span>
+        <span class="sc-msg-time">${time}</span>
+        ${actions}
+      </div>
+      ${replySection}
+      <div class="sc-msg-body">${escHtml(m.content)}</div>
+    </div>`;
+  }).join('') : '<div class="sc-system">// no messages yet — say hi!</div>';
+  if (atBottom) box.scrollTop = box.scrollHeight;
+}
+
+async function scPoll() {
+  let msgs = [];
+  try {
+    const res = await nhostQuery(`
+      query { chat_messages(order_by:{created_at:asc}, limit:80) { id username content created_at reply_to_content reply_to_username } }
+    `);
+    msgs = res?.data?.chat_messages || [];
+    // if error (columns don't exist yet), fallback
+    if (res?.errors) throw new Error('fallback');
+  } catch(e) {
+    const res2 = await nhostQuery(`
+      query { chat_messages(order_by:{created_at:asc}, limit:80) { id username content created_at } }
+    `);
+    msgs = res2?.data?.chat_messages || [];
+  }
+  if (msgs.length !== scLastCount) {
+    scLastCount = msgs.length;
+    scRender(msgs, 'sc-messages');
+    scRender(msgs, 'mob-sc-messages');
+    if (username) {
+      const ni = document.getElementById('sc-name-inp');     if(ni && !ni.value) ni.value = username;
+      const mn = document.getElementById('mob-sc-name-inp'); if(mn && !mn.value) mn.value = username;
+    }
+  }
+}
+
+let scReplyTo = null;
+
+function scSetReply(id, btn) {
+  const el = document.getElementById('scm-' + id);
+  const uname   = el?.dataset.user    || '';
+  const preview = el?.dataset.content || '';
+  scReplyTo = {id, username: uname, content: preview};
+  const bar  = document.getElementById('sc-replying-to');
+  const prev = document.getElementById('sc-reply-preview');
+  const mbar  = document.getElementById('mob-sc-replying-to');
+  const mprev = document.getElementById('mob-sc-reply-preview');
+  if(bar)  bar.classList.add('show');
+  if(prev) prev.textContent = uname + ': ' + preview;
+  if(mbar)  mbar.style.display = 'flex';
+  if(mprev) mprev.textContent = uname + ': ' + preview;
+}
+
+function scScrollToMsg(quoteEl) {
+  const targetContent = quoteEl.dataset.content;
+  // search in both boxes
+  ['sc-messages','mob-sc-messages'].forEach(boxId => {
+    const box = document.getElementById(boxId);
+    if(!box) return;
+    const msgs = box.querySelectorAll('.sc-msg');
+    for(const msg of msgs) {
+      const body = msg.querySelector('.sc-msg-body');
+      if(body && body.textContent.trim().substring(0,60) === targetContent.substring(0,60)) {
+        msg.scrollIntoView({behavior:'smooth', block:'center'});
+        // flash highlight
+        msg.style.transition = 'background .15s';
+        msg.style.background = 'rgba(192,132,252,.25)';
+        setTimeout(()=>{ msg.style.background = ''; }, 900);
+        break;
+      }
+    }
+  });
+}
+
+
+async function scSend(src) {
+  const name = scGetName(src);
+  const msgInp = document.getElementById(src==='mob' ? 'mob-sc-msg-inp' : 'sc-msg-inp');
+  const content = msgInp?.value.trim();
+  if (!content) return;
+  const displayName = (isAdmin && username==='FAA') ? 'FAA' : name;
+  msgInp.value = '';
+  let mut, vars;
+  if (scReplyTo) {
+    vars = { u: displayName, c: content, rtu: scReplyTo.username, rtc: scReplyTo.content };
+    mut = `mutation($u:String!,$c:String!,$rtu:String!,$rtc:String!){
+      insert_chat_messages_one(object:{username:$u,content:$c,reply_to_username:$rtu,reply_to_content:$rtc}){id}
+    }`;
+  } else {
+    vars = { u: displayName, c: content };
+    mut = `mutation($u:String!,$c:String!){ insert_chat_messages_one(object:{username:$u,content:$c}){id} }`;
+  }
+  scCancelReply();
+  await nhostQuery(mut, vars);
+  scPoll();
+}
+
+async function scDelete(id) {
+  const el = document.getElementById('scm-' + id);
+  if (el) el.style.opacity = '0.3';
+  await nhostQuery(`mutation($id:uuid!){ delete_chat_messages_by_pk(id:$id){id} }`, { id });
+  scLastCount = -1;
+  scPoll();
+}
+
+
+function scInit() {
+  // prefill name from login
+  if (username) {
+    const ni = document.getElementById('sc-name-inp');     if(ni) ni.value = username;
+    const mn = document.getElementById('mob-sc-name-inp'); if(mn) mn.value = username;
+  }
+  // enter key
+  document.getElementById('sc-msg-inp')?.addEventListener('keydown', e => { if(e.key==='Enter') scSend('desk'); });
+  document.getElementById('mob-sc-msg-inp')?.addEventListener('keydown', e => { if(e.key==='Enter') scSend('mob'); });
+  scPoll();
+  scPollTimer = setInterval(scPoll, 3000);
 }
 
 // cleanup on tab close
