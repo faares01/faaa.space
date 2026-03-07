@@ -1475,7 +1475,7 @@ body {
         <div class="mpb mp-play-btn" id="btn-play" onclick="togglePlay()">▶</div>
         <div class="mpb" onclick="nextTrack()" title="Next">⏭</div>
         <div class="mpb" id="btn-rep" onclick="toggleRepeat()" title="Repeat">↻</div>
-        <input type="range" id="mp-vol" min="0" max="1" step="0.05" value="0.8" oninput="setVol(this.value)" title="Volume">
+        <input type="range" id="mp-vol" min="0" max="1" step="0.05" value="0.17" oninput="setVol(this.value)" title="Volume">
       </div>
       <div class="mp-pl" id="mp-pl"><div class="mp-empty">// loading songs...</div></div>
     </div></div>
@@ -1845,7 +1845,7 @@ body {
         <div class="mpb mp-play-btn" id="mob-play-btn" onclick="togglePlay()">▶</div>
         <div class="mpb" onclick="nextTrack()">⏭</div>
         <div class="mpb" id="mob-rep" onclick="toggleRepeat()" title="Repeat">↻</div>
-        <input type="range" id="mob-vol" min="0" max="1" step="0.05" value="0.8" oninput="setVol(this.value)">
+        <input type="range" id="mob-vol" min="0" max="1" step="0.05" value="0.17" oninput="setVol(this.value)">
       </div>
       <div class="mp-pl" id="mob-pl"><div class="mp-empty">// loading songs...</div></div>
     </div>
@@ -2455,7 +2455,14 @@ function renderPL(){
 function playTrack(i){
   if(i<0||i>=tracks.length) return;
   curI=i; const t=tracks[i];
-  aud.src=t.url; aud.volume=parseFloat(document.getElementById('mp-vol').value); aud.play();
+  aud.src=t.url;
+  // restore saved volume
+  let savedVol=0.17;
+  try{const sv=sessionStorage.getItem('faa_vol');if(sv!==null)savedVol=parseFloat(sv);}catch(e){}
+  aud.volume=savedVol;
+  const dv=document.getElementById('mp-vol');if(dv)dv.value=savedVol;
+  const mv=document.getElementById('mob-vol');if(mv)mv.value=savedVol;
+  aud.play();
   document.getElementById('mp-trk').textContent=t.name;
   document.getElementById('mp-art2').textContent=t.artist;
   document.getElementById('mp-alb').textContent=t.album;
@@ -2479,7 +2486,12 @@ function nextTrack(){if(!tracks.length)return;if(shuffleOn){const si=shuffled.in
 function onEnded(){if(repeatOn){aud.currentTime=0;aud.play()}else nextTrack()}
 function toggleShuffle(){shuffleOn=!shuffleOn;buildShuffle();document.getElementById('btn-shuf').classList.toggle('on',shuffleOn)}
 function toggleRepeat(){repeatOn=!repeatOn;document.getElementById('btn-rep').classList.toggle('on',repeatOn);const mr=document.getElementById('mob-rep');if(mr)mr.classList.toggle('on',repeatOn)}
-function setVol(v){aud.volume=parseFloat(v);const mv=document.getElementById('mob-vol');if(mv)mv.value=v}
+function setVol(v){
+  aud.volume=parseFloat(v);
+  const mv=document.getElementById('mob-vol');if(mv)mv.value=v;
+  const dv=document.getElementById('mp-vol');if(dv)dv.value=v;
+  try{sessionStorage.setItem('faa_vol',v);}catch(e){}
+}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━
 // LOAD AVATAR
@@ -2898,6 +2910,18 @@ async function mobSigPollChat(){
     }).join('');
     box.scrollTop=box.scrollHeight;
   }
+  // check if partner ended
+  const chk=await nhostQuery(`query($id:uuid!){signal_requests_by_pk(id:$id){status}}`,{id:mobSig.chatId});
+  if(chk?.data?.signal_requests_by_pk?.status==='ended'){
+    clearInterval(mobSig.chatPollTimer);
+    const box=mobSigEl('mob-sig-messages');
+    const inp=mobSigEl('mob-sig-msg'); if(inp) inp.disabled=true;
+    box.innerHTML+=`<div style="text-align:center;padding:14px 10px;border-top:1px solid rgba(60,35,100,.3);margin-top:8px">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);margin-bottom:10px">// ${escHtml(mobSig.partnerName)} ended the conversation</div>
+      <button onclick="mobSigEndChat()" style="padding:6px 20px;background:rgba(30,15,60,.6);border:1px solid rgba(140,80,255,.35);color:var(--a1);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;cursor:pointer;">⟵ back to lobby</button>
+    </div>`;
+    box.scrollTop=box.scrollHeight;
+  }
 }
 async function mobSigSendMsg(){
   const input=mobSigEl('mob-sig-msg');
@@ -2908,10 +2932,15 @@ async function mobSigSendMsg(){
 async function mobSigEndChat(){
   clearInterval(mobSig.chatPollTimer);
   if(mobSig.chatId){
-    await nhostQuery(`mutation($c:String!){delete_signal_messages(where:{chat_id:{_eq:$c}}){affected_rows}}`,{c:mobSig.chatId});
-    await nhostQuery(`mutation($id:uuid!){delete_signal_requests_by_pk(id:$id){id}}`,{id:mobSig.chatId});
+    await nhostQuery(`mutation($id:uuid!){update_signal_requests_by_pk(pk_columns:{id:$id},_set:{status:"ended"}){id}}`,{id:mobSig.chatId});
+    const _cid=mobSig.chatId;
+    setTimeout(async()=>{
+      await nhostQuery(`mutation($c:String!){delete_signal_messages(where:{chat_id:{_eq:$c}}){affected_rows}}`,{c:_cid});
+      await nhostQuery(`mutation($id:uuid!){delete_signal_requests_by_pk(id:$id){id}}`,{id:_cid});
+    },5000);
   }
-  mobSig.chatId=null; mobSig.reqId=null; mobSig.partnerName=null; mobSig.lastMsgCount=0;
+  const inp=mobSigEl('mob-sig-msg');if(inp)inp.disabled=false;
+  mobSig.chatId=null;mobSig.reqId=null;mobSig.partnerName=null;mobSig.lastMsgCount=0;
   mobSigShow('lobby');
   mobSig.pollTimer=setInterval(mobSigPollLobby,2500);
   mobSigPollLobby();
@@ -3404,27 +3433,30 @@ async function sigPollChat() {
     box.scrollTop = box.scrollHeight;
   }
 
-  // check if partner disconnected
-  await sigPing();
-  const partnerRes = await nhostQuery(`
-    query($cutoff:timestamptz!){
-      signal_online(where:{last_ping:{_gte:$cutoff}}){token}
-    }`, { cutoff: new Date(Date.now()-18000).toISOString() });
-  const onlineTokens = (partnerRes?.data?.signal_online||[]).map(u=>u.token);
-  // find partner token from request
-  const reqRes = await nhostQuery(`
-    query($id:uuid!){signal_requests_by_pk(id:$id){from_token to_token}}
-  `, { id: sigState.chatId });
-  const req = reqRes?.data?.signal_requests_by_pk;
-  if (req) {
-    const partnerToken = req.from_token === sigState.token ? req.to_token : req.from_token;
-    if (!onlineTokens.includes(partnerToken)) {
-      const box = sigEl('sig-messages');
-      box.innerHTML += `<div style="text-align:center;color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:9px;padding:10px">// ${escHtml(sigState.partnerName)} disconnected</div>`;
-      box.scrollTop = box.scrollHeight;
-      clearInterval(sigState.chatPollTimer);
-    }
+  // check if partner ended the chat
+  const chk = await nhostQuery(`query($id:uuid!){signal_requests_by_pk(id:$id){status}}`,{id:sigState.chatId});
+  if (chk?.data?.signal_requests_by_pk?.status === 'ended') {
+    clearInterval(sigState.chatPollTimer);
+    sigShowEnded(sigState.partnerName);
+    return;
   }
+}
+
+function sigShowEnded(partnerName) {
+  const box = sigEl('sig-messages');
+  box.innerHTML += `
+    <div style="text-align:center;padding:14px 10px;border-top:1px solid rgba(60,35,100,.3);margin-top:8px">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);margin-bottom:10px">
+        // ${escHtml(partnerName)} ended the conversation
+      </div>
+      <button onclick="sigEndChat()" style="padding:6px 20px;background:rgba(30,15,60,.6);border:1px solid rgba(140,80,255,.35);color:var(--a1);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;cursor:pointer;">
+        ⟵ back to lobby
+      </button>
+    </div>`;
+  box.scrollTop = box.scrollHeight;
+  // disable input
+  const inp = sigEl('sig-msg-input'); if(inp) inp.disabled = true;
+  const btn = document.querySelector('.sig-msg-send'); if(btn) btn.disabled = true;
 }
 
 async function sigSendMsg() {
@@ -3440,22 +3472,20 @@ async function sigSendMsg() {
 
 async function sigEndChat() {
   clearInterval(sigState.chatPollTimer);
-  // delete all messages for this chat + the request
   if (sigState.chatId) {
-    await nhostQuery(`
-      mutation($chat_id:String!){
-        delete_signal_messages(where:{chat_id:{_eq:$chat_id}}){affected_rows}
-      }`, { chat_id: sigState.chatId });
-    await nhostQuery(`
-      mutation($id:uuid!){
-        delete_signal_requests_by_pk(id:$id){id}
-      }`, { id: sigState.chatId });
+    await nhostQuery(`mutation($id:uuid!){update_signal_requests_by_pk(pk_columns:{id:$id},_set:{status:"ended"}){id}}`,{id:sigState.chatId});
+    const _cid = sigState.chatId;
+    setTimeout(async()=>{
+      await nhostQuery(`mutation($c:String!){delete_signal_messages(where:{chat_id:{_eq:$c}}){affected_rows}}`,{c:_cid});
+      await nhostQuery(`mutation($id:uuid!){delete_signal_requests_by_pk(id:$id){id}}`,{id:_cid});
+    },5000);
   }
-  sigState.chatId = null; sigState.reqId = null; sigState.partnerName = null;
-  sigState.lastMsgCount = 0;
+  const inp=sigEl('sig-msg-input');if(inp)inp.disabled=false;
+  const snd=document.querySelector('.sig-msg-send');if(snd)snd.disabled=false;
+  sigState.chatId=null;sigState.reqId=null;sigState.partnerName=null;sigState.lastMsgCount=0;
   sigShow('lobby');
-  sigEl('sig-status-msg').textContent = '// back in lobby — send another signal ✦';
-  sigState.pollTimer = setInterval(sigPollLobby, 2500);
+  sigEl('sig-status-msg').textContent='// back in lobby — send another signal ✦';
+  sigState.pollTimer=setInterval(sigPollLobby,2500);
   sigPollLobby();
 }
 
