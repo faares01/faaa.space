@@ -864,9 +864,157 @@ body {
   50%      { opacity:.3; box-shadow:none; }
 }
 
-/* ═══════════════════════════════
-   DISCORD STATUS
-   ═══════════════════════════════ */
+/* ═══════════════════════════════════════
+   SIGNAL APP
+   ═══════════════════════════════════════ */
+#signal-inner {
+  display:flex; flex-direction:column; height:100%;
+  font-family:'Tahoma',sans-serif;
+}
+
+/* ── Join screen ── */
+#sig-join {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:14px; padding:20px;
+}
+.sig-logo {
+  font-family:'VT323',monospace; font-size:36px; letter-spacing:4px;
+  background:linear-gradient(135deg,var(--a1),var(--a2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.sig-logo-sub { font-size:9px; color:var(--dim); letter-spacing:2px; font-family:'Share Tech Mono',monospace; margin-top:-10px; }
+#sig-name-input {
+  width:200px; background:rgba(15,8,35,.9);
+  border:1px solid rgba(60,35,100,.5); color:var(--text);
+  font-family:'Share Tech Mono',monospace; font-size:12px;
+  padding:8px 12px; outline:none; text-align:center; letter-spacing:2px;
+  transition:border-color .15s;
+}
+#sig-name-input:focus { border-color:var(--a1); box-shadow:0 0 8px rgba(192,132,252,.2); }
+.sig-join-btn {
+  padding:6px 28px;
+  background:linear-gradient(180deg,#5a2ab0,#3a1278);
+  border:1px solid rgba(140,80,255,.4); color:#e0d0ff;
+  font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:2px;
+  cursor:pointer; transition:all .15s;
+}
+.sig-join-btn:hover { background:linear-gradient(180deg,#7a3adc,#5a1a9a); box-shadow:0 0 12px rgba(192,132,252,.3); }
+
+/* ── Lobby screen ── */
+#sig-lobby { flex:1; display:none; flex-direction:column; }
+.sig-header {
+  padding:8px 12px; border-bottom:1px solid rgba(60,35,100,.4);
+  background:rgba(15,8,35,.5); display:flex; align-items:center; gap:8px; flex-shrink:0;
+}
+.sig-header-name { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--a1); flex:1; }
+.sig-online-dot { width:8px; height:8px; border-radius:50%; background:#3ba55c; box-shadow:0 0 6px #3ba55c; flex-shrink:0; animation:vc-pulse 2s infinite; }
+.sig-online-count { font-size:9px; color:var(--dim); font-family:'Share Tech Mono',monospace; }
+.sig-leave-btn {
+  font-size:9px; padding:2px 8px; cursor:pointer;
+  background:rgba(180,40,60,.15); border:1px solid rgba(200,50,70,.3); color:#f87171;
+  font-family:'Tahoma',sans-serif; transition:all .1s;
+}
+.sig-leave-btn:hover { background:rgba(220,50,70,.3); }
+
+.sig-lobby-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; gap:12px; }
+.sig-status-msg {
+  font-family:'Share Tech Mono',monospace; font-size:11px;
+  color:var(--dim); text-align:center; letter-spacing:1px; line-height:1.8;
+}
+.sig-send-btn {
+  padding:8px 24px;
+  background:linear-gradient(180deg,#5a2ab0,#3a1278);
+  border:1px solid rgba(140,80,255,.4); color:#e0d0ff;
+  font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:2px;
+  cursor:pointer; transition:all .15s; animation:sig-glow 2s infinite alternate;
+}
+.sig-send-btn:hover { background:linear-gradient(180deg,#7a3adc,#5a1a9a); }
+.sig-send-btn:disabled { opacity:.4; cursor:default; animation:none; }
+@keyframes sig-glow {
+  from { box-shadow:0 0 4px rgba(192,132,252,.2); }
+  to   { box-shadow:0 0 16px rgba(192,132,252,.5); }
+}
+
+/* ── Incoming signal ── */
+#sig-incoming {
+  display:none; position:absolute; inset:0;
+  background:rgba(5,2,15,.92); z-index:50;
+  flex-direction:column; align-items:center; justify-content:center; gap:16px;
+}
+#sig-incoming.show { display:flex; }
+.sig-incoming-title {
+  font-family:'VT323',monospace; font-size:28px; color:var(--a2);
+  letter-spacing:3px; animation:blink 1s infinite;
+}
+.sig-from-name { font-family:'Share Tech Mono',monospace; font-size:14px; color:var(--a1); letter-spacing:2px; }
+.sig-inc-btns { display:flex; gap:10px; margin-top:8px; }
+.sig-accept-btn {
+  padding:7px 22px;
+  background:linear-gradient(180deg,#1a6e3a,#0d4024);
+  border:1px solid rgba(59,165,92,.5); color:#6ee7a0;
+  font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:2px; cursor:pointer;
+  transition:all .1s;
+}
+.sig-accept-btn:hover { background:linear-gradient(180deg,#1e8a47,#0f4f2a); }
+.sig-reject-btn {
+  padding:7px 22px;
+  background:linear-gradient(180deg,#6e1a28,#400d16);
+  border:1px solid rgba(237,66,69,.5); color:#fca5a5;
+  font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:2px; cursor:pointer;
+  transition:all .1s;
+}
+.sig-reject-btn:hover { background:linear-gradient(180deg,#8a1e30,#4f0f1c); }
+
+/* ── Chat screen ── */
+#sig-chat { flex:1; display:none; flex-direction:column; }
+.sig-chat-header {
+  padding:6px 12px; border-bottom:1px solid rgba(60,35,100,.4);
+  background:rgba(15,8,35,.5); display:flex; align-items:center; gap:8px; flex-shrink:0;
+}
+.sig-chat-with { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--a1); flex:1; }
+.sig-chat-end-btn {
+  font-size:9px; padding:2px 8px; cursor:pointer;
+  background:rgba(180,40,60,.15); border:1px solid rgba(200,50,70,.3); color:#f87171;
+  font-family:'Tahoma',sans-serif;
+}
+.sig-messages {
+  flex:1; overflow-y:auto; padding:10px 12px; display:flex; flex-direction:column; gap:6px;
+}
+.sig-messages::-webkit-scrollbar { width:4px; }
+.sig-messages::-webkit-scrollbar-track { background:rgba(10,5,25,.5); }
+.sig-messages::-webkit-scrollbar-thumb { background:rgba(80,45,140,.5); }
+.sig-msg {
+  max-width:80%; padding:6px 10px;
+  font-size:10px; line-height:1.6; word-break:break-word;
+}
+.sig-msg.mine {
+  align-self:flex-end;
+  background:linear-gradient(135deg,rgba(90,42,176,.5),rgba(58,18,120,.6));
+  border:1px solid rgba(140,80,255,.3); color:#e0d0ff;
+}
+.sig-msg.theirs {
+  align-self:flex-start;
+  background:rgba(20,10,40,.7);
+  border:1px solid rgba(60,35,100,.4); color:var(--text);
+}
+.sig-msg-name { font-size:8px; color:var(--dim); font-family:'Share Tech Mono',monospace; margin-bottom:2px; }
+.sig-msg-time { font-size:7px; color:var(--dim); text-align:right; margin-top:2px; font-family:'Share Tech Mono',monospace; }
+.sig-chat-input-row {
+  display:flex; gap:0; border-top:1px solid rgba(60,35,100,.4); flex-shrink:0;
+}
+#sig-msg-input {
+  flex:1; background:rgba(10,5,25,.9); border:none; outline:none;
+  color:var(--text); font-family:'Share Tech Mono',monospace; font-size:10px;
+  padding:8px 10px;
+}
+.sig-msg-send {
+  padding:0 14px; cursor:pointer;
+  background:linear-gradient(180deg,#5a2ab0,#3a1278);
+  border:none; border-left:1px solid rgba(140,80,255,.3); color:#e0d0ff;
+  font-size:14px; transition:background .1s;
+}
+.sig-msg-send:hover { background:linear-gradient(180deg,#7a3adc,#5a1a9a); }
+
 .dc-status-box {
   display:flex; align-items:center; gap:8px;
   padding:8px 10px;
@@ -1065,7 +1213,7 @@ body {
       <button class="l-btn" onclick="doLogin()">Log In</button>
       <!-- ★ زر "نسخة الجوال" — انسخه والصقه أي مكان في صفحتك ★ -->
       <div class="l-note">best viewed on desktop · 1920×1080<br>
-        <a href="https://faaa.space/old/" target="_blank" id="mob-ver-btn" class="mob-btn">OLD SITE</a>
+        <a href="https://faaa.space/old/" target="_blank" id="mob-ver-btn" class="mob-btn">Mobile version. (And it's old.)</a>
         <style>
         #mob-ver-btn {
           display: inline-block;
@@ -1125,6 +1273,9 @@ body {
     </div>
     <div class="dicon" onclick="openWin('blog')">
       <div class="di">📝</div><div class="dl">Blog</div>
+    </div>
+    <div class="dicon" onclick="openWin('signal')">
+      <div class="di">📡</div><div class="dl">Signal</div>
     </div>
   </div>
 
@@ -1388,6 +1539,71 @@ body {
       </div>
     </div>
   </div>
+  <!-- ─────── SIGNAL ─────── -->
+  <div class="win" id="win-signal" style="width:360px;height:480px;top:80px;left:320px;position:absolute">
+    <div class="win-tb" onmousedown="dragStart(event,'win-signal')">
+      <div class="win-tl"><span class="wico">📡</span><span class="wtitle">Signal</span></div>
+      <div class="win-btns">
+        <button class="wbtn bm" onclick="minWin('signal')">−</button>
+        <button class="wbtn bx" onclick="maxWin('win-signal')">□</button>
+        <button class="wbtn bc" onclick="closeWin('signal')">✕</button>
+      </div>
+    </div>
+    <div class="win-body" style="padding:0;overflow:hidden;position:relative">
+      <div id="signal-inner">
+
+        <!-- JOIN SCREEN -->
+        <div id="sig-join">
+          <div>
+            <div class="sig-logo">SIGNAL</div>
+            <div class="sig-logo-sub">// anonymous chat · connect with someone</div>
+          </div>
+          <input type="text" id="sig-name-input" placeholder="your name..." maxlength="20" autocomplete="off">
+          <button class="sig-join-btn" onclick="sigJoin()">CONNECT ✦</button>
+        </div>
+
+        <!-- LOBBY -->
+        <div id="sig-lobby">
+          <div class="sig-header">
+            <div class="sig-online-dot"></div>
+            <div class="sig-header-name" id="sig-my-name-display">—</div>
+            <div class="sig-online-count" id="sig-online-count">0 online</div>
+            <button class="sig-leave-btn" onclick="sigLeave()">disconnect</button>
+          </div>
+          <div class="sig-lobby-body">
+            <div class="sig-status-msg" id="sig-status-msg">scanning for signals...</div>
+            <button class="sig-send-btn" id="sig-send-signal-btn" onclick="sigSend()">⟶ SEND SIGNAL</button>
+          </div>
+
+          <!-- INCOMING SIGNAL OVERLAY -->
+          <div id="sig-incoming">
+            <div class="sig-incoming-title">⚡ INCOMING SIGNAL</div>
+            <div class="sig-from-name" id="sig-from-name">— signal from —</div>
+            <div style="font-size:9px;color:var(--dim);font-family:'Share Tech Mono',monospace">wants to connect with you</div>
+            <div class="sig-inc-btns">
+              <button class="sig-accept-btn" onclick="sigAccept()">✓ ACCEPT</button>
+              <button class="sig-reject-btn" onclick="sigReject()">✕ REJECT</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHAT SCREEN -->
+        <div id="sig-chat">
+          <div class="sig-chat-header">
+            <div class="sig-online-dot"></div>
+            <div class="sig-chat-with" id="sig-chat-with">chatting with —</div>
+            <button class="sig-chat-end-btn" onclick="sigEndChat()">end chat</button>
+          </div>
+          <div class="sig-messages" id="sig-messages"></div>
+          <div class="sig-chat-input-row">
+            <input type="text" id="sig-msg-input" placeholder="type something..." maxlength="300" autocomplete="off">
+            <button class="sig-msg-send" onclick="sigSendMsg()">➤</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 
 </div><!-- end desktop -->
 
@@ -1401,6 +1617,7 @@ body {
   <div class="tb-item" id="tb-welcome" onclick="tbClick('welcome')">🌙 Welcome</div>
   <div class="tb-item" id="tb-gallery" onclick="tbClick('gallery')">🖼️ Gallery</div>
   <div class="tb-item" id="tb-blog"    onclick="tbClick('blog')">📝 Blog</div>
+  <div class="tb-item" id="tb-signal"  onclick="tbClick('signal')">📡 Signal</div>
   <div style="flex:1"></div>
   <div id="clock"></div>
   <div class="tb-sep"></div>
@@ -1420,6 +1637,7 @@ body {
   <div class="sm-item" onclick="openWin('welcome');toggleStart()"><span class="si">🌙</span>Welcome</div>
   <div class="sm-item" onclick="openWin('gallery');toggleStart()"><span class="si">🖼️</span>Gallery</div>
   <div class="sm-item" onclick="openWin('blog');toggleStart()"><span class="si">📝</span>Blog</div>
+  <div class="sm-item" onclick="openWin('signal');toggleStart()"><span class="si">📡</span>Signal</div>
   <div class="sm-divider"></div>
   <div class="sm-item" onclick="window.open('https://faaa.space/old','_blank')"><span class="si">🕹️</span>Old Site</div>
   <div class="sm-divider"></div>
@@ -1829,7 +2047,7 @@ updateClock(); setInterval(updateClock,10000);
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━
 // WINDOW MANAGEMENT
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━
-const WINS = ['about','music','chat','welcome','gallery','blog'];
+const WINS = ['about','music','chat','welcome','gallery','blog','signal'];
 const wSt={}, wPv={}, wMx={};
 WINS.forEach(k=>{wSt[k]=false;wMx[k]=false});
 
@@ -2574,6 +2792,263 @@ async function fetchVisitorCount() {
   await registerVisit();
   await fetchVisitorCount();
 })();
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SIGNAL APP
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let sigState = {
+  token: null, name: null,
+  reqId: null, chatId: null, partnerName: null,
+  pollTimer: null, pingTimer: null, chatPollTimer: null,
+  lastMsgCount: 0
+};
+
+function sigEl(id) { return document.getElementById(id); }
+
+function sigShow(screen) {
+  sigEl('sig-join').style.display   = screen==='join'   ? 'flex'   : 'none';
+  sigEl('sig-lobby').style.display  = screen==='lobby'  ? 'flex'   : 'none';
+  sigEl('sig-chat').style.display   = screen==='chat'   ? 'flex'   : 'none';
+}
+
+async function sigJoin() {
+  const name = sigEl('sig-name-input').value.trim();
+  if (!name) return;
+  const token = Math.random().toString(36).slice(2) + Date.now().toString(36);
+  // register presence
+  const res = await nhostQuery(`
+    mutation($name:String!,$token:String!){
+      insert_signal_online_one(object:{name:$name,token:$token}){id}
+    }`, { name, token });
+  if (res?.errors) { sigEl('sig-name-input').placeholder='error — try again'; return; }
+  sigState.token = token;
+  sigState.name  = name;
+  sigEl('sig-my-name-display').textContent = '✦ ' + name;
+  sigShow('lobby');
+  sigPing();
+  sigState.pingTimer = setInterval(sigPing, 8000);
+  sigState.pollTimer = setInterval(sigPollLobby, 2500);
+  sigPollLobby();
+}
+
+async function sigPing() {
+  if (!sigState.token) return;
+  await nhostQuery(`
+    mutation($token:String!,$now:timestamptz!){
+      update_signal_online(where:{token:{_eq:$token}},_set:{last_ping:$now}){affected_rows}
+    }`, { token: sigState.token, now: new Date().toISOString() });
+  // clean stale (>20s old)
+  await nhostQuery(`
+    mutation($cutoff:timestamptz!){
+      delete_signal_online(where:{last_ping:{_lt:$cutoff}}){affected_rows}
+    }`, { cutoff: new Date(Date.now()-20000).toISOString() });
+}
+
+async function sigPollLobby() {
+  if (!sigState.token) return;
+  // get online count (excluding self)
+  const res = await nhostQuery(`
+    query($cutoff:timestamptz!){
+      signal_online(where:{last_ping:{_gte:$cutoff}}){token name}
+    }`, { cutoff: new Date(Date.now()-18000).toISOString() });
+  const online = (res?.data?.signal_online||[]).filter(u=>u.token!==sigState.token);
+  const count  = online.length;
+  sigEl('sig-online-count').textContent = count + ' online';
+
+  if (count === 0) {
+    sigEl('sig-status-msg').textContent = '// no one in signal right now';
+    sigEl('sig-send-signal-btn').disabled = true;
+  } else {
+    sigEl('sig-status-msg').textContent = count===1
+      ? '// 1 person is waiting for a signal ✦'
+      : `// ${count} people online — signal goes random ✦`;
+    sigEl('sig-send-signal-btn').disabled = false;
+  }
+
+  // check for incoming pending signal to me
+  const inc = await nhostQuery(`
+    query($token:String!){
+      signal_requests(where:{to_token:{_eq:$token},status:{_eq:"pending"}},order_by:{created_at:desc},limit:1){id from_name from_token}
+    }`, { token: sigState.token });
+  const req = inc?.data?.signal_requests?.[0];
+  if (req && !sigState.reqId) {
+    sigState.reqId = req.id;
+    sigEl('sig-from-name').textContent = `signal from  ${req.from_name}`;
+    sigEl('sig-incoming').classList.add('show');
+  }
+
+  // check if my sent signal was accepted
+  if (sigState.reqId && !sigState.chatId) {
+    const chk = await nhostQuery(`
+      query($id:uuid!){
+        signal_requests_by_pk(id:$id){status to_token}
+      }`, { id: sigState.reqId });
+    const s = chk?.data?.signal_requests_by_pk;
+    if (s?.status === 'accepted') {
+      // get partner name
+      const pRes = await nhostQuery(`
+        query($token:String!,$cutoff:timestamptz!){
+          signal_online(where:{token:{_eq:$token},last_ping:{_gte:$cutoff}}){name}
+        }`, { token: s.to_token, cutoff: new Date(Date.now()-18000).toISOString() });
+      const pName = pRes?.data?.signal_online?.[0]?.name || '???';
+      sigStartChat(sigState.reqId, pName);
+    } else if (s?.status === 'rejected') {
+      sigState.reqId = null;
+      sigEl('sig-status-msg').textContent = '// signal rejected — try again';
+    }
+  }
+}
+
+async function sigSend() {
+  if (!sigState.token) return;
+  sigEl('sig-send-signal-btn').disabled = true;
+  sigEl('sig-status-msg').textContent = '// sending signal...';
+  // get online users excluding self
+  const res = await nhostQuery(`
+    query($cutoff:timestamptz!,$token:String!){
+      signal_online(where:{last_ping:{_gte:$cutoff},token:{_neq:$token}}){token name}
+    }`, { cutoff: new Date(Date.now()-18000).toISOString(), token: sigState.token });
+  const online = res?.data?.signal_online || [];
+  if (!online.length) {
+    sigEl('sig-status-msg').textContent = '// no one here anymore';
+    return;
+  }
+  // pick random
+  const target = online[Math.floor(Math.random()*online.length)];
+  const reqRes = await nhostQuery(`
+    mutation($from_name:String!,$from_token:String!,$to_token:String!){
+      insert_signal_requests_one(object:{from_name:$from_name,from_token:$from_token,to_token:$to_token}){id}
+    }`, { from_name: sigState.name, from_token: sigState.token, to_token: target.token });
+  sigState.reqId = reqRes?.data?.insert_signal_requests_one?.id;
+  sigEl('sig-status-msg').textContent = `// signal sent to ${target.name} — waiting...`;
+}
+
+async function sigAccept() {
+  if (!sigState.reqId) return;
+  sigEl('sig-incoming').classList.remove('show');
+  await nhostQuery(`
+    mutation($id:uuid!){
+      update_signal_requests_by_pk(pk_columns:{id:$id},_set:{status:"accepted"}){id from_name from_token}
+    }`, { id: sigState.reqId });
+  // get from_name
+  const r = await nhostQuery(`
+    query($id:uuid!){signal_requests_by_pk(id:$id){from_name}}
+  `, { id: sigState.reqId });
+  const fromName = r?.data?.signal_requests_by_pk?.from_name || '???';
+  sigStartChat(sigState.reqId, fromName);
+}
+
+async function sigReject() {
+  if (!sigState.reqId) return;
+  sigEl('sig-incoming').classList.remove('show');
+  await nhostQuery(`
+    mutation($id:uuid!){
+      update_signal_requests_by_pk(pk_columns:{id:$id},_set:{status:"rejected"}){id}
+    }`, { id: sigState.reqId });
+  sigState.reqId = null;
+}
+
+function sigStartChat(chatId, partnerName) {
+  clearInterval(sigState.pollTimer);
+  sigState.chatId      = chatId;
+  sigState.partnerName = partnerName;
+  sigState.lastMsgCount = 0;
+  sigEl('sig-chat-with').textContent = `chatting with  ${partnerName} ✦`;
+  sigEl('sig-messages').innerHTML = '';
+  sigShow('chat');
+  sigState.chatPollTimer = setInterval(sigPollChat, 1500);
+  sigPollChat();
+  sigEl('sig-msg-input').addEventListener('keydown', e => { if(e.key==='Enter') sigSendMsg(); });
+}
+
+async function sigPollChat() {
+  if (!sigState.chatId) return;
+  const res = await nhostQuery(`
+    query($chat_id:String!){
+      signal_messages(where:{chat_id:{_eq:$chat_id}},order_by:{sent_at:asc}){id sender_name content sent_at}
+    }`, { chat_id: sigState.chatId });
+  const msgs = res?.data?.signal_messages || [];
+  if (msgs.length !== sigState.lastMsgCount) {
+    sigState.lastMsgCount = msgs.length;
+    const box = sigEl('sig-messages');
+    box.innerHTML = msgs.map(m => {
+      const mine = m.sender_name === sigState.name;
+      const t = new Date(m.sent_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      return `<div class="sig-msg ${mine?'mine':'theirs'}">
+        ${!mine ? `<div class="sig-msg-name">${escHtml(m.sender_name)}</div>` : ''}
+        <div>${escHtml(m.content)}</div>
+        <div class="sig-msg-time">${t}</div>
+      </div>`;
+    }).join('');
+    box.scrollTop = box.scrollHeight;
+  }
+
+  // check if partner disconnected
+  await sigPing();
+  const partnerRes = await nhostQuery(`
+    query($cutoff:timestamptz!){
+      signal_online(where:{last_ping:{_gte:$cutoff}}){token}
+    }`, { cutoff: new Date(Date.now()-18000).toISOString() });
+  const onlineTokens = (partnerRes?.data?.signal_online||[]).map(u=>u.token);
+  // find partner token from request
+  const reqRes = await nhostQuery(`
+    query($id:uuid!){signal_requests_by_pk(id:$id){from_token to_token}}
+  `, { id: sigState.chatId });
+  const req = reqRes?.data?.signal_requests_by_pk;
+  if (req) {
+    const partnerToken = req.from_token === sigState.token ? req.to_token : req.from_token;
+    if (!onlineTokens.includes(partnerToken)) {
+      const box = sigEl('sig-messages');
+      box.innerHTML += `<div style="text-align:center;color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:9px;padding:10px">// ${escHtml(sigState.partnerName)} disconnected</div>`;
+      box.scrollTop = box.scrollHeight;
+      clearInterval(sigState.chatPollTimer);
+    }
+  }
+}
+
+async function sigSendMsg() {
+  const input = sigEl('sig-msg-input');
+  const content = input.value.trim();
+  if (!content || !sigState.chatId) return;
+  input.value = '';
+  await nhostQuery(`
+    mutation($chat_id:String!,$sender_name:String!,$content:String!){
+      insert_signal_messages_one(object:{chat_id:$chat_id,sender_name:$sender_name,content:$content}){id}
+    }`, { chat_id: sigState.chatId, sender_name: sigState.name, content });
+}
+
+async function sigEndChat() {
+  clearInterval(sigState.chatPollTimer);
+  sigState.chatId = null; sigState.reqId = null; sigState.partnerName = null;
+  sigState.lastMsgCount = 0;
+  sigShow('lobby');
+  sigEl('sig-status-msg').textContent = 'scanning for signals...';
+  sigState.pollTimer = setInterval(sigPollLobby, 2500);
+  sigPollLobby();
+}
+
+async function sigLeave() {
+  clearInterval(sigState.pollTimer);
+  clearInterval(sigState.pingTimer);
+  clearInterval(sigState.chatPollTimer);
+  if (sigState.token) {
+    await nhostQuery(`
+      mutation($token:String!){delete_signal_online(where:{token:{_eq:$token}}){affected_rows}}
+    `, { token: sigState.token });
+  }
+  sigState = { token:null, name:null, reqId:null, chatId:null, partnerName:null,
+    pollTimer:null, pingTimer:null, chatPollTimer:null, lastMsgCount:0 };
+  sigEl('sig-name-input').value = '';
+  sigShow('join');
+}
+
+// cleanup on tab close
+window.addEventListener('beforeunload', () => {
+  if (sigState.token) {
+    navigator.sendBeacon && navigator.sendBeacon('/beacon'); // fallback
+    nhostQuery(`mutation($t:String!){delete_signal_online(where:{token:{_eq:$t}}){affected_rows}}`,{t:sigState.token});
+  }
+});
 
 
 </script>
