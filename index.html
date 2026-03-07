@@ -1023,6 +1023,38 @@ body {
 }
 .sig-msg-send:hover { background:linear-gradient(180deg,#7a3adc,#5a1a9a); }
 
+.sig-system-msg {
+  align-self:stretch;
+  background:rgba(88,101,242,.07);
+  border:1px solid rgba(88,101,242,.2);
+  border-left:3px solid rgba(88,101,242,.5);
+  padding:10px 12px;
+  color:var(--dim);
+  font-size:9px;
+  line-height:1.8;
+}
+.sig-ended-notice {
+  text-align:center;
+  padding:14px 10px;
+  border-top:1px solid rgba(60,35,100,.3);
+  margin-top:8px;
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+}
+.sig-ended-txt {
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px; color:#f87171; letter-spacing:1px;
+}
+.sig-ended-back {
+  padding:6px 20px;
+  background:rgba(30,15,60,.6);
+  border:1px solid rgba(140,80,255,.35);
+  color:var(--a1);
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px; letter-spacing:2px; cursor:pointer;
+  transition:all .15s;
+}
+.sig-ended-back:hover { background:rgba(90,42,176,.3); border-color:var(--a1); }
+
 /* ═══════════════════════════════════════
    STATUS WINDOW
    ═══════════════════════════════════════ */
@@ -2882,12 +2914,16 @@ async function mobSigReject(){
   await nhostQuery(`mutation($id:uuid!){update_signal_requests_by_pk(pk_columns:{id:$id},_set:{status:"rejected"}){id}}`,{id:mobSig.reqId});
   mobSig.reqId=null;
 }
-function mobSigStartChat(chatId,partnerName){
+async function mobSigStartChat(chatId,partnerName){
   clearInterval(mobSig.pollTimer);
   mobSig.chatId=chatId; mobSig.partnerName=partnerName; mobSig.lastMsgCount=0;
   mobSigEl('mob-sig-chat-with').textContent='chatting with  '+partnerName+' ✦';
   mobSigEl('mob-sig-messages').innerHTML='';
   mobSigShow('chat');
+  await nhostQuery(
+    `mutation($c:String!,$m:String!){insert_signal_messages_one(object:{chat_id:$c,sender_name:"system",content:$m}){id}}`,
+    {c:chatId,m:SIG_RULES}
+  );
   mobSig.chatPollTimer=setInterval(mobSigPollChat,1500);
   mobSigPollChat();
   mobSigEl('mob-sig-msg').addEventListener('keydown',e=>{if(e.key==='Enter')mobSigSendMsg();});
@@ -2900,6 +2936,9 @@ async function mobSigPollChat(){
     mobSig.lastMsgCount=msgs.length;
     const box=mobSigEl('mob-sig-messages');
     box.innerHTML=msgs.map(m=>{
+      if(m.sender_name==='system'){
+        return `<div class="sig-system-msg"><pre style="margin:0;font-family:'Share Tech Mono',monospace;white-space:pre-wrap;font-size:9px">${escHtml(m.content)}</pre></div>`;
+      }
       const mine=m.sender_name===mobSig.name;
       const t=new Date(m.sent_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
       return `<div class="sig-msg ${mine?'mine':'theirs'}">
@@ -2916,9 +2955,9 @@ async function mobSigPollChat(){
     clearInterval(mobSig.chatPollTimer);
     const box=mobSigEl('mob-sig-messages');
     const inp=mobSigEl('mob-sig-msg'); if(inp) inp.disabled=true;
-    box.innerHTML+=`<div style="text-align:center;padding:14px 10px;border-top:1px solid rgba(60,35,100,.3);margin-top:8px">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);margin-bottom:10px">// ${escHtml(mobSig.partnerName)} ended the conversation</div>
-      <button onclick="mobSigEndChat()" style="padding:6px 20px;background:rgba(30,15,60,.6);border:1px solid rgba(140,80,255,.35);color:var(--a1);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;cursor:pointer;">⟵ back to lobby</button>
+    box.innerHTML+=`<div class="sig-ended-notice">
+      <div class="sig-ended-txt">✕  ${escHtml(mobSig.partnerName)} left the conversation</div>
+      <button class="sig-ended-back" onclick="mobSigEndChat()">⟵ back to lobby</button>
     </div>`;
     box.scrollTop=box.scrollHeight;
   }
@@ -3398,7 +3437,17 @@ async function sigReject() {
   sigState.reqId = null;
 }
 
-function sigStartChat(chatId, partnerName) {
+const SIG_RULES = `📋 signal rules
+─────────────────────
+✦ no hate speech or slurs
+✦ no harassment or threats
+✦ keep it respectful
+✦ no explicit content
+✦ be kind — you\'re talking to a real person
+─────────────────────
+have fun ✦`;
+
+async function sigStartChat(chatId, partnerName) {
   clearInterval(sigState.pollTimer);
   sigState.chatId      = chatId;
   sigState.partnerName = partnerName;
@@ -3406,6 +3455,11 @@ function sigStartChat(chatId, partnerName) {
   sigEl('sig-chat-with').textContent = `chatting with  ${partnerName} ✦`;
   sigEl('sig-messages').innerHTML = '';
   sigShow('chat');
+  // send rules as system message
+  await nhostQuery(
+    `mutation($c:String!,$m:String!){insert_signal_messages_one(object:{chat_id:$c,sender_name:"system",content:$m}){id}}`,
+    {c:chatId, m:SIG_RULES}
+  );
   sigState.chatPollTimer = setInterval(sigPollChat, 1500);
   sigPollChat();
   sigEl('sig-msg-input').addEventListener('keydown', e => { if(e.key==='Enter') sigSendMsg(); });
@@ -3422,6 +3476,9 @@ async function sigPollChat() {
     sigState.lastMsgCount = msgs.length;
     const box = sigEl('sig-messages');
     box.innerHTML = msgs.map(m => {
+      if (m.sender_name === 'system') {
+        return `<div class="sig-system-msg"><pre style="margin:0;font-family:'Share Tech Mono',monospace;white-space:pre-wrap;font-size:9px">${escHtml(m.content)}</pre></div>`;
+      }
       const mine = m.sender_name === sigState.name;
       const t = new Date(m.sent_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
       return `<div class="sig-msg ${mine?'mine':'theirs'}">
@@ -3445,18 +3502,13 @@ async function sigPollChat() {
 function sigShowEnded(partnerName) {
   const box = sigEl('sig-messages');
   box.innerHTML += `
-    <div style="text-align:center;padding:14px 10px;border-top:1px solid rgba(60,35,100,.3);margin-top:8px">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);margin-bottom:10px">
-        // ${escHtml(partnerName)} ended the conversation
-      </div>
-      <button onclick="sigEndChat()" style="padding:6px 20px;background:rgba(30,15,60,.6);border:1px solid rgba(140,80,255,.35);color:var(--a1);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;cursor:pointer;">
-        ⟵ back to lobby
-      </button>
+    <div class="sig-ended-notice">
+      <div class="sig-ended-txt">✕  ${escHtml(partnerName)} left the conversation</div>
+      <button class="sig-ended-back" onclick="sigEndChat()">⟵ back to lobby</button>
     </div>`;
   box.scrollTop = box.scrollHeight;
-  // disable input
   const inp = sigEl('sig-msg-input'); if(inp) inp.disabled = true;
-  const btn = document.querySelector('.sig-msg-send'); if(btn) btn.disabled = true;
+  const snd = document.querySelector('#win-signal .sig-msg-send'); if(snd) snd.disabled = true;
 }
 
 async function sigSendMsg() {
