@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>cil — faaa.space</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+/* ── VARS ── */
+:root {
+  --bg:     #06040f;
+  --bg2:    #0c0820;
+  --a1:     #c084fc;
+  --a2:     #f472b6;
+  --a3:     #67e8f9;
+  --dim:    rgba(192,132,252,.35);
+  --border: rgba(120,60,220,.28);
+  --text:   #d4c8f0;
+  --grey:   #6b5a8e;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Share Tech Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── STARS ── */
+#stars { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+/* ── SCANLINES ── */
+body::before {
+  content: '';
+  position: fixed; inset:0; z-index:1; pointer-events:none;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,.06) 2px, rgba(0,0,0,.06) 4px
+  );
+}
+
+/* ── NAV ── */
+nav {
+  position: relative; z-index:10;
+  display: flex; align-items:center; gap:0;
+  padding: 12px 32px;
+  background: linear-gradient(180deg,rgba(20,10,50,.95),rgba(10,5,25,.9));
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+.nav-logo {
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  color: var(--a1);
+  letter-spacing: 3px;
+  margin-right: auto;
+  text-decoration: none;
+}
+.nav-logo span { color: var(--a2); }
+.nav-links { display:flex; gap:24px; align-items:center; }
+.nav-links a {
+  font-size: 10px; letter-spacing: 2px; color: var(--grey);
+  text-decoration: none; transition: color .2s;
+}
+.nav-links a:hover { color: var(--a1); }
+.nav-back {
+  font-size: 10px; letter-spacing: 2px;
+  color: var(--grey); text-decoration: none;
+  transition: color .2s; margin-right: 24px;
+}
+.nav-back:hover { color: var(--a2); }
+
+/* ── MAIN WRAPPER ── */
+main {
+  position: relative; z-index:2;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 60px 32px 80px;
+}
+
+/* ── HERO ── */
+.hero { text-align:center; margin-bottom:64px; }
+
+.cil-logo {
+  font-family: 'VT323', monospace;
+  font-size: clamp(80px, 14vw, 140px);
+  line-height: 1;
+  background: linear-gradient(135deg, var(--a1), var(--a2) 50%, var(--a3));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 12px;
+  animation: logoGlow 4s ease-in-out infinite;
+}
+@keyframes logoGlow {
+  0%,100% { filter: drop-shadow(0 0 20px rgba(192,132,252,.3)); }
+  50%      { filter: drop-shadow(0 0 40px rgba(244,114,182,.5)); }
+}
+
+.hero-sub {
+  font-size: 11px; letter-spacing: 4px; color: var(--grey);
+  margin-top: 12px;
+}
+.hero-desc {
+  font-size: 13px; color: rgba(212,200,240,.65);
+  margin-top: 20px; line-height: 1.8;
+  max-width: 480px; margin-left:auto; margin-right:auto;
+}
+
+/* ── COMMAND BOX ── */
+.cmd-section { margin-bottom: 56px; }
+
+.section-label {
+  font-size: 9px; letter-spacing: 4px; color: var(--grey);
+  margin-bottom: 16px; display:flex; align-items:center; gap:10px;
+}
+.section-label::after {
+  content:''; flex:1; height:1px; background: var(--border);
+}
+
+.cmd-grid { display:grid; gap:12px; }
+
+.cmd-card {
+  background: linear-gradient(135deg,rgba(18,8,40,.9),rgba(10,5,25,.95));
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color .25s, transform .15s;
+}
+.cmd-card::before {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg,rgba(192,132,252,.04),transparent 60%);
+  pointer-events:none;
+}
+.cmd-card:hover {
+  border-color: rgba(192,132,252,.55);
+  transform: translateY(-1px);
+}
+.cmd-card:hover .cmd-copy-btn { opacity:1; }
+
+.cmd-platform {
+  font-size: 8px; letter-spacing: 3px; color: var(--a2);
+  margin-bottom: 8px;
+}
+.cmd-line {
+  font-size: 13px; color: var(--a3);
+  letter-spacing: 0.5px;
+}
+.cmd-line .prompt { color: var(--grey); margin-right: 6px; }
+.cmd-line .cmd-text { color: var(--a1); }
+.cmd-note { font-size: 9px; color: var(--grey); margin-top: 6px; }
+
+.cmd-copy-btn {
+  position: absolute; top:12px; right:12px;
+  font-size: 8px; letter-spacing: 2px;
+  padding: 4px 10px;
+  background: rgba(192,132,252,.12);
+  border: 1px solid rgba(192,132,252,.3);
+  color: var(--a1); cursor:pointer;
+  opacity: 0; transition: opacity .2s, background .2s;
+}
+.cmd-copy-btn:hover { background: rgba(192,132,252,.22); }
+.cmd-copy-btn.copied { color: var(--a3); border-color: rgba(103,232,249,.3); }
+
+/* ── DIVIDER ── */
+.or-divider {
+  text-align:center; font-size:9px; letter-spacing:4px;
+  color: var(--grey); margin: 4px 0;
+  display:flex; align-items:center; gap:12px;
+}
+.or-divider::before, .or-divider::after {
+  content:''; flex:1; height:1px; background:var(--border);
+}
+
+/* ── DOWNLOADS ── */
+.downloads-section { margin-bottom: 56px; }
+
+.dl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.dl-card {
+  background: linear-gradient(160deg,rgba(18,8,40,.95),rgba(8,4,20,.98));
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 22px 20px 18px;
+  position: relative; overflow:hidden;
+  text-decoration: none;
+  display: block;
+  transition: border-color .25s, transform .15s, box-shadow .25s;
+}
+.dl-card::after {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg,rgba(192,132,252,.05),transparent 55%);
+  pointer-events:none; transition: opacity .25s;
+}
+.dl-card:hover {
+  border-color: rgba(192,132,252,.55);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(120,40,220,.2);
+}
+
+.dl-os {
+  display: flex; align-items:center; gap:10px;
+  margin-bottom: 12px;
+}
+.dl-icon { font-size: 22px; }
+.dl-name {
+  font-family: 'VT323', monospace;
+  font-size: 22px; letter-spacing: 2px; color: var(--a1);
+}
+.dl-filename {
+  font-size: 9px; letter-spacing: 2px; color: var(--grey);
+  margin-bottom: 14px;
+}
+.dl-filename span { color: var(--a2); }
+
+.dl-btn {
+  display: inline-flex; align-items:center; gap:8px;
+  font-size: 9px; letter-spacing: 3px;
+  padding: 7px 16px;
+  background: linear-gradient(180deg,rgba(90,42,176,.5),rgba(30,15,60,.7));
+  border: 1px solid rgba(140,80,255,.35);
+  color: var(--a1);
+  transition: all .2s;
+}
+.dl-card:hover .dl-btn {
+  background: linear-gradient(180deg,rgba(120,60,210,.6),rgba(50,25,90,.8));
+  border-color: rgba(192,132,252,.55);
+}
+.dl-btn-arrow { color: var(--a2); }
+
+/* ── RELEASES NOTE ── */
+.releases-note {
+  margin-top: 16px;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--grey); text-align:center;
+}
+.releases-note a { color: var(--a1); text-decoration:none; }
+.releases-note a:hover { color: var(--a2); }
+
+/* ── HOW IT WORKS ── */
+.how-section { margin-bottom: 56px; }
+
+.steps { display:grid; gap:10px; }
+.step {
+  display:flex; align-items:flex-start; gap:14px;
+  padding: 14px 18px;
+  background: rgba(12,8,28,.7);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--a1);
+  border-radius: 2px;
+}
+.step-num {
+  font-family: 'VT323', monospace;
+  font-size: 22px; color: var(--a1); flex-shrink:0; line-height:1.2;
+}
+.step-txt { font-size: 11px; line-height:1.7; color: rgba(212,200,240,.7); }
+.step-txt code {
+  color: var(--a3); background:rgba(103,232,249,.08);
+  padding: 1px 5px; border-radius:2px;
+}
+
+/* ── FOOTER ── */
+footer {
+  position: relative; z-index:2;
+  text-align: center; padding: 28px;
+  border-top: 1px solid var(--border);
+  font-size: 9px; letter-spacing: 2px; color: var(--grey);
+}
+footer a { color: var(--a1); text-decoration:none; }
+footer a:hover { color: var(--a2); }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(20px);
+  background: rgba(18,8,40,.97); border: 1px solid rgba(103,232,249,.4);
+  color: var(--a3); font-size: 9px; letter-spacing: 3px;
+  padding: 10px 20px; opacity:0; pointer-events:none;
+  transition: opacity .3s, transform .3s;
+  z-index:999;
+}
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ── CURSOR ── */
+* { cursor: none !important; }
+#cursor {
+  position:fixed; pointer-events:none; z-index:9999;
+  font-size:14px; color: var(--a1);
+  transform: translate(-50%,-50%);
+  transition: color .2s;
+  animation: cursorSpin 6s linear infinite;
+}
+@keyframes cursorSpin {
+  0%   { transform:translate(-50%,-50%) rotate(0deg); }
+  100% { transform:translate(-50%,-50%) rotate(360deg); }
+}
+
+/* ── MOBILE ── */
+@media(max-width:600px){
+  main { padding:40px 20px 60px; }
+  nav  { padding:12px 20px; }
+  .cil-logo { letter-spacing:6px; }
+  .dl-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div id="cursor">✦</div>
+<div id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">FAA<span>A</span></a>
+  <div class="nav-links">
+    <a href="https://faaa.space" class="nav-back">← back to site</a>
+    <a href="https://github.com/faares01/faaa.space" target="_blank">github</a>
+    <a href="https://github.com/faares01/faaa.space/releases" target="_blank">releases</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="cil-logo">cil</div>
+    <div class="hero-sub">// command line interface — faaa.space</div>
+    <div class="hero-desc">
+      A terminal portfolio card. No dependencies. Pure Node.js.<br>
+      Run from anywhere. Works on every OS.
+    </div>
+  </div>
+
+  <!-- QUICK COMMANDS -->
+  <div class="cmd-section">
+    <div class="section-label">// quick run — no install needed</div>
+    <div class="cmd-grid">
+
+      <div class="cmd-card" onclick="copyCmd(this,'npx @faares/faaa')">
+        <div class="cmd-platform">ANY PLATFORM — npx</div>
+        <div class="cmd-line">
+          <span class="prompt">$</span>
+          <span class="cmd-text">npx @faares/faaa</span>
+        </div>
+        <div class="cmd-note">requires Node.js installed</div>
+        <button class="cmd-copy-btn">COPY</button>
+      </div>
+
+      <div class="or-divider">OR</div>
+
+      <div class="cmd-card" onclick="copyCmd(this,'curl -s https://faaa.space/Terminal.js | node')">
+        <div class="cmd-platform">ANY PLATFORM — curl</div>
+        <div class="cmd-line">
+          <span class="prompt">$</span>
+          <span class="cmd-text">curl -s https://faaa.space/Terminal.js | node</span>
+        </div>
+        <div class="cmd-note">requires curl + Node.js — no install, runs directly</div>
+        <button class="cmd-copy-btn">COPY</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DOWNLOADS -->
+  <div class="downloads-section">
+    <div class="section-label">// download binary — no Node.js needed</div>
+    <div class="dl-grid">
+
+      <!-- Windows -->
+      <a class="dl-card" href="https://github.com/faares01/faaa.space/releases/latest/download/faaa-win.exe" download>
+        <div class="dl-os">
+          <span class="dl-icon">🪟</span>
+          <span class="dl-name">WINDOWS</span>
+        </div>
+        <div class="dl-filename">downloads/<span>faaa-win.exe</span></div>
+        <div class="dl-btn"><span>↓</span><span>DOWNLOAD</span><span class="dl-btn-arrow">→</span></div>
+      </a>
+
+      <!-- macOS -->
+      <a class="dl-card" href="https://github.com/faares01/faaa.space/releases/latest/download/faaa-macos" download>
+        <div class="dl-os">
+          <span class="dl-icon">🍎</span>
+          <span class="dl-name">MACOS</span>
+        </div>
+        <div class="dl-filename">downloads/<span>faaa-macos</span></div>
+        <div class="dl-btn"><span>↓</span><span>DOWNLOAD</span><span class="dl-btn-arrow">→</span></div>
+      </a>
+
+      <!-- Linux -->
+      <a class="dl-card" href="https://github.com/faares01/faaa.space/releases/latest/download/faaa-linux" download>
+        <div class="dl-os">
+          <span class="dl-icon">🐧</span>
+          <span class="dl-name">LINUX</span>
+        </div>
+        <div class="dl-filename">downloads/<span>faaa-linux</span></div>
+        <div class="dl-btn"><span>↓</span><span>DOWNLOAD</span><span class="dl-btn-arrow">→</span></div>
+      </a>
+
+    </div>
+    <div class="releases-note">
+      all releases on
+      <a href="https://github.com/faares01/faaa.space/releases" target="_blank">github.com/faares01/faaa.space/releases</a>
+    </div>
+  </div>
+
+  <!-- HOW TO USE -->
+  <div class="how-section">
+    <div class="section-label">// after downloading binary</div>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-txt">
+          <strong>macOS / Linux</strong> — make it executable then run:<br>
+          <code>chmod +x faaa-macos && ./faaa-macos</code>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-txt">
+          <strong>Windows</strong> — open terminal in download folder and run:<br>
+          <code>.\faaa-win.exe</code>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-txt">
+          Navigate with <code>↑↓</code> arrows, press <code>Enter</code> to open,
+          <code>b</code> to go back, <code>q</code> to quit.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <span>✦</span>
+  &nbsp;&nbsp;
+  <a href="/">faaa.space</a>
+  &nbsp;&nbsp;·&nbsp;&nbsp;
+  <a href="https://github.com/faares01/faaa.space" target="_blank">github</a>
+  &nbsp;&nbsp;·&nbsp;&nbsp;
+  <a href="https://github.com/faares01/faaa.space/releases" target="_blank">releases</a>
+  &nbsp;&nbsp;
+  <span>✦</span>
+</footer>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+});
+
+// ── STARS ──
+(function(){
+  const cv = document.getElementById('stars');
+  const ctx = cv.getContext('2d');
+  let W, H, stars = [], shooting = null;
+
+  function resize(){
+    W = cv.width  = window.innerWidth;
+    H = cv.height = window.innerHeight;
+  }
+
+  function mkStars(){
+    stars = Array.from({length: 160}, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 1.2 + 0.2,
+      spd: Math.random() * 0.012 + 0.004,
+      phase: Math.random() * Math.PI * 2,
+    }));
+  }
+
+  function drawStar4(x,y,r,a){
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.fillStyle = '#c084fc';
+    ctx.translate(x,y);
+    ctx.beginPath();
+    for(let i=0;i<4;i++){
+      const angle = (i/4)*Math.PI*2;
+      const angle2= ((i+.5)/4)*Math.PI*2;
+      ctx.lineTo(Math.cos(angle)*r*2.5, Math.sin(angle)*r*2.5);
+      ctx.lineTo(Math.cos(angle2)*r*.6, Math.sin(angle2)*r*.6);
+    }
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+
+  let t = 0;
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    t += 0.016;
+    stars.forEach(s => {
+      const a = 0.25 + 0.55 * (Math.sin(t * s.spd * 60 + s.phase) * .5 + .5);
+      drawStar4(s.x, s.y, s.r, a);
+    });
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize', () => { resize(); mkStars(); });
+  resize(); mkStars(); frame();
+})();
+
+// ── COPY ──
+function copyCmd(card, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = card.querySelector('.cmd-copy-btn');
+    btn.textContent = 'COPIED';
+    btn.classList.add('copied');
+    showToast('copied to clipboard ✦');
+    setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ── STAGGER REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.cmd-card,.dl-card,.step').forEach((el,i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(18px)';
+  el.style.transition = `opacity .5s ease ${i*0.07}s, transform .5s ease ${i*0.07}s, border-color .25s, box-shadow .25s`;
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
