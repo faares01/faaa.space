@@ -164,6 +164,7 @@ body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monosp
     <button class="nav-btn active" id="nav-chat"   onclick="setPanel('chat')">💬 CHAT</button>
     <button class="nav-btn"        id="nav-blog"   onclick="setPanel('blog')">📝 BLOG</button>
     <button class="nav-btn"        id="nav-signal" onclick="setPanel('signal')">📡 SIGNAL</button>
+    <button class="nav-btn"        id="nav-marks"  onclick="setPanel('marks')">🖊 MARKS</button>
     <div class="app-user">
       <span>// FAA</span>
       <button class="logout-btn" onclick="doLogout()">log out</button>
@@ -245,6 +246,21 @@ body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monosp
         <div style="padding:0;max-height:340px;overflow-y:auto" id="spy-msgs"><div class="loading-state">// loading messages...</div></div>
       </div>
     </div>
+  </div>
+
+  <!-- ── MARKS ── -->
+  <div class="panel" id="panel-marks">
+    <div class="panel-title">🖊 Visitor Marks <span id="adm-marks-count" style="font-size:11px;color:var(--dim)"></span></div>
+
+    <canvas id="adm-marks-cv" style="display:block;width:100%;height:420px;background:#07050e;border:1px solid var(--border);margin-bottom:14px"></canvas>
+
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button onclick="loadMarks()" style="padding:5px 16px;cursor:pointer;background:linear-gradient(180deg,rgba(90,42,176,.5),rgba(30,15,60,.7));border:1px solid rgba(140,80,255,.3);color:var(--a1);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px">↺ RELOAD</button>
+      <button onclick="admClearAll()" style="padding:5px 16px;cursor:pointer;background:rgba(200,60,60,.08);border:1px solid rgba(200,60,60,.3);color:#f87171;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px">✕ CLEAR ALL MARKS</button>
+    </div>
+
+    <div style="font-size:8px;color:var(--dim);letter-spacing:2px;margin-bottom:8px">// BY USER — click to delete all marks from that user</div>
+    <div id="adm-marks-list" style="border:1px solid var(--border);max-height:380px;overflow-y:auto"></div>
   </div>
 
   <div class="status-bar">
@@ -336,14 +352,14 @@ function doLogout(){
 
 // ── PANELS ──
 function setPanel(name){
-  ['chat','blog','signal'].forEach(p=>{
+  ['chat','blog','signal','marks'].forEach(p=>{
     document.getElementById('panel-'+p).classList.toggle('active',p===name);
     document.getElementById('nav-'+p).classList.toggle('active',p===name);
   });
 }
 
 function startApp(){
-  loadChat(); loadBlog(); loadSignal();
+  loadChat(); loadBlog(); loadSignal(); loadMarks();
   polls.push(setInterval(loadChat,4000));
   polls.push(setInterval(loadBlog,8000));
   polls.push(setInterval(loadSignal,5000));
@@ -585,6 +601,91 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('chat-inp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();adminSendChat();}});
   document.getElementById('spy-inp').addEventListener('keydown',e=>{if(e.key==='Enter')spySend();});
 });
+
+// ═══════════════════════
+// MARKS ADMIN
+// ═══════════════════════
+const NHOST_M = 'https://nlbllfpowhdjugrkrvcr.hasura.eu-central-1.nhost.run/v1/graphql';
+async function mgql(q,v={}){
+  try{const r=await fetch(NHOST_M,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q,variables:v})});return r.json();}catch(e){return null;}
+}
+
+let _admMarks=[];
+
+async function loadMarks(){
+  const r=await mgql(`query{life_marks(order_by:{created_at:asc}){id user_id username mark_data created_at}}`);
+  _admMarks=r?.data?.life_marks||[];
+  document.getElementById('adm-marks-count').textContent='('+_admMarks.length+' marks)';
+  _admRenderCanvas();
+  _admRenderList();
+}
+
+function _admRenderCanvas(){
+  const cv=document.getElementById('adm-marks-cv');
+  if(!cv) return;
+  cv.width=cv.offsetWidth||880; cv.height=420;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#07050e'; ctx.fillRect(0,0,cv.width,cv.height);
+  ctx.strokeStyle='rgba(60,35,100,.12)'; ctx.lineWidth=.7;
+  for(let x=0;x<cv.width;x+=32){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,cv.height);ctx.stroke();}
+  for(let y=0;y<cv.height;y+=32){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cv.width,y);ctx.stroke();}
+  _admMarks.forEach(m=>{try{_admDraw(ctx,JSON.parse(m.mark_data));}catch(e){}});
+}
+
+function _admDraw(ctx,d){
+  if(!d||!d.t) return;
+  ctx.save(); ctx.globalAlpha=d.a??1;
+  const col=d.c||'#c084fc', sz=d.s||4;
+  if(d.t==='stroke'||d.t==='pen'||d.t==='brush'){
+    if(!d.p||!d.p.length){ctx.restore();return;}
+    ctx.strokeStyle=col;ctx.lineWidth=sz;ctx.lineCap='round';ctx.lineJoin='round';
+    if(d.p.length===1){ctx.beginPath();ctx.arc(d.p[0][0],d.p[0][1],sz/2,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();}
+    else{ctx.beginPath();ctx.moveTo(d.p[0][0],d.p[0][1]);for(let i=1;i<d.p.length;i++)ctx.lineTo(d.p[i][0],d.p[i][1]);ctx.stroke();}
+  } else if(d.t==='spray'){ctx.fillStyle=col;(d.p||[]).forEach(p=>{ctx.beginPath();ctx.arc(p[0],p[1],sz*.25,0,Math.PI*2);ctx.fill();});}
+  else if(d.t==='line'){ctx.strokeStyle=col;ctx.lineWidth=sz;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(d.x1,d.y1);ctx.lineTo(d.x2,d.y2);ctx.stroke();}
+  else if(d.t==='rect'){ctx.strokeStyle=col;ctx.lineWidth=sz;ctx.strokeRect(d.x,d.y,d.w,d.h);}
+  else if(d.t==='circle'){ctx.strokeStyle=col;ctx.lineWidth=sz;ctx.beginPath();ctx.ellipse(d.cx,d.cy,Math.abs(d.rx),Math.abs(d.ry),0,0,Math.PI*2);ctx.stroke();}
+  else if(d.t==='text'){ctx.fillStyle=col;ctx.font=`bold ${sz*5}px Share Tech Mono,monospace`;ctx.fillText(d.txt,d.x,d.y);}
+  ctx.restore();
+}
+
+function _admRenderList(){
+  const box=document.getElementById('adm-marks-list');
+  if(!box) return;
+  const byUser={};
+  _admMarks.forEach(m=>{
+    if(!byUser[m.user_id]) byUser[m.user_id]={uname:m.username||m.user_id.slice(0,16),ids:[],count:0,last:m.created_at};
+    byUser[m.user_id].ids.push(m.id); byUser[m.user_id].count++;
+    if(m.created_at>byUser[m.user_id].last) byUser[m.user_id].last=m.created_at;
+  });
+  box.innerHTML=Object.entries(byUser).map(([uid,data])=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid rgba(60,35,100,.2);font-size:9px">
+      <div style="flex:1">
+        <span style="color:var(--a1)">${h(data.uname)}</span>
+        <span style="color:var(--dim);font-size:7px;margin-left:8px">${h(uid)}</span>
+      </div>
+      <span style="color:var(--a3)">${data.count} marks</span>
+      <span style="color:var(--dim);font-size:7px">${new Date(data.last).toLocaleDateString('en-GB')}</span>
+      <button onclick="admDeleteUser('${uid}')" style="padding:2px 10px;cursor:pointer;border:1px solid rgba(200,60,60,.3);background:rgba(200,60,60,.07);color:#f87171;font-size:8px;transition:all .1s"
+        onmouseover="this.style.background='rgba(200,60,60,.2)'" onmouseout="this.style.background='rgba(200,60,60,.07)'">✕ delete</button>
+    </div>`).join('') || '<div style="padding:18px;color:var(--dim);font-size:9px">// no marks yet</div>';
+}
+
+async function admDeleteUser(uid){
+  if(!confirm('Delete ALL marks from this user?')) return;
+  const ids=_admMarks.filter(m=>m.user_id===uid).map(m=>m.id);
+  for(const id of ids) await mgql(`mutation($id:uuid!){delete_life_marks_by_pk(id:$id){id}}`,{id});
+  setStatus('// deleted '+ids.length+' marks');
+  loadMarks();
+}
+
+async function admClearAll(){
+  if(!confirm('Delete ALL marks from EVERYONE? Cannot be undone.')) return;
+  await mgql(`mutation{delete_life_marks(where:{}){affected_rows}}`);
+  setStatus('// all marks cleared');
+  loadMarks();
+}
+
 </script>
 </body>
 </html>
