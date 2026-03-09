@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FAA // World</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════
+   Nhost tables needed:
+
+   world_users:
+     id uuid pk default gen_random_uuid()
+     username text notnull unique
+     password text notnull
+     discord_id text nullable
+     created_at timestamptz default now()
+
+   world_characters:
+     id uuid pk default gen_random_uuid()
+     user_id uuid notnull unique
+     display_name text
+     skin_tone text
+     hair_color text
+     hair_style int4 default 0
+     outfit_color text
+     outfit_style int4 default 0
+
+   Permissions: public role → select + insert + update on both
+   ══════════════════════════════════ */
+:root{
+  --bg:#07050e;--a1:#c084fc;--a2:#f472b6;--a3:#67e8f9;
+  --text:#d4c8f0;--dim:#6b5a8e;
+  --border:rgba(120,60,220,.25);
+  --tb:linear-gradient(180deg,#3a1878,#1e0c44);
+  --win:linear-gradient(180deg,#1a0e38,#110824);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;overflow:hidden;height:100vh;width:100vw;}
+
+/* screens */
+.screen{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;}
+.screen.active{display:flex;}
+#screen-world{display:none;position:fixed;inset:0;z-index:1;}
+#screen-world.active{display:block;}
+#world-canvas{display:block;}
+
+/* win box */
+.win-box{border:1px solid var(--border);background:var(--win);
+  box-shadow:0 0 60px rgba(0,0,0,.7),inset 0 1px 0 rgba(192,132,252,.1);}
+.win-tb{background:var(--tb);padding:7px 10px;display:flex;align-items:center;gap:6px;
+  border-bottom:1px solid rgba(120,60,220,.3);}
+.win-tl{flex:1;display:flex;align-items:center;gap:6px;font-size:11px;color:#d0b0ff;letter-spacing:1px;}
+.wbtn{width:13px;height:13px;border-radius:50%;border:none;cursor:pointer;}
+.bm{background:#f0a500;}.bx{background:#3a8a3a;}.bc{background:#c0392b;}
+.win-body{padding:24px;}
+
+/* forms */
+.fi{width:100%;padding:8px 10px;background:rgba(10,5,25,.9);border:1px solid rgba(60,35,100,.5);
+  color:var(--text);font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;
+  transition:border-color .15s;margin-bottom:8px;}
+.fi:focus{border-color:var(--a1);}
+.fi-lbl{font-size:8px;color:var(--dim);letter-spacing:2px;margin-bottom:3px;display:block;}
+.btn{width:100%;padding:9px;cursor:pointer;
+  background:linear-gradient(180deg,#5a2ab0,#3a1278);
+  border:1px solid rgba(140,80,255,.4);color:#e0d0ff;
+  font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;transition:all .15s;margin-top:4px;}
+.btn:hover{background:linear-gradient(180deg,#7a3adc,#5a1a9a);}
+.btn.alt{background:transparent;color:var(--dim);border-color:rgba(60,35,100,.5);margin-top:6px;}
+.btn.alt:hover{color:var(--text);}
+.errmsg{font-size:9px;color:#f87171;min-height:14px;margin-bottom:4px;}
+.logo{font-family:'VT323',monospace;font-size:50px;letter-spacing:5px;color:#fff;
+  text-shadow:0 0 30px rgba(192,132,252,.5);text-align:center;margin-bottom:4px;}
+.logo-sub{font-size:9px;color:var(--dim);letter-spacing:3px;text-align:center;margin-bottom:20px;}
+.tabs{display:flex;border-bottom:1px solid rgba(60,35,100,.4);margin-bottom:18px;}
+.tab{flex:1;padding:8px;text-align:center;cursor:pointer;font-size:10px;letter-spacing:2px;
+  color:var(--dim);border-bottom:2px solid transparent;transition:all .15s;}
+.tab.active{color:var(--a1);border-bottom-color:var(--a1);}
+
+/* char creator */
+.char-grid{display:grid;grid-template-columns:200px 1fr;gap:20px;}
+#char-preview-canvas{border:1px solid var(--border);background:#0d0818;display:block;}
+.char-opts{display:flex;flex-direction:column;gap:12px;}
+.opt-lbl{font-size:8px;color:var(--dim);letter-spacing:2px;margin-bottom:4px;}
+.opt-row{display:flex;flex-wrap:wrap;gap:6px;}
+.opt-btn{width:28px;height:28px;border:2px solid transparent;cursor:pointer;
+  transition:all .1s;border-radius:2px;font-size:13px;display:flex;align-items:center;justify-content:center;
+  font-family:sans-serif;}
+.opt-btn:hover{border-color:rgba(192,132,252,.4);}
+.opt-btn.sel{border-color:var(--a1)!important;box-shadow:0 0 6px rgba(192,132,252,.4);}
+.swatch{border-radius:50%!important;}
+
+/* HUD */
+#hud-bar{position:fixed;top:0;left:0;right:0;z-index:5;background:rgba(7,5,14,.92);
+  border-bottom:1px solid rgba(60,35,100,.3);padding:0 14px;height:38px;
+  display:none;align-items:center;gap:12px;font-size:9px;color:var(--dim);letter-spacing:1px;}
+#hud-bar.show{display:flex;}
+#hud-name{color:var(--a1);font-weight:bold;}
+.hud-right{margin-left:auto;display:flex;align-items:center;gap:14px;}
+.hud-hint{font-size:8px;color:rgba(107,90,142,.6);}
+.exit-btn{padding:2px 10px;cursor:pointer;border:1px solid rgba(244,114,182,.3);
+  background:rgba(244,114,182,.06);color:var(--a2);font-size:8px;letter-spacing:1px;transition:all .1s;}
+.exit-btn:hover{background:rgba(244,114,182,.15);}
+
+/* prompt */
+#interact-prompt{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);
+  z-index:5;display:none;padding:8px 24px;background:rgba(10,5,25,.92);
+  border:1px solid var(--a1);color:var(--a1);font-size:10px;letter-spacing:3px;
+  text-align:center;animation:pls .8s ease-in-out infinite alternate;white-space:nowrap;}
+@keyframes pls{from{opacity:.6}to{opacity:1}}
+
+/* modal */
+#modal-overlay{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.65);
+  display:none;align-items:center;justify-content:center;}
+#modal-overlay.open{display:flex;}
+#modal-box{border:1px solid var(--border);background:var(--win);
+  min-width:340px;max-width:700px;width:90vw;max-height:85vh;
+  display:flex;flex-direction:column;}
+#modal-content{padding:20px;overflow-y:auto;flex:1;}
+.m-title{font-family:'VT323',monospace;font-size:28px;color:var(--a1);letter-spacing:3px;margin-bottom:10px;}
+.m-desc{font-size:10px;color:var(--dim);line-height:1.9;margin-bottom:14px;}
+.m-link{display:inline-block;padding:7px 22px;
+  background:linear-gradient(180deg,rgba(90,42,176,.5),rgba(30,15,60,.7));
+  border:1px solid rgba(140,80,255,.3);color:var(--a1);text-decoration:none;
+  font-size:10px;letter-spacing:2px;transition:all .15s;}
+.m-link:hover{background:linear-gradient(180deg,rgba(120,60,220,.6),rgba(60,25,120,.8));color:#fff;}
+
+/* shop */
+.shop-sec{margin-bottom:14px;}
+.shop-sec-title{font-size:8px;color:var(--dim);letter-spacing:2px;
+  border-bottom:1px solid rgba(60,35,100,.3);padding-bottom:4px;margin-bottom:8px;}
+.shop-grid{display:flex;flex-wrap:wrap;gap:6px;}
+.shop-item{padding:5px 10px;cursor:pointer;border:1px solid rgba(60,35,100,.4);
+  background:rgba(15,8,35,.5);font-size:9px;color:var(--text);transition:all .1s;
+  display:flex;align-items:center;gap:5px;}
+.shop-item:hover,.shop-item.sel{border-color:var(--a1);color:var(--a1);background:rgba(192,132,252,.1);}
+.sh-sw{width:13px;height:13px;border-radius:50%;border:1px solid rgba(255,255,255,.2);flex-shrink:0;}
+
+/* mini game */
+#game-canvas{display:block;background:#0d0818;border:1px solid var(--border);cursor:crosshair;}
+#game-score{font-size:10px;color:var(--a3);margin:6px 0;}
+
+/* admin */
+.admin-user-row{display:flex;align-items:center;gap:8px;padding:7px 10px;
+  border-bottom:1px solid rgba(60,35,100,.2);font-size:9px;}
+.admin-user-row:last-child{border-bottom:none;}
+.admin-user-row .un{color:var(--a1);flex:1;}
+.admin-user-row .uid{color:var(--dim);font-size:7px;}
+.admin-edit-btn{padding:2px 8px;cursor:pointer;border:1px solid rgba(192,132,252,.3);
+  background:rgba(192,132,252,.07);color:var(--a1);font-size:8px;transition:all .1s;}
+.admin-edit-btn:hover{background:rgba(192,132,252,.2);}
+.admin-del-btn{padding:2px 8px;cursor:pointer;border:1px solid rgba(200,60,60,.3);
+  background:rgba(200,60,60,.07);color:#f87171;font-size:8px;transition:all .1s;}
+.admin-del-btn:hover{background:rgba(200,60,60,.2);}
+.search-row{display:flex;gap:6px;margin-bottom:12px;}
+.search-inp{flex:1;padding:6px 10px;background:rgba(10,5,25,.9);border:1px solid rgba(60,35,100,.5);
+  color:var(--text);font-family:'Share Tech Mono',monospace;font-size:10px;outline:none;}
+.search-inp:focus{border-color:var(--a1);}
+
+/* status bar */
+#status-bar{position:fixed;bottom:0;left:0;right:0;height:22px;background:var(--tb);
+  border-top:1px solid rgba(120,60,220,.3);display:flex;align-items:center;
+  padding:0 12px;gap:12px;font-size:8px;color:var(--dim);letter-spacing:1px;z-index:30;}
+#sb-msg{color:var(--a1);}
+#sb-clock{margin-left:auto;}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:rgba(10,5,25,.5);}
+::-webkit-scrollbar-thumb{background:rgba(80,45,140,.4);}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div class="screen active" id="screen-login" style="background:radial-gradient(ellipse at center,#1a0838 0%,#07050e 70%)">
+  <canvas id="login-stars" style="position:fixed;inset:0;pointer-events:none;z-index:0"></canvas>
+  <div class="win-box" style="width:360px;z-index:1;max-height:96vh;overflow-y:auto">
+    <div class="win-tb">
+      <div class="win-tl">🌐 FAA WORLD</div>
+      <button class="wbtn bc" onclick="window.location.href='https://faaa.space'">✕</button>
+    </div>
+    <div class="win-body">
+      <div class="logo">WORLD</div>
+      <div class="logo-sub">// FAA's virtual space</div>
+      <div class="tabs">
+        <div class="tab active" onclick="authTab('login')">LOGIN</div>
+        <div class="tab" onclick="authTab('register')">REGISTER</div>
+      </div>
+      <div class="errmsg" id="auth-err"></div>
+      <div id="tab-login">
+        <label class="fi-lbl">username</label>
+        <input class="fi" id="l-user" type="text" autocomplete="off" placeholder="username...">
+        <label class="fi-lbl">password</label>
+        <input class="fi" id="l-pass" type="password" placeholder="password...">
+        <button class="btn" onclick="doLogin()">ENTER WORLD ✦</button>
+      </div>
+      <div id="tab-reg" style="display:none">
+        <label class="fi-lbl">username</label>
+        <input class="fi" id="r-user" type="text" autocomplete="off" placeholder="choose a username...">
+        <label class="fi-lbl">password</label>
+        <input class="fi" id="r-pass" type="password" placeholder="choose a password...">
+        <label class="fi-lbl">discord id <span style="color:var(--dim);font-size:7px">(optional)</span></label>
+        <input class="fi" id="r-disc" type="text" autocomplete="off" placeholder="your discord user id...">
+        <button class="btn" onclick="doRegister()">CREATE ACCOUNT ✦</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHAR CREATOR ══ -->
+<div class="screen" id="screen-char" style="background:radial-gradient(ellipse at center,#1a0838 0%,#07050e 70%);overflow-y:auto;padding:20px 0">
+  <div class="win-box" style="z-index:1;margin:auto;max-width:96vw">
+    <div class="win-tb">
+      <div class="win-tl">✦ Create Your Character</div>
+    </div>
+    <div class="win-body">
+      <div class="char-grid">
+        <div>
+          <canvas id="char-preview-canvas" width="200" height="300"></canvas>
+          <label class="fi-lbl" style="margin-top:8px">display name</label>
+          <input class="fi" id="c-dname" type="text" maxlength="16" placeholder="your name..." autocomplete="off">
+        </div>
+        <div class="char-opts">
+          <div>
+            <div class="opt-lbl">SKIN TONE</div>
+            <div class="opt-row" id="opt-skin"></div>
+          </div>
+          <div>
+            <div class="opt-lbl">HAIR COLOR</div>
+            <div class="opt-row" id="opt-hcol"></div>
+          </div>
+          <div>
+            <div class="opt-lbl">HAIR STYLE</div>
+            <div class="opt-row" id="opt-hstyle"></div>
+          </div>
+          <div>
+            <div class="opt-lbl">OUTFIT COLOR</div>
+            <div class="opt-row" id="opt-ocol"></div>
+          </div>
+          <div>
+            <div class="opt-lbl">OUTFIT STYLE</div>
+            <div class="opt-row" id="opt-ostyle"></div>
+          </div>
+          <div class="errmsg" id="char-err"></div>
+          <button class="btn" onclick="saveCharacter()">ENTER WORLD ✦</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ WORLD ══ -->
+<div class="screen" id="screen-world">
+  <canvas id="world-canvas"></canvas>
+  <div id="hud-bar">
+    <span>🌐</span>
+    <span id="hud-name">—</span>
+    <span id="hud-loc" style="color:var(--dim);font-size:8px"></span>
+    <div class="hud-right">
+      <span class="hud-hint">WASD·move &nbsp; E·interact &nbsp; ESC·close</span>
+      <button class="exit-btn" onclick="exitWorld()">⟵ EXIT</button>
+    </div>
+  </div>
+  <div id="interact-prompt"></div>
+</div>
+
+<!-- ══ ADMIN ══ -->
+<div class="screen" id="screen-admin" style="background:radial-gradient(ellipse at center,#1a0838 0%,#07050e 70%);overflow-y:auto;align-items:flex-start;padding:20px 0">
+  <div class="win-box" style="z-index:1;margin:auto;width:700px;max-width:96vw">
+    <div class="win-tb">
+      <div class="win-tl">🔐 FAA World — Admin Panel</div>
+      <button class="wbtn bc" onclick="showScreen('screen-login')">✕</button>
+    </div>
+    <div class="win-body" style="padding:16px">
+      <div style="font-family:'VT323',monospace;font-size:24px;color:var(--a1);letter-spacing:2px;margin-bottom:14px">
+        ADMIN — World Users
+      </div>
+      <div class="search-row">
+        <input class="search-inp" id="admin-search" type="text" placeholder="search by username or id..." oninput="adminSearch()">
+      </div>
+      <div id="admin-user-list" style="max-height:460px;overflow-y:auto;border:1px solid var(--border)">
+        <div style="padding:20px;color:var(--dim);font-size:9px">// loading users...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL ══ -->
+<div id="modal-overlay" onclick="bgCloseModal(event)">
+  <div id="modal-box">
+    <div class="win-tb">
+      <div class="win-tl" id="modal-tb-title">—</div>
+      <button class="wbtn bc" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- ══ STATUS BAR ══ -->
+<div id="status-bar">
+  <span>✦ FAA WORLD</span>
+  <span id="sb-msg"></span>
+  <span id="sb-clock"></span>
+</div>
+
+<script>
+// ════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════
+const NHOST = 'https://nlbllfpowhdjugrkrvcr.hasura.eu-central-1.nhost.run/v1/graphql';
+const ADMIN_USER = 'faares0', ADMIN_PASS = 'Fares100';
+
+const SKIN_TONES    = ['#fddbb4','#f1c27d','#e0ac69','#c68642','#8d5524'];
+const HAIR_COLORS   = ['#1a0a00','#5c3a1e','#c47a00','#d4af37','#e8e8e8','#f472b6','#a855f7','#22d3ee','#ef4444','#22c55e'];
+const OUTFIT_COLORS = ['#6b21a8','#be185d','#0e7490','#166534','#1d4ed8','#92400e','#374151','#c084fc'];
+const HAIR_STYLES   = [{n:'Short',s:0},{n:'Wavy',s:1},{n:'Spiky',s:2},{n:'Curly',s:3},{n:'Bun',s:4}];
+const OUTFIT_STYLES = [{n:'Casual',s:0},{n:'Hoodie',s:1},{n:'Coat',s:2},{n:'Uniform',s:3},{n:'Robe',s:4}];
+
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let currentUser = null;
+let currentChar = {
+  display_name:'', skin_tone:SKIN_TONES[0], hair_color:HAIR_COLORS[0],
+  hair_style:0, outfit_color:OUTFIT_COLORS[0], outfit_style:0
+};
+let allAdminUsers = [];
+let shopTempChar = null;
+let gameActive = false, gameScore = 0, gameTimeLeft = 0, gameTimer = null;
+let gameStars = [], gameCtx = null, gameCanvas = null;
+
+// Three.js
+let scene, camera, renderer, playerMesh, clock3;
+let keys = {};
+let buildings3D = [];
+let nearBuilding = null;
+let animFrameId = null;
+let playerX = 0, playerZ = 0;
+let groundGrid = null;
+
+// ════════════════════════════════════════
+// BUILDINGS
+// ════════════════════════════════════════
+const BUILDINGS = [
+  {id:'about',   label:'About Me',    x:0,   z:-18, col:0x6b21a8, ico:'✦'},
+  {id:'music',   label:'Music',       x:-18, z:0,   col:0xbe185d, ico:'🎵'},
+  {id:'blog',    label:'Blog',        x:18,  z:0,   col:0x0e7490, ico:'📝'},
+  {id:'signal',  label:'Signal Chat', x:0,   z:18,  col:0x065f46, ico:'📡'},
+  {id:'shop',    label:'Wardrobe',    x:-14, z:-14, col:0x92400e, ico:'👗'},
+  {id:'game',    label:'Mini Game',   x:14,  z:14,  col:0x166534, ico:'⭐'},
+  {id:'desktop', label:'FAA Site',    x:14,  z:-14, col:0x1e3a5f, ico:'🌐'},
+];
+
+// ════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════
+async function gql(query, vars={}) {
+  try {
+    const r = await fetch(NHOST, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({query, variables:vars})
+    });
+    return r.json();
+  } catch(e) { return null; }
+}
+function setStatus(m, c='var(--a1)') {
+  const e = document.getElementById('sb-msg');
+  if(e){ e.textContent=m; e.style.color=c; }
+  if(m) setTimeout(()=>{if(e&&e.textContent===m)e.textContent='';},3000);
+}
+function showScreen(id) {
+  ['screen-login','screen-char','screen-world','screen-admin'].forEach(s=>{
+    document.getElementById(s).classList.toggle('active', s===id);
+  });
+  if(id==='screen-world'){
+    document.getElementById('screen-world').style.display='block';
+    document.getElementById('hud-bar').classList.add('show');
+  } else {
+    document.getElementById('screen-world').style.display='none';
+    document.getElementById('hud-bar').classList.remove('show');
+  }
+}
+function h(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// clock
+setInterval(()=>{
+  const e=document.getElementById('sb-clock');
+  if(e) e.textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+},1000);
+
+// ════════════════════════════════════════
+// LOGIN STARS
+// ════════════════════════════════════════
+(function(){
+  const cv=document.getElementById('login-stars');
+  const ctx=cv.getContext('2d'); let W,H,stars=[];
+  function resize(){ W=cv.width=window.innerWidth; H=cv.height=window.innerHeight;
+    stars=Array.from({length:120},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.2,o:Math.random(),s:Math.random()*.018+.004,p:Math.random()*Math.PI*2})); }
+  window.addEventListener('resize',resize); resize();
+  let t=0;
+  (function loop(){ ctx.clearRect(0,0,W,H); t+=.016;
+    stars.forEach(s=>{ ctx.globalAlpha=(0.25+0.75*(0.5+0.5*Math.sin(t*s.s*60+s.p)))*s.o; ctx.fillStyle='#c084fc'; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill(); });
+    ctx.globalAlpha=1; requestAnimationFrame(loop); })();
+})();
+
+// ════════════════════════════════════════
+// AUTH TABS
+// ════════════════════════════════════════
+function authTab(t) {
+  document.querySelectorAll('.tabs .tab').forEach((el,i)=>el.classList.toggle('active',i===(t==='login'?0:1)));
+  document.getElementById('tab-login').style.display=t==='login'?'block':'none';
+  document.getElementById('tab-reg').style.display=t==='register'?'block':'none';
+  document.getElementById('auth-err').textContent='';
+}
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('screen-login').classList.contains('active')) return;
+  if(e.key==='Enter'){
+    document.getElementById('tab-login').style.display!=='none' ? doLogin() : doRegister();
+  }
+});
+
+// ════════════════════════════════════════
+// LOGIN
+// ════════════════════════════════════════
+async function doLogin() {
+  const u=document.getElementById('l-user').value.trim();
+  const p=document.getElementById('l-pass').value;
+  if(!u||!p){ document.getElementById('auth-err').textContent='// fill all fields'; return; }
+  // admin check
+  if(u===ADMIN_USER && p===ADMIN_PASS){ showScreen('screen-admin'); loadAdminUsers(); return; }
+  setStatus('// logging in...');
+  const res=await gql(`query($u:String!,$p:String!){world_users(where:{username:{_eq:$u},password:{_eq:$p}}){id username discord_id}}`,{u,p});
+  const user=res?.data?.world_users?.[0];
+  if(!user){ document.getElementById('auth-err').textContent='// incorrect credentials'; return; }
+  currentUser=user;
+  const cr=await gql(`query($uid:uuid!){world_characters(where:{user_id:{_eq:$uid}}){display_name skin_tone hair_color hair_style outfit_color outfit_style}}`,{uid:user.id});
+  const char=cr?.data?.world_characters?.[0];
+  if(char){ Object.assign(currentChar,char); startWorld(); }
+  else { showScreen('screen-char'); buildCharCreator(); }
+}
+
+async function doRegister() {
+  const u=document.getElementById('r-user').value.trim();
+  const p=document.getElementById('r-pass').value;
+  const d=document.getElementById('r-disc').value.trim();
+  const err=document.getElementById('auth-err');
+  if(!u||!p){ err.textContent='// fill username and password'; return; }
+  if(u.length<3){ err.textContent='// username must be at least 3 chars'; return; }
+  if(p.length<4){ err.textContent='// password must be at least 4 chars'; return; }
+  const chk=await gql(`query($u:String!){world_users(where:{username:{_eq:$u}}){id}}`,{u});
+  if(chk?.data?.world_users?.length){ err.textContent='// username already taken'; return; }
+  setStatus('// creating account...');
+  const res=await gql(`mutation($u:String!,$p:String!,$d:String){insert_world_users_one(object:{username:$u,password:$p,discord_id:$d}){id username}}`,{u,p,d:d||null});
+  const user=res?.data?.insert_world_users_one;
+  if(!user){ err.textContent='// error — check DB permissions'; return; }
+  currentUser=user;
+  showScreen('screen-char');
+  buildCharCreator();
+}
+
+// ════════════════════════════════════════
+// CHARACTER CREATOR
+// ════════════════════════════════════════
+function buildCharCreator() {
+  buildSwatches('opt-skin', SKIN_TONES, 'skin_tone', true);
+  buildSwatches('opt-hcol', HAIR_COLORS, 'hair_color', true);
+  buildStyleBtns('opt-hstyle', HAIR_STYLES, 'hair_style');
+  buildSwatches('opt-ocol', OUTFIT_COLORS, 'outfit_color', true);
+  buildStyleBtns('opt-ostyle', OUTFIT_STYLES, 'outfit_style');
+  drawCharPreview();
+}
+
+function buildSwatches(containerId, colors, prop, isSwatch) {
+  const el=document.getElementById(containerId); el.innerHTML='';
+  colors.forEach((c,i)=>{
+    const b=document.createElement('div');
+    b.className='opt-btn'+(isSwatch?' swatch':'')+(currentChar[prop]===c?' sel':'');
+    if(isSwatch){ b.style.background=c; b.style.borderColor=currentChar[prop]===c?'var(--a1)':'transparent'; }
+    else b.textContent=c;
+    b.onclick=()=>{ currentChar[prop]=c; buildCharCreator(); };
+    el.appendChild(b);
+  });
+}
+
+function buildStyleBtns(containerId, styles, prop) {
+  const el=document.getElementById(containerId); el.innerHTML='';
+  styles.forEach(({n,s})=>{
+    const b=document.createElement('div');
+    b.className='opt-btn'+(currentChar[prop]===s?' sel':'');
+    b.style.background=currentChar[prop]===s?'rgba(192,132,252,.15)':'rgba(15,8,35,.8)';
+    b.style.border=currentChar[prop]===s?'2px solid var(--a1)':'2px solid rgba(60,35,100,.4)';
+    b.style.width='auto'; b.style.padding='0 8px'; b.style.fontSize='9px'; b.style.letterSpacing='1px'; b.style.color=currentChar[prop]===s?'var(--a1)':'var(--dim)';
+    b.textContent=n;
+    b.onclick=()=>{ currentChar[prop]=s; buildCharCreator(); };
+    el.appendChild(b);
+  });
+}
+
+function drawCharPreview(char=currentChar, canvasId='char-preview-canvas') {
+  const cv=document.getElementById(canvasId); if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  // background
+  ctx.fillStyle='#0d0818'; ctx.fillRect(0,0,W,H);
+  // grid lines
+  ctx.strokeStyle='rgba(60,35,100,.2)'; ctx.lineWidth=1;
+  for(let i=0;i<W;i+=20){ ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,H); ctx.stroke(); }
+  for(let j=0;j<H;j+=20){ ctx.beginPath(); ctx.moveTo(0,j); ctx.lineTo(W,j); ctx.stroke(); }
+
+  const cx=W/2, skin=char.skin_tone, hcol=char.hair_color, ocol=char.outfit_color;
+  const hs=char.hair_style, os=char.outfit_style;
+
+  // shadow
+  ctx.fillStyle='rgba(0,0,0,.3)';
+  ctx.beginPath(); ctx.ellipse(cx,H-30,24,8,0,0,Math.PI*2); ctx.fill();
+
+  // legs
+  ctx.fillStyle=ocol;
+  ctx.fillRect(cx-16,H-100,14,45); ctx.fillRect(cx+2,H-100,14,45);
+  // shoes
+  ctx.fillStyle='#1a1a2e';
+  ctx.fillRect(cx-18,H-60,16,12); ctx.fillRect(cx,H-60,16,12);
+
+  // body / outfit
+  ctx.fillStyle=ocol;
+  if(os===0){ // casual - tshirt
+    ctx.fillRect(cx-22,H-175,44,75);
+  } else if(os===1){ // hoodie
+    ctx.fillStyle=ocol; ctx.fillRect(cx-24,H-178,48,78);
+    // pocket
+    ctx.fillStyle='rgba(0,0,0,.2)'; ctx.fillRect(cx-10,H-130,20,16);
+  } else if(os===2){ // coat
+    ctx.fillStyle=ocol; ctx.fillRect(cx-26,H-178,52,78);
+    // lapels
+    ctx.fillStyle='rgba(255,255,255,.1)';
+    ctx.beginPath(); ctx.moveTo(cx-4,H-178); ctx.lineTo(cx-22,H-140); ctx.lineTo(cx,H-150); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx+4,H-178); ctx.lineTo(cx+22,H-140); ctx.lineTo(cx,H-150); ctx.closePath(); ctx.fill();
+  } else if(os===3){ // uniform - white shirt + dark pants
+    ctx.fillStyle='#e8e0f8'; ctx.fillRect(cx-22,H-175,44,75);
+    ctx.fillStyle=ocol;
+    ctx.fillRect(cx-22,H-175,5,75); ctx.fillRect(cx+17,H-175,5,75);
+  } else { // robe
+    ctx.fillStyle=ocol;
+    ctx.beginPath(); ctx.moveTo(cx-20,H-178); ctx.lineTo(cx+20,H-178); ctx.lineTo(cx+34,H-55); ctx.lineTo(cx-34,H-55); ctx.closePath(); ctx.fill();
+  }
+
+  // arms
+  ctx.fillStyle=skin;
+  ctx.fillRect(cx-38,H-170,16,50); ctx.fillRect(cx+22,H-170,16,50);
+  // sleeves
+  ctx.fillStyle=ocol; ctx.globalAlpha=0.8;
+  ctx.fillRect(cx-38,H-170,16,30); ctx.fillRect(cx+22,H-170,16,30);
+  ctx.globalAlpha=1;
+
+  // neck
+  ctx.fillStyle=skin; ctx.fillRect(cx-8,H-200,16,24);
+  // head
+  ctx.fillStyle=skin;
+  ctx.beginPath(); ctx.roundRect(cx-26,H-255,52,62,[8]); ctx.fill();
+  // face details
+  ctx.fillStyle='rgba(0,0,0,.7)';
+  ctx.beginPath(); ctx.ellipse(cx-9,H-225,4,5,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+9,H-225,4,5,0,0,Math.PI*2); ctx.fill();
+  // pupils
+  ctx.fillStyle='#fff';
+  ctx.beginPath(); ctx.ellipse(cx-9,H-226,1.5,2,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+9,H-226,1.5,2,0,0,Math.PI*2); ctx.fill();
+  // smile
+  ctx.strokeStyle='rgba(0,0,0,.5)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.arc(cx,H-213,8,0.2,Math.PI-0.2); ctx.stroke();
+
+  // ears
+  ctx.fillStyle=skin;
+  ctx.beginPath(); ctx.ellipse(cx-26,H-230,5,8,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+26,H-230,5,8,0,0,Math.PI*2); ctx.fill();
+
+  // hair
+  ctx.fillStyle=hcol;
+  if(hs===0){ // short
+    ctx.beginPath(); ctx.roundRect(cx-27,H-258,54,24,[6,6,0,0]); ctx.fill();
+    ctx.fillRect(cx-27,H-250,6,16); ctx.fillRect(cx+21,H-250,6,16);
+  } else if(hs===1){ // wavy
+    ctx.beginPath(); ctx.roundRect(cx-28,H-260,56,26,[8,8,0,0]); ctx.fill();
+    // waves falling down sides
+    ctx.fillRect(cx-30,H-255,8,55); ctx.fillRect(cx+22,H-255,8,55);
+    ctx.beginPath(); ctx.arc(cx-30,H-200,8,0,Math.PI); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+30,H-200,8,0,Math.PI); ctx.fill();
+  } else if(hs===2){ // spiky
+    ctx.beginPath(); ctx.roundRect(cx-26,H-256,52,22,[4]); ctx.fill();
+    for(let sp=-20;sp<=20;sp+=10){
+      ctx.beginPath(); ctx.moveTo(cx+sp-6,H-254); ctx.lineTo(cx+sp,H-280); ctx.lineTo(cx+sp+6,H-254); ctx.closePath(); ctx.fill();
+    }
+  } else if(hs===3){ // curly
+    ctx.beginPath(); ctx.roundRect(cx-28,H-260,56,28,[8,8,0,0]); ctx.fill();
+    for(let cc=-24;cc<=24;cc+=12){
+      ctx.beginPath(); ctx.arc(cx+cc,H-258,8,0,Math.PI*2); ctx.fill();
+    }
+    ctx.fillRect(cx-30,H-250,8,60); ctx.fillRect(cx+22,H-250,8,60);
+  } else { // bun
+    ctx.beginPath(); ctx.roundRect(cx-26,H-256,52,22,[4]); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,H-268,14,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=hcol; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.arc(cx,H-268,9,0,Math.PI*1.5); ctx.stroke();
+  }
+
+  // name tag
+  if(char.display_name) {
+    ctx.font="bold 11px 'Share Tech Mono',monospace";
+    const tw=ctx.measureText(char.display_name).width;
+    ctx.fillStyle='rgba(10,5,25,.85)';
+    ctx.fillRect(cx-tw/2-6, H-290, tw+12, 18);
+    ctx.fillStyle='#c084fc'; ctx.textAlign='center';
+    ctx.fillText(char.display_name, cx, H-278);
+    ctx.textAlign='left';
+  }
+}
+
+async function saveCharacter() {
+  const dname=document.getElementById('c-dname').value.trim();
+  if(!dname){ document.getElementById('char-err').textContent='// enter a display name'; return; }
+  currentChar.display_name=dname;
+  setStatus('// saving character...');
+  const vars={
+    uid:currentUser.id, dn:dname,
+    st:currentChar.skin_tone, hc:currentChar.hair_color,
+    hs:currentChar.hair_style, oc:currentChar.outfit_color, os:currentChar.outfit_style
+  };
+  const res=await gql(`mutation($uid:uuid!,$dn:String!,$st:String!,$hc:String!,$hs:Int!,$oc:String!,$os:Int!){
+    insert_world_characters_one(object:{user_id:$uid,display_name:$dn,skin_tone:$st,hair_color:$hc,hair_style:$hs,outfit_color:$oc,outfit_style:$os},
+    on_conflict:{constraint:world_characters_user_id_key,update_columns:[display_name,skin_tone,hair_color,hair_style,outfit_color,outfit_style]}){id}}`,vars);
+  if(!res||res.errors){ document.getElementById('char-err').textContent='// save failed — check DB'; return; }
+  setStatus('// character saved ✦','var(--a3)');
+  startWorld();
+}
+
+// live preview on name input
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('c-dname')?.addEventListener('input',e=>{
+    currentChar.display_name=e.target.value; drawCharPreview();
+  });
+});
+
+// ════════════════════════════════════════
+// 3D WORLD
+// ════════════════════════════════════════
+function startWorld() {
+  showScreen('screen-world');
+  document.getElementById('hud-name').textContent = currentChar.display_name || currentUser.username;
+  initThree();
+  buildWorld();
+  spawnPlayer();
+  animate();
+}
+
+function initThree() {
+  if(renderer){ renderer.dispose(); }
+  const canvas=document.getElementById('world-canvas');
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.shadowMap.enabled=true;
+  renderer.setClearColor(0x07050e);
+
+  scene=new THREE.Scene();
+  scene.fog=new THREE.Fog(0x07050e,40,120);
+
+  camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,300);
+  camera.position.set(0,22,-18);
+  camera.lookAt(0,0,0);
+
+  clock3=new THREE.Clock();
+
+  // Ambient
+  const ambient=new THREE.AmbientLight(0x1a0e38,3);
+  scene.add(ambient);
+  // Main light
+  const dirLight=new THREE.DirectionalLight(0xc084fc,2);
+  dirLight.position.set(10,20,10);
+  dirLight.castShadow=true;
+  scene.add(dirLight);
+  // Accent
+  const pt=new THREE.PointLight(0xf472b6,1.5,60);
+  pt.position.set(-8,8,0);
+  scene.add(pt);
+  const pt2=new THREE.PointLight(0x67e8f9,1,60);
+  pt2.position.set(8,8,0);
+  scene.add(pt2);
+
+  window.addEventListener('resize',()=>{
+    camera.aspect=window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+  });
+}
+
+function buildWorld() {
+  // Ground
+  const gGeo=new THREE.PlaneGeometry(100,100);
+  const gMat=new THREE.MeshLambertMaterial({color:0x0d0818});
+  const ground=new THREE.Mesh(gGeo,gMat);
+  ground.rotation.x=-Math.PI/2; ground.receiveShadow=true;
+  scene.add(ground);
+
+  // Grid lines on ground
+  const gridHelper=new THREE.GridHelper(100,20,0x2d1060,0x1a0838);
+  gridHelper.position.y=0.01;
+  scene.add(gridHelper);
+
+  // Center plaza
+  const plazaGeo=new THREE.CylinderGeometry(8,8,0.1,32);
+  const plazaMat=new THREE.MeshLambertMaterial({color:0x1a0e38});
+  const plaza=new THREE.Mesh(plazaGeo,plazaMat);
+  plaza.position.y=0.05;
+  scene.add(plaza);
+
+  // Plaza ring glow
+  const ringGeo=new THREE.TorusGeometry(8,0.08,8,64);
+  const ringMat=new THREE.MeshBasicMaterial({color:0xc084fc});
+  const ring=new THREE.Mesh(ringGeo,ringMat);
+  ring.rotation.x=Math.PI/2; ring.position.y=0.1;
+  scene.add(ring);
+
+  // Paths between plaza and buildings
+  BUILDINGS.forEach(b=>{
+    const len=Math.sqrt(b.x*b.x+b.z*b.z)-8;
+    const angle=Math.atan2(b.z,b.x);
+    const pathGeo=new THREE.BoxGeometry(len,0.05,2);
+    const pathMat=new THREE.MeshLambertMaterial({color:0x150a30});
+    const path=new THREE.Mesh(pathGeo,pathMat);
+    path.position.set(b.x/2,0.02,b.z/2);
+    path.rotation.y=-angle;
+    scene.add(path);
+  });
+
+  // Stars in sky
+  const starGeo=new THREE.BufferGeometry();
+  const starVerts=[];
+  for(let i=0;i<600;i++){
+    starVerts.push((Math.random()-0.5)*200,(Math.random()*30+10),(Math.random()-0.5)*200);
+  }
+  starGeo.setAttribute('position',new THREE.Float32BufferAttribute(starVerts,3));
+  const starMat=new THREE.PointsMaterial({color:0xc084fc,size:0.25,transparent:true,opacity:0.8});
+  scene.add(new THREE.Points(starGeo,starMat));
+
+  // Buildings
+  buildings3D=[];
+  BUILDINGS.forEach(b=>{
+    const grp=new THREE.Group();
+
+    // base platform
+    const platGeo=new THREE.CylinderGeometry(4,4.5,0.3,8);
+    const platMat=new THREE.MeshLambertMaterial({color:0x150a30});
+    grp.add(new THREE.Mesh(platGeo,platMat));
+
+    // main building box
+    const bGeo=new THREE.BoxGeometry(6,8,6);
+    const bMat=new THREE.MeshLambertMaterial({color:b.col,transparent:true,opacity:0.9});
+    const bMesh=new THREE.Mesh(bGeo,bMat);
+    bMesh.position.y=4.2; bMesh.castShadow=true;
+    grp.add(bMesh);
+
+    // roof pyramid
+    const rGeo=new THREE.ConeGeometry(4.5,3,4);
+    const rMat=new THREE.MeshLambertMaterial({color:b.col});
+    const rMesh=new THREE.Mesh(rGeo,rMat);
+    rMesh.position.y=9.7; rMesh.rotation.y=Math.PI/4;
+    grp.add(rMesh);
+
+    // glowing windows
+    const winMat=new THREE.MeshBasicMaterial({color:0xd0b0ff,transparent:true,opacity:0.7});
+    [[-1.5,2],[ 1.5,2],[-1.5,5],[ 1.5,5]].forEach(([wx,wy])=>{
+      const wGeo=new THREE.BoxGeometry(1,1.2,0.1);
+      const w=new THREE.Mesh(wGeo,winMat);
+      w.position.set(wx,wy+0.2,3.06);
+      grp.add(w);
+    });
+
+    // point light on building
+    const ptLight=new THREE.PointLight(b.col,1.2,12);
+    ptLight.position.y=5;
+    grp.add(ptLight);
+
+    // sign glow ring
+    const signRing=new THREE.TorusGeometry(2.8,0.06,8,32);
+    const signRingMat=new THREE.MeshBasicMaterial({color:b.col});
+    const sr=new THREE.Mesh(signRing,signRingMat);
+    sr.position.y=8.4; sr.rotation.x=Math.PI/2;
+    grp.add(sr);
+
+    grp.position.set(b.x,0,b.z);
+    grp.userData={buildingId:b.id, label:b.label};
+    scene.add(grp);
+    buildings3D.push({group:grp, data:b, mesh:bMesh});
+  });
+}
+
+function spawnPlayer() {
+  if(playerMesh){ scene.remove(playerMesh); }
+  const grp=new THREE.Group();
+
+  const skin=new THREE.Color(currentChar.skin_tone);
+  const hair=new THREE.Color(currentChar.hair_color);
+  const outfit=new THREE.Color(currentChar.outfit_color);
+
+  // Body
+  const bodyGeo=new THREE.BoxGeometry(0.8,1.1,0.5);
+  const bodyMat=new THREE.MeshLambertMaterial({color:outfit});
+  const body=new THREE.Mesh(bodyGeo,bodyMat);
+  body.position.y=1.15; grp.add(body);
+
+  // Legs
+  const legMat=new THREE.MeshLambertMaterial({color:outfit});
+  [-0.22,0.22].forEach(lx=>{
+    const leg=new THREE.Mesh(new THREE.BoxGeometry(0.3,0.7,0.3),legMat);
+    leg.position.set(lx,0.4,0); grp.add(leg);
+  });
+
+  // Head
+  const headGeo=new THREE.BoxGeometry(0.65,0.65,0.6);
+  const headMat=new THREE.MeshLambertMaterial({color:skin});
+  const head=new THREE.Mesh(headGeo,headMat);
+  head.position.y=2.05; grp.add(head);
+
+  // Hair
+  const hairMat=new THREE.MeshLambertMaterial({color:hair});
+  const hs=currentChar.hair_style;
+  if(hs===0||hs===3){ // short/curly - flat top
+    const h=new THREE.Mesh(new THREE.BoxGeometry(0.68,0.18,0.62),hairMat);
+    h.position.set(0,2.41,0); grp.add(h);
+  } else if(hs===1){ // wavy - taller
+    const h=new THREE.Mesh(new THREE.BoxGeometry(0.7,0.3,0.64),hairMat);
+    h.position.set(0,2.46,0); grp.add(h);
+    const hs2=new THREE.Mesh(new THREE.BoxGeometry(0.1,0.5,0.5),hairMat);
+    hs2.position.set(-0.38,2.2,0); grp.add(hs2);
+    const hs3=hs2.clone(); hs3.position.set(0.38,2.2,0); grp.add(hs3);
+  } else if(hs===2){ // spiky - spikes
+    const base=new THREE.Mesh(new THREE.BoxGeometry(0.68,0.16,0.62),hairMat);
+    base.position.set(0,2.4,0); grp.add(base);
+    [-0.2,0,0.2].forEach(sx=>{
+      const spike=new THREE.Mesh(new THREE.ConeGeometry(0.1,0.36,4),hairMat);
+      spike.position.set(sx,2.65,0); grp.add(spike);
+    });
+  } else { // bun
+    const bun=new THREE.Mesh(new THREE.SphereGeometry(0.22,8,8),hairMat);
+    bun.position.set(0,2.56,0); grp.add(bun);
+    const base=new THREE.Mesh(new THREE.BoxGeometry(0.68,0.14,0.62),hairMat);
+    base.position.set(0,2.38,0); grp.add(base);
+  }
+
+  // Eyes
+  const eyeMat=new THREE.MeshBasicMaterial({color:0x000000});
+  const eyeGeo=new THREE.BoxGeometry(0.1,0.12,0.05);
+  [-0.15,0.15].forEach(ex=>{
+    const eye=new THREE.Mesh(eyeGeo,eyeMat);
+    eye.position.set(ex,2.05,0.31); grp.add(eye);
+  });
+
+  // Name label sprite
+  const nameCanvas=document.createElement('canvas');
+  nameCanvas.width=256; nameCanvas.height=64;
+  const nc=nameCanvas.getContext('2d');
+  nc.fillStyle='rgba(10,5,25,.8)';
+  nc.fillRect(0,16,256,32);
+  nc.font="bold 22px 'Share Tech Mono',monospace";
+  nc.fillStyle='#c084fc'; nc.textAlign='center';
+  nc.fillText(currentChar.display_name||currentUser.username,128,38);
+  const nameTex=new THREE.CanvasTexture(nameCanvas);
+  const nameSprite=new THREE.Sprite(new THREE.SpriteMaterial({map:nameTex,transparent:true,depthTest:false}));
+  nameSprite.scale.set(3,0.75,1);
+  nameSprite.position.y=3.2;
+  grp.add(nameSprite);
+
+  grp.position.set(playerX,0,playerZ);
+  grp.userData.isPlayer=true;
+  scene.add(grp);
+  playerMesh=grp;
+}
+
+// keyboard
+document.addEventListener('keydown',e=>{ keys[e.code]=true;
+  if(e.code==='KeyE' && nearBuilding) openBuilding(nearBuilding);
+  if(e.code==='Escape') closeModal();
+});
+document.addEventListener('keyup',e=>{ keys[e.code]=false; });
+
+function animate() {
+  animFrameId=requestAnimationFrame(animate);
+  const dt=clock3.getDelta();
+  const speed=8;
+  let moved=false;
+
+  if(playerMesh && !document.getElementById('modal-overlay').classList.contains('open')) {
+    let dx=0, dz=0;
+    if(keys['KeyW']||keys['ArrowUp'])    dz-=1;
+    if(keys['KeyS']||keys['ArrowDown'])  dz+=1;
+    if(keys['KeyA']||keys['ArrowLeft'])  dx-=1;
+    if(keys['KeyD']||keys['ArrowRight']) dx+=1;
+    const len=Math.sqrt(dx*dx+dz*dz);
+    if(len>0){
+      dx/=len; dz/=len;
+      playerX+=dx*speed*dt; playerZ+=dz*speed*dt;
+      // clamp to world
+      playerX=Math.max(-46,Math.min(46,playerX));
+      playerZ=Math.max(-46,Math.min(46,playerZ));
+      playerMesh.position.set(playerX,0,playerZ);
+      playerMesh.rotation.y=Math.atan2(dx,dz);
+      moved=true;
+      // bob legs
+      const t=clock3.elapsedTime;
+      playerMesh.children.forEach((c,i)=>{
+        if(i===1||i===2){ c.position.y=0.4+Math.sin(t*10+(i*Math.PI))*0.1; }
+      });
+    }
+
+    // camera follow
+    camera.position.set(playerX,22,playerZ+18);
+    camera.lookAt(playerX,0,playerZ);
+  }
+
+  // check near buildings
+  nearBuilding=null;
+  let closest=6;
+  BUILDINGS.forEach(b=>{
+    const dist=Math.sqrt((playerX-b.x)**2+(playerZ-b.z)**2);
+    if(dist<closest){ closest=dist; nearBuilding=b; }
+  });
+
+  // building hover + prompt
+  buildings3D.forEach(({group,data,mesh})=>{
+    const near=nearBuilding&&nearBuilding.id===data.id;
+    mesh.material.emissive=near?new THREE.Color(0x3d1070):new THREE.Color(0x000000);
+    mesh.material.emissiveIntensity=near?0.4:0;
+    group.position.y=near?(Math.sin(clock3.elapsedTime*2)*0.06):0;
+  });
+
+  const prompt=document.getElementById('interact-prompt');
+  if(nearBuilding){
+    prompt.style.display='block';
+    prompt.textContent=`[ E ] Enter ${nearBuilding.label}`;
+    document.getElementById('hud-loc').textContent=`// near ${nearBuilding.label}`;
+  } else {
+    prompt.style.display='none';
+    document.getElementById('hud-loc').textContent='';
+  }
+
+  // rotate star field slowly
+  scene.children.forEach(c=>{
+    if(c instanceof THREE.Points) c.rotation.y+=0.0003;
+  });
+
+  renderer.render(scene,camera);
+}
+
+// ════════════════════════════════════════
+// BUILDING INTERACTIONS
+// ════════════════════════════════════════
+function openBuilding(b) {
+  if(b.id==='desktop'){ window.location.href='https://faaa.space'; return; }
+  if(b.id==='shop')   { openShop(); return; }
+  if(b.id==='game')   { openMiniGame(); return; }
+  openModal(b.label, buildingContent(b));
+}
+
+function buildingContent(b) {
+  const descriptions = {
+    about:  'This is FAA\'s about me page. Learn more about the person behind this site — interests, social links, and more.',
+    music:  'The music player — browse and listen to tracks curated by FAA.',
+    blog:   'Read posts and updates from FAA. Thoughts, projects, and whatever else comes to mind.',
+    signal: 'Signal — anonymous real-time chat. Connect with someone and have a conversation.',
+  };
+  return `<div class="m-title">${b.ico} ${b.label}</div>
+    <div class="m-desc">${descriptions[b.id]||'Welcome!'}</div>
+    <a class="m-link" href="https://faaa.space" target="_blank">Open on FAA site ↗</a>`;
+}
+
+// ════════════════════════════════════════
+// SHOP
+// ════════════════════════════════════════
+function openShop() {
+  shopTempChar = {...currentChar};
+  const content = `
+    <div class="m-title">👗 Wardrobe</div>
+    <div style="display:grid;grid-template-columns:160px 1fr;gap:16px;align-items:start">
+      <canvas id="shop-preview" width="160" height="240"
+        style="border:1px solid var(--border);background:#0d0818;display:block"></canvas>
+      <div>
+        <div class="shop-sec">
+          <div class="shop-sec-title">SKIN TONE</div>
+          <div class="shop-grid">${SKIN_TONES.map((c,i)=>`
+            <div class="shop-item${shopTempChar.skin_tone===c?' sel':''}" onclick="shopSet('skin_tone','${c}',this)">
+              <div class="sh-sw" style="background:${c}"></div>
+            </div>`).join('')}
+          </div>
+        </div>
+        <div class="shop-sec">
+          <div class="shop-sec-title">HAIR COLOR</div>
+          <div class="shop-grid">${HAIR_COLORS.map(c=>`
+            <div class="shop-item${shopTempChar.hair_color===c?' sel':''}" onclick="shopSet('hair_color','${c}',this)">
+              <div class="sh-sw" style="background:${c}"></div>
+            </div>`).join('')}
+          </div>
+        </div>
+        <div class="shop-sec">
+          <div class="shop-sec-title">HAIR STYLE</div>
+          <div class="shop-grid">${HAIR_STYLES.map(({n,s})=>`
+            <div class="shop-item${shopTempChar.hair_style===s?' sel':''}" onclick="shopSet('hair_style',${s},this)">${n}</div>`).join('')}
+          </div>
+        </div>
+        <div class="shop-sec">
+          <div class="shop-sec-title">OUTFIT COLOR</div>
+          <div class="shop-grid">${OUTFIT_COLORS.map(c=>`
+            <div class="shop-item${shopTempChar.outfit_color===c?' sel':''}" onclick="shopSet('outfit_color','${c}',this)">
+              <div class="sh-sw" style="background:${c}"></div>
+            </div>`).join('')}
+          </div>
+        </div>
+        <div class="shop-sec">
+          <div class="shop-sec-title">OUTFIT STYLE</div>
+          <div class="shop-grid">${OUTFIT_STYLES.map(({n,s})=>`
+            <div class="shop-item${shopTempChar.outfit_style===s?' sel':''}" onclick="shopSet('outfit_style',${s},this)">${n}</div>`).join('')}
+          </div>
+        </div>
+        <button class="btn" onclick="applyShop()" style="margin-top:8px">APPLY LOOK ✦</button>
+      </div>
+    </div>`;
+  openModal('👗 Wardrobe', content);
+  setTimeout(()=>drawCharPreview(shopTempChar,'shop-preview'),50);
+}
+
+function shopSet(prop, val, el) {
+  shopTempChar[prop]=val;
+  el.closest('.shop-grid').querySelectorAll('.shop-item').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  drawCharPreview(shopTempChar,'shop-preview');
+}
+
+async function applyShop() {
+  Object.assign(currentChar, shopTempChar);
+  spawnPlayer();
+  // save to DB
+  const vars={uid:currentUser.id,dn:currentChar.display_name,
+    st:currentChar.skin_tone,hc:currentChar.hair_color,hs:currentChar.hair_style,
+    oc:currentChar.outfit_color,os:currentChar.outfit_style};
+  await gql(`mutation($uid:uuid!,$dn:String!,$st:String!,$hc:String!,$hs:Int!,$oc:String!,$os:Int!){
+    insert_world_characters_one(object:{user_id:$uid,display_name:$dn,skin_tone:$st,hair_color:$hc,hair_style:$hs,outfit_color:$oc,outfit_style:$os},
+    on_conflict:{constraint:world_characters_user_id_key,update_columns:[display_name,skin_tone,hair_color,hair_style,outfit_color,outfit_style]}){id}}`,vars);
+  setStatus('// look applied ✦','var(--a3)');
+  closeModal();
+}
+
+// ════════════════════════════════════════
+// MINI GAME — collect falling stars
+// ════════════════════════════════════════
+function openMiniGame() {
+  const content=`
+    <div class="m-title">⭐ Star Catcher</div>
+    <div style="font-size:9px;color:var(--dim);margin-bottom:8px">Click / tap stars to catch them! 30 seconds.</div>
+    <div id="game-score">Score: <span id="gs">0</span> &nbsp;|&nbsp; Time: <span id="gt">30</span>s</div>
+    <canvas id="game-canvas" width="480" height="300" style="max-width:100%;"></canvas>
+    <button class="btn" onclick="startMiniGame()" style="margin-top:8px">START ✦</button>`;
+  openModal('⭐ Mini Game', content);
+}
+
+function startMiniGame() {
+  gameCanvas=document.getElementById('game-canvas');
+  if(!gameCanvas)return;
+  gameCtx=gameCanvas.getContext('2d');
+  gameScore=0; gameTimeLeft=30; gameStars=[];
+  gameActive=true;
+  document.getElementById('gs').textContent='0';
+  document.getElementById('gt').textContent='30';
+
+  // spawn stars
+  function spawnStar(){
+    if(!gameActive)return;
+    const x=30+Math.random()*(gameCanvas.width-60);
+    gameStars.push({x,y:-20,vy:2+Math.random()*3,r:14+Math.random()*10,caught:false,alpha:1});
+    setTimeout(spawnStar,400+Math.random()*600);
+  }
+  spawnStar();
+
+  // click
+  gameCanvas.onclick=(e)=>{
+    if(!gameActive)return;
+    const rect=gameCanvas.getBoundingClientRect();
+    const scaleX=gameCanvas.width/rect.width;
+    const scaleY=gameCanvas.height/rect.height;
+    const mx=(e.clientX-rect.left)*scaleX;
+    const my=(e.clientY-rect.top)*scaleY;
+    gameStars.forEach(s=>{
+      if(s.caught)return;
+      const dist=Math.sqrt((mx-s.x)**2+(my-s.y)**2);
+      if(dist<s.r){ s.caught=true; gameScore++; document.getElementById('gs').textContent=gameScore; }
+    });
+  };
+
+  // timer
+  clearInterval(gameTimer);
+  gameTimer=setInterval(()=>{
+    gameTimeLeft--;
+    const el=document.getElementById('gt');
+    if(el) el.textContent=gameTimeLeft;
+    if(gameTimeLeft<=0){
+      clearInterval(gameTimer); gameActive=false;
+      const el2=document.getElementById('gs');
+      if(el2) el2.textContent=`${gameScore} — GAME OVER!`;
+    }
+  },1000);
+
+  // render loop
+  function renderGame(){
+    if(!gameCtx||!gameCanvas)return;
+    gameCtx.clearRect(0,0,gameCanvas.width,gameCanvas.height);
+    gameCtx.fillStyle='#07050e'; gameCtx.fillRect(0,0,gameCanvas.width,gameCanvas.height);
+
+    // grid
+    gameCtx.strokeStyle='rgba(60,35,100,.2)'; gameCtx.lineWidth=1;
+    for(let i=0;i<gameCanvas.width;i+=30){ gameCtx.beginPath(); gameCtx.moveTo(i,0); gameCtx.lineTo(i,gameCanvas.height); gameCtx.stroke(); }
+    for(let j=0;j<gameCanvas.height;j+=30){ gameCtx.beginPath(); gameCtx.moveTo(0,j); gameCtx.lineTo(gameCanvas.width,j); gameCtx.stroke(); }
+
+    gameStars=gameStars.filter(s=>s.y<gameCanvas.height+30 || s.caught);
+    gameStars.forEach(s=>{
+      if(!s.caught) s.y+=s.vy;
+      else { s.alpha-=0.08; s.y-=3; }
+      if(s.alpha<=0)return;
+      gameCtx.globalAlpha=s.alpha;
+      gameCtx.font=`${s.r*1.6}px serif`;
+      gameCtx.textAlign='center';
+      gameCtx.fillStyle=s.caught?'#f472b6':'#c084fc';
+      gameCtx.fillText('⭐',s.x,s.y);
+      gameCtx.globalAlpha=1;
+    });
+
+    if(gameActive||gameStars.some(s=>s.alpha>0)) requestAnimationFrame(renderGame);
+  }
+  renderGame();
+}
+
+// ════════════════════════════════════════
+// MODAL
+// ════════════════════════════════════════
+function openModal(title, content) {
+  document.getElementById('modal-tb-title').textContent=title;
+  document.getElementById('modal-content').innerHTML=content;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  gameActive=false; clearInterval(gameTimer);
+}
+function bgCloseModal(e){ if(e.target===document.getElementById('modal-overlay'))closeModal(); }
+
+// ════════════════════════════════════════
+// ADMIN
+// ════════════════════════════════════════
+let adminAllUsers=[];
+async function loadAdminUsers(){
+  setStatus('// loading users...');
+  const res=await gql(`query{world_users(order_by:{created_at:desc}){id username discord_id created_at}}`);
+  adminAllUsers=res?.data?.world_users||[];
+  renderAdminUsers(adminAllUsers);
+}
+
+function adminSearch(){
+  const q=document.getElementById('admin-search').value.toLowerCase();
+  renderAdminUsers(adminAllUsers.filter(u=>u.username.toLowerCase().includes(q)||u.id.toLowerCase().includes(q)));
+}
+
+function renderAdminUsers(users){
+  const box=document.getElementById('admin-user-list');
+  if(!users.length){ box.innerHTML='<div style="padding:16px;color:var(--dim);font-size:9px">// no users found</div>'; return; }
+  box.innerHTML=users.map(u=>`
+    <div class="admin-user-row" id="aur-${u.id}">
+      <div>
+        <div class="un">${h(u.username)}</div>
+        <div class="uid">id: ${u.id} ${u.discord_id?'· discord: '+h(u.discord_id):''}</div>
+      </div>
+      <button class="admin-edit-btn" onclick="adminEdit('${u.id}','${h(u.username)}')">✏ edit</button>
+      <button class="admin-del-btn" onclick="adminDelete('${u.id}')">✕</button>
+    </div>`).join('');
+}
+
+function adminEdit(id, username){
+  const newUser=prompt('New username:', username);
+  if(!newUser||newUser===username)return;
+  const newPass=prompt('New password (leave empty to keep):','');
+  adminApplyEdit(id, newUser, newPass||null);
+}
+
+async function adminApplyEdit(id, newUsername, newPass){
+  const vars={id};
+  let setClause='username:$u';
+  let mutSig='$id:uuid!,$u:String!';
+  vars.u=newUsername;
+  if(newPass){ setClause+=',password:$p'; mutSig+=`,$p:String!`; vars.p=newPass; }
+  const res=await gql(`mutation(${mutSig}){update_world_users_by_pk(pk_columns:{id:$id},_set:{${setClause}}){id username}}`,vars);
+  if(res?.errors){ alert('Error: '+res.errors[0].message); return; }
+  setStatus('// user updated ✦','var(--a3)');
+  loadAdminUsers();
+}
+
+async function adminDelete(id){
+  if(!confirm('Delete this user and their character?'))return;
+  await gql(`mutation($id:uuid!){delete_world_characters(where:{user_id:{_eq:$id}}){affected_rows}}`,{id});
+  const res=await gql(`mutation($id:uuid!){delete_world_users_by_pk(id:$id){id}}`,{id});
+  if(res?.errors){ alert('Error'); return; }
+  setStatus('// user deleted','#f87171');
+  loadAdminUsers();
+}
+
+// ════════════════════════════════════════
+// EXIT
+// ════════════════════════════════════════
+function exitWorld(){
+  if(animFrameId){ cancelAnimationFrame(animFrameId); animFrameId=null; }
+  gameActive=false; clearInterval(gameTimer);
+  currentUser=null;
+  playerX=0; playerZ=0;
+  showScreen('screen-login');
+  document.getElementById('l-pass').value='';
+  document.getElementById('l-user').value='';
+}
+</script>
+</body>
+</html>
