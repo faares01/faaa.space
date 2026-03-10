@@ -1,0 +1,20 @@
+{
+  "name": "@faares/faaa",
+  "version": "2.0.0",
+  "description": "FAA's interactive terminal card — run me with npx faaa",
+  "bin": {
+    "faaa": "bin/cli.js"
+  },
+  "scripts": {
+    "start": "node ./bin/cli.js"
+  },
+  "keywords": [
+    "card",
+    "terminal",
+    "faa",
+    "portfolio"
+  ],
+  "author": "faares01",
+  "license": "MIT",
+  "preferGlobal": false
+}
