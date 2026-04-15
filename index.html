@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>✦ FAA site ✦</title>
-<link href="https://fonts.googleapis.com/css2?family=VT323&family=Tahoma:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
 <link rel="icon" href="ava.png">
 <style>
@@ -1382,6 +1382,550 @@ body {
   font-size:8px; color:var(--a1); font-family:'Share Tech Mono',monospace;
   margin-top:5px; letter-spacing:1px; opacity:.7;
 }
+
+/* ═══════════════════════════════════════
+   LOGIN WORLD — Ghibli Sky Story
+   ═══════════════════════════════════════ */
+#login-world {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 200;
+  scroll-behavior: smooth;
+  background: #050b1a;
+}
+#login-world::-webkit-scrollbar { display: none; }
+
+.lw-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.lw-sky {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #08091c 0%, #0c1028 55%, #1a2244 100%);
+}
+.lw-galaxy-sec {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #06040e 0%, #080618 50%, #0a0820 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lw-aurora-sec {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #050c1a 0%, #030a14 60%, #04101e 100%);
+  position: relative;
+}
+.lw-about-sec {
+  background: linear-gradient(180deg, #03080e 0%, #050c14 100%);
+  padding: 70px 20px;
+}
+.lw-links-sec {
+  background: #030609;
+  padding: 60px 20px 80px;
+}
+
+/* canvas layers */
+#cloud-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+#galaxy-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* hero title */
+.lw-hero {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  text-align: center;
+  z-index: 20;
+  width: 90%;
+}
+.lw-site-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(22px, 5vw, 48px);
+  color: #fff;
+  letter-spacing: 4px;
+  line-height: 1.5;
+  text-shadow:
+    0 0 10px rgba(200,190,255,.8),
+    0 0 30px rgba(160,140,255,.4),
+    0 0 60px rgba(130,110,255,.2);
+  animation: lw-glow 5s ease-in-out infinite;
+}
+@keyframes lw-glow {
+  0%,100% { text-shadow: 0 0 10px rgba(200,190,255,.8),0 0 30px rgba(160,140,255,.4); }
+  50%      { text-shadow: 0 0 20px rgba(220,210,255,1),0 0 50px rgba(180,160,255,.6),0 0 80px rgba(150,130,255,.3); }
+}
+.lw-site-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(10px, 1.5vw, 13px);
+  color: rgba(180,200,255,.45);
+  letter-spacing: 4px;
+  margin-top: 14px;
+}
+.lw-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 20;
+}
+.lw-scroll-txt {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: rgba(160, 180, 255, 0.719);
+  letter-spacing: 4px;
+  animation: lw-pulse 2.5s ease-in-out infinite;
+}
+.lw-scroll-arrow {
+  display: block;
+  color: rgba(160,180,255,.3);
+  font-size: 14px;
+  margin-top: 5px;
+  animation: lw-bounce 1.8s ease-in-out infinite;
+}
+@keyframes lw-pulse { 0%,100%{opacity:.35} 50%{opacity:.7} }
+@keyframes lw-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+/* visitor counter hero */
+.lw-vc-wrap {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: rgba(160,180,255,.35);
+  letter-spacing: 1px;
+}
+.lw-vc-dot {
+  width: 5px;
+  height: 5px;
+  background: rgba(160,200,255,.4);
+  border-radius: 50%;
+  animation: blink 2.5s ease-in-out infinite;
+}
+.lw-vc-num { color: rgba(180,210,255,.6); }
+
+/* galaxy section */
+.lw-galaxy-overlay {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+  width: 80%;
+}
+.lw-galaxy-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(9px, 1.5vw, 13px);
+  color: rgba(160,200,255,.4);
+  letter-spacing: 5px;
+  margin-bottom: 8px;
+}
+.lw-galaxy-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: rgba(120,150,220,.3);
+  letter-spacing: 3px;
+}
+
+/* aurora section */
+.lw-aurora-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 65%;
+  overflow: hidden;
+  z-index: 2;
+}
+.lw-aurora-col {
+  position: absolute;
+  bottom: 0;
+  width: 10px;
+  border-radius: 8px 8px 0 0;
+  animation: lw-aurora-wave var(--dur) ease-in-out infinite var(--dly);
+  transform-origin: bottom center;
+  opacity: 0;
+}
+@keyframes lw-aurora-wave {
+  0%,100% { transform: scaleY(1) skewX(0deg); opacity: var(--op); }
+  25%  { transform: scaleY(1.5) skewX(3deg);  opacity: calc(var(--op)*1.6); }
+  50%  { transform: scaleY(.7)  skewX(-2deg); opacity: calc(var(--op)*.5); }
+  75%  { transform: scaleY(1.2) skewX(1deg);  opacity: calc(var(--op)*1.2); }
+}
+.lw-pixel-moon {
+  position: absolute;
+  top: 8%;
+  left: 48%;
+  width: 28px;
+  height: 16px;
+  z-index: 10;
+  overflow: hidden;
+}
+.lw-pixel-moon::before {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(220,230,240,.75);
+  box-shadow: 0 0 12px rgba(200,220,240,.5);
+}
+.lw-pixel-moon::after {
+  content: '';
+  position: absolute;
+  top: 1px; left: 5px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #050c1a;
+}
+.lw-ocean {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 28%;
+  background: linear-gradient(180deg, rgba(3,14,32,.4) 0%, rgba(2,7,18,.97) 100%);
+  z-index: 3;
+  overflow: hidden;
+}
+.lw-ocean-line {
+  position: absolute;
+  height: 1px;
+  background: rgba(60,200,180,.18);
+  border-radius: 50%;
+  animation: lw-ocean-shimmer var(--dur) ease-in-out infinite var(--dly);
+  opacity: 0;
+}
+@keyframes lw-ocean-shimmer {
+  0%,100% { opacity:0; transform:scaleX(.6) translateX(0); }
+  50%     { opacity:1; transform:scaleX(1.2) translateX(3%); }
+}
+.lw-mountains {
+  position: absolute;
+  bottom: 28%;
+  left: 0; right: 0;
+  height: 80px;
+  z-index: 3;
+}
+
+/* login box */
+.lw-login-wrap {
+  position: absolute;
+  bottom: 32%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  width: min(300px, 88vw);
+}
+.lw-login-box {
+  background: rgba(4,10,30,.92);
+  border: 1px solid rgba(60,200,180,.25);
+  box-shadow:
+    0 0 30px rgba(40,180,160,.06),
+    inset 0 0 40px rgba(0,0,0,.3);
+  backdrop-filter: blur(8px);
+}
+.lw-login-tb {
+  padding: 6px 10px;
+  background: rgba(40,180,160,.1);
+  border-bottom: 1px solid rgba(60,200,180,.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: rgba(60,210,190,.7);
+  letter-spacing: 2px;
+}
+.lw-login-body { padding: 16px 14px; }
+.lw-login-label {
+  display: block;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 7px;
+  color: rgba(60,200,180,.5);
+  letter-spacing: 3px;
+  margin-bottom: 4px;
+  margin-top: 10px;
+}
+.lw-login-label:first-child { margin-top: 0; }
+.lw-login-input {
+  width: 100%;
+  background: rgba(4,14,36,.8);
+  border: none;
+  border-bottom: 1px solid rgba(60,200,180,.25);
+  color: rgba(180,230,220,.85);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  padding: 5px 2px;
+  outline: none;
+  transition: border-color .2s;
+}
+.lw-login-input:focus { border-bottom-color: rgba(60,210,190,.7); }
+.lw-login-input::placeholder { color: rgba(80,160,150,.25); }
+.lw-login-btn {
+  width: 100%;
+  margin-top: 14px;
+  padding: 9px;
+  background: rgba(40,180,160,.1);
+  border: 1px solid rgba(60,200,180,.3);
+  color: rgba(60,220,200,.85);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.lw-login-btn:hover {
+  background: rgba(40,180,160,.22);
+  box-shadow: 0 0 12px rgba(40,200,180,.15);
+  color: rgba(100,240,220,.9);
+}
+.lw-login-note {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 7px;
+  color: rgba(80,160,150,.4);
+  text-align: center;
+  margin-top: 9px;
+  line-height: 1.8;
+}
+.lw-login-vc {
+  text-align: center;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: rgba(120,170,160,.35);
+}
+
+/* about section */
+.lw-about-inner {
+  max-width: 660px;
+  margin: 0 auto;
+}
+.lw-section-hdr {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: rgba(160,180,255,.3);
+  letter-spacing: 4px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+.lw-dc-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px;
+  background: rgba(88,101,242,.04);
+  border: 1px solid rgba(88,101,242,.12);
+  margin-bottom: 22px;
+}
+.lw-dc-ava {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border: 2px solid rgba(88,101,242,.25);
+  overflow: hidden;
+  position: relative;
+  image-rendering: pixelated;
+}
+.lw-dc-ava img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lw-dc-ava-fb {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; color: rgba(88,101,242,.4);
+  position: absolute; inset: 0;
+}
+.lw-dc-sdot {
+  position: absolute;
+  bottom: 1px; right: 1px;
+  width: 12px; height: 12px;
+  border: 2px solid rgba(3,8,20,.9);
+  border-radius: 50%;
+  background: #555;
+}
+.lw-dc-sdot.online  { background: #3ba55c; }
+.lw-dc-sdot.idle    { background: #faa61a; }
+.lw-dc-sdot.dnd     { background: #ed4245; }
+.lw-dc-info { flex: 1; min-width: 0; }
+.lw-dc-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: rgba(200,200,255,.7);
+  margin-bottom: 5px;
+}
+.lw-dc-status {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: rgba(130,150,220,.45);
+  margin-bottom: 4px;
+}
+.lw-dc-act {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: rgba(100,200,150,.45);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lw-bio {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: rgba(160,190,210,.55);
+  line-height: 2;
+  margin-bottom: 18px;
+}
+.lw-bio span.hl1 { color: rgba(190,170,255,.8); }
+.lw-bio span.hl2 { color: rgba(160,200,255,.8); }
+.lw-tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.lw-tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  padding: 3px 9px;
+  border: 1px solid rgba(160,180,255,.15);
+  color: rgba(160,180,255,.4);
+}
+
+/* links section */
+.lw-links-inner {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+.lw-links-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+.lw-link-a {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  padding: 6px 14px;
+  border: 1px solid rgba(160,180,255,.12);
+  color: rgba(160,180,255,.45);
+  text-decoration: none;
+  transition: all .2s;
+  letter-spacing: 1px;
+}
+.lw-link-a:hover {
+  background: rgba(160,180,255,.07);
+  border-color: rgba(160,180,255,.3);
+  color: rgba(200,220,255,.75);
+}
+.lw-88-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  margin: 20px 0;
+}
+.lw-88-row a { display: inline-block; border: 1px solid rgba(160,180,255,.12); }
+.lw-88-row img { display: block; image-rendering: pixelated; }
+.lw-enter-btn {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 12px 28px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  background: rgba(160,150,255,.08);
+  border: 2px solid rgba(160,150,255,.25);
+  color: rgba(190,180,255,.7);
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all .25s;
+}
+.lw-enter-btn:hover {
+  background: rgba(160,150,255,.18);
+  border-color: rgba(180,170,255,.45);
+  color: rgba(210,200,255,.9);
+  box-shadow: 0 0 20px rgba(160,150,255,.15);
+}
+
+
+
+.lw-enter-btn1 {
+  display: inline-block;
+  margin-top: 700px;
+  padding: 12px 28px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  background: rgba(160,150,255,.08);
+  border: 2px solid rgba(160,150,255,.25);
+  color: rgba(190,180,255,.7);
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all .25s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.lw-enter-btn1:hover {
+  background: rgba(160,150,255,.18);
+  border-color: rgba(180,170,255,.45);
+  color: rgba(210,200,255,.9);
+  box-shadow: 0 0 20px rgba(160,150,255,.15);
+}
+
+
+
+
+
+.lw-footer {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: rgba(120,140,180,.2);
+  letter-spacing: 2px;
+  margin-top: 24px;
+}
+
+/* section fade-in on scroll */
+.lw-fade {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .9s ease, transform .9s ease;
+}
+.lw-fade.lw-in { opacity: 1; transform: translateY(0); }
+.lw-fade-d1 { transition-delay: .1s; }
+.lw-fade-d2 { transition-delay: .25s; }
+.lw-fade-d3 { transition-delay: .4s; }
+
+/* mountain shapes (css) */
+.lw-mountain {
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
 </style>
 </head>
 <body>
@@ -1397,63 +1941,153 @@ body {
 </div>
 
 <!-- ══════════ LOGIN ══════════ -->
-<div id="login-page">
-  <div class="login-box">
-    <div class="l-titlebar">
-      <div class="l-title-left">
-        <span class="l-icon">✦</span>
-        <span class="l-title-text">FAA site — login</span>
-      </div>
-      <button class="l-close-btn" onclick="document.getElementById('login-page').style.opacity='.5'">✕</button>
+<div id="login-world">
+
+  <!-- ══ SECTION 1: SKY + CLOUDS ══ -->
+  <section class="lw-section lw-sky">
+    <canvas id="cloud-canvas"></canvas>
+
+    <!-- visitor counter -->
+    <div class="lw-vc-wrap">
+      <div class="lw-vc-dot"></div>
+      <span>visitors</span>
+      <span class="lw-vc-num" id="lw-vc-num">——</span>
     </div>
-    <div class="l-body">
-      <div class="l-logo-area">
-        <div class="l-logo">FAA SITE</div>
-        <div class="l-logo-sub">// enter a name and password, or press enter to continue anonymously ✦ </div>
-      </div>
-      <div class="l-field"><label>NAME</label><input type="text" id="l-user" placeholder="enter your name..." autocomplete="off"></div>
-      <div class="l-field"><label>PASSWORD</label><input type="password" id="l-pass" placeholder="••••••••" autocomplete="off"></div>
-      <button class="l-btn" onclick="doLogin()">Log In</button>
-      <!-- ★ زر "نسخة الجوال" — انسخه والصقه أي مكان في صفحتك ★ -->
-      <div class="l-note">best viewed on desktop · 1920×1080<br>
-        <a href="https://faaa.space/old/" target="_blank" id="mob-ver-btn" class="mob-btn">OLD SITE</a>
-        <style>
-        #mob-ver-btn {
-          display: inline-block;
-          font-family: 'Tahoma', sans-serif;
-          font-size: 11px;
-          color: #b090e8;
-          text-decoration: none;
-          padding: 3px 10px;
-          border: 1px solid rgba(100,60,180,.35);
-          background: linear-gradient(180deg, rgba(60,30,110,.4), rgba(20,8,50,.6));
-          letter-spacing: 1px;
-          transition: all 0.15s;
-          box-shadow: inset 0 1px 0 rgba(180,140,255,.08);
-        }
-        #mob-ver-btn:hover {
-          color: #fff;
-          border-color: #c084fc;
-          background: linear-gradient(180deg, rgba(100,50,200,.5), rgba(50,20,110,.7));
-          box-shadow: 0 0 10px rgba(192,132,252,.25);
-        }
-        </style>
-        
-        
-        <span class="blink">✦✦✦✦✦</span></div>
-      <div style="text-align:center;margin-top:8px">
-        <div class="visitor-counter" id="login-counter">
-          <span class="vc-dot"></span>
-          <span>visitors</span>
-          <span class="vc-num" id="login-vc-num">——</span>
+
+    <!-- hero title -->
+    <div class="lw-hero">
+      <div class="lw-site-title">✦ FAA SITE ✦</div>
+      <div class="lw-site-sub">// personal corner of the internet</div>
+    </div>
+    <div class="lw-fade lw-fade-d3">
+      <button class="lw-enter-btn1" onclick="doLogin()">✦ SKIP — ENTER DESKTOP ✦</button>
+    </div>
+
+    <!-- scroll hint -->
+    <div class="lw-scroll-hint">
+      <span class="lw-scroll-txt">scroll to explore</span>
+      <span class="lw-scroll-arrow">▼</span>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 2: GALAXY ══ -->
+  <section class="lw-section lw-galaxy-sec">
+    <canvas id="galaxy-canvas"></canvas>
+    <div class="lw-galaxy-overlay">
+      <div class="lw-galaxy-title lw-fade">DISCOVER</div>
+      <div class="lw-galaxy-sub lw-fade lw-fade-d2">// somewhere far in the cosmos...</div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 3: AURORA + LOGIN ══ -->
+  <section class="lw-section lw-aurora-sec">
+    <!-- aurora columns (injected by JS) -->
+    <div class="lw-aurora-bg" id="lw-aurora-bg"></div>
+
+    <!-- pixel crescent moon -->
+    <div class="lw-pixel-moon"></div>
+
+    <!-- mountain silhouettes -->
+    <div class="lw-mountains" id="lw-mountains"></div>
+
+    <!-- ocean shimmer (injected by JS) -->
+    <div class="lw-ocean" id="lw-ocean"></div>
+
+    <!-- login form -->
+    <div class="lw-login-wrap">
+      <div class="lw-login-box">
+        <div class="lw-login-tb">
+          <span>✦ FAA site — login (not real login)</span>
+          <span style="opacity:.4">▬ ▬ ▬</span>
+        </div>
+        <div class="lw-login-body">
+          <label class="lw-login-label">NAME</label>
+          <input class="lw-login-input" type="text" id="l-user" placeholder="enter your name..." autocomplete="off">
+          <label class="lw-login-label">PASSWORD</label>
+          <input class="lw-login-input" type="password" id="l-pass" placeholder="••••••••" autocomplete="off">
+          <button class="lw-login-btn" onclick="doLogin()">▶ ENTER SITE</button>
+          <div class="lw-login-note">
+            // enter a name and password, or press enter to continue anonymously ✦<br>
+            best viewed on desktop
+          </div>
         </div>
       </div>
-      
-
-
-
+      <div class="lw-login-vc">
+        <div class="lw-vc-dot" style="width:4px;height:4px;background:rgba(60,200,180,.4);border-radius:50%;animation:blink 2.5s infinite"></div>
+        <span>visitors</span>
+        <span id="login-vc-num" style="color:rgba(100,210,200,.6)">——</span>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- ══ SECTION 4: ABOUT ══ -->
+  <section class="lw-section lw-about-sec">
+    <div class="lw-about-inner">
+      <div class="lw-section-hdr lw-fade">// about.exe</div>
+
+      <!-- discord card -->
+      <div class="lw-dc-card lw-fade lw-fade-d1" id="lw-dc-card">
+        <div class="lw-dc-ava">
+          <div class="lw-dc-ava-fb" id="lw-dc-fb">✦</div>
+          <img id="lw-dc-img" src="ava.png" alt="" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+          <div class="lw-dc-sdot" id="lw-dc-sdot"></div>
+        </div>
+        <div class="lw-dc-info">
+          <div class="lw-dc-name" id="lw-dc-name">FAA</div>
+          <div class="lw-dc-status" id="lw-dc-status">● offline</div>
+          <div class="lw-dc-act" id="lw-dc-act"></div>
+        </div>
+      </div>
+
+      <div class="lw-bio lw-fade lw-fade-d1">
+        hey !! i'm <span class="hl1">Fares almori</span>, also known as <span class="hl2">FAA</span>.<br>
+        i'm just a guy who spends too much time online making things.<br>
+        this is my personal space on the web <span style="color:rgba(200,180,255,.6)">。◕‿◕。</span><br>
+        feel free to look around &amp; leave a message in the chat !!
+      </div>
+
+      <div class="lw-tags-wrap lw-fade lw-fade-d2">
+        <span class="lw-tag">dev</span>
+        <span class="lw-tag">music</span>
+        <span class="lw-tag">web design</span>
+        <span class="lw-tag">discord bots</span>
+        <span class="lw-tag">games</span>
+        <span class="lw-tag">coding</span>
+        <span class="lw-tag">foooooodss</span>
+        <span class="lw-tag">potato chips</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 5: LINKS ══ -->
+  <section class="lw-section lw-links-sec">
+    <div class="lw-links-inner">
+      <div class="lw-section-hdr lw-fade">// find me elsewhere</div>
+
+      <div class="lw-links-grid lw-fade lw-fade-d1">
+        <a class="lw-link-a" href="https://www.instagram.com/faares.8/?igsh=ZTkyOGdiZ2hrMm0z&utm_source=qr" target="_blank">📷 instagram</a>
+        <a class="lw-link-a" href="https://www.snapchat.com/@faares.9" target="_blank">👻 snapchat</a>
+        <a class="lw-link-a" href="https://github.com/faares01" target="_blank">🐙 github</a>
+        <a class="lw-link-a" href="https://open.spotify.com/user/31vjxguunsbsgrhrmo6gg23i3zma?si=6f99944d6f55414a" target="_blank">🎵 spotify</a>
+        <a class="lw-link-a" href="https://steamcommunity.com/profiles/76561199503547319/" target="_blank">🎮 steam</a>
+        <a class="lw-link-a" href="https://faaa.space/old/" target="_blank">🕹️ old site</a>
+        <a class="lw-link-a" href="https://faaa.space/cil-index.html" target="_blank">⌨️ cil</a>
+      </div>
+
+      <div class="lw-88-row lw-fade lw-fade-d2">
+
+        </a>
+
+      </div>
+
+      <div class="lw-fade lw-fade-d3">
+        <button class="lw-enter-btn" onclick="doLogin()">✦ ENTER DESKTOP ✦</button>
+      </div>
+
+      <div class="lw-footer lw-fade lw-fade-d3">© faaa.space — made with too much coffee</div>
+    </div>
+  </section>
+
 </div>
 
 <!-- ══════════ DESKTOP ══════════ -->
@@ -1932,6 +2566,7 @@ body {
     <div class="mob-banner">
       <div class="mob-logo">FAA SITE</div>
       <div class="mob-logo-sub">// personal corner of the internet</div>
+      
       <div class="mob-hi" id="mob-hi-name"></div>
     </div>
 
@@ -2371,7 +3006,7 @@ function doLogin() {
   ov.style.display = 'flex';
   setTimeout(() => {
     ov.style.display = 'none';
-    document.getElementById('login-page').style.display = 'none';
+    document.getElementById('login-world').style.display = 'none';
     if (isMobile()) {
       startMobile();
     } else {
@@ -2380,7 +3015,7 @@ function doLogin() {
   }, 1300);
 }
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('login-page').style.display !== 'none') doLogin();
+  if (e.key === 'Enter' && document.getElementById('login-world') && document.getElementById('login-world').style.display !== 'none') doLogin();
 });
 
 function startDesktop() {
@@ -2453,7 +3088,7 @@ function minWin(id){document.getElementById('win-'+id).style.display='none';docu
 function focusWin(id){WINS.forEach(k=>{document.getElementById('win-'+k).classList.remove('active');document.getElementById('tb-'+k).classList.remove('focused')});document.getElementById('win-'+id).classList.add('active');document.getElementById('tb-'+id).classList.add('focused')}
 function tbClick(id){const el=document.getElementById('win-'+id);if(!wSt[id]){openWin(id);return}if(el.style.display==='none'){el.style.display='flex';focusWin(id)}else minWin(id)}
 function maxWin(elId){const id=elId.replace('win-',''),el=document.getElementById(elId);if(!wMx[id]){wPv[id]={left:el.style.left,top:el.style.top,width:el.style.width,height:el.style.height};Object.assign(el.style,{left:'0',top:'0',width:'100vw',height:'calc(100vh - 40px)'});wMx[id]=true}else{Object.assign(el.style,wPv[id]);wMx[id]=false}}
-function logout(){document.getElementById('desktop').style.display='none';document.getElementById('mobile-page').style.display='none';document.getElementById('login-page').style.display='flex';WINS.forEach(k=>{wSt[k]=false});stopAudio()}
+function logout(){document.getElementById('desktop').style.display='none';document.getElementById('mobile-page').style.display='none';document.getElementById('login-world').style.display='block';WINS.forEach(k=>{wSt[k]=false});stopAudio()}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━
 // DRAG
@@ -4058,5 +4693,337 @@ window.addEventListener('beforeunload', () => {
 
 
 
+
+<script>
+// ═══════════════════════════════════════════
+// LOGIN WORLD — CANVAS ANIMATIONS
+// ═══════════════════════════════════════════
+
+// ── GHIBLI CLOUDS ──
+(function initClouds() {
+  const cv = document.getElementById('cloud-canvas');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  let W, H, clouds = [];
+
+  function resize() {
+    W = cv.width  = cv.offsetWidth  || window.innerWidth;
+    H = cv.height = cv.offsetHeight || window.innerHeight;
+  }
+
+  function drawCloud(cx, cy, s, alpha) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    const C = (x,y,r,col) => {
+      ctx.fillStyle = col;
+      ctx.beginPath();
+      ctx.arc(cx + x*s, cy + y*s, r*s, 0, Math.PI*2);
+      ctx.fill();
+    };
+    // shadow / base (grey-purple)
+    C(8,  18, 26, '#6e6882'); C(36, 22, 21, '#66607a'); C(-14, 20, 17, '#5e5870');
+    // mid warm peach
+    C(0,  6,  29, '#c2a090'); C(28, 10, 25, '#b89888'); C(-17,12, 21,'#b09080'); C(52,14, 17,'#a88878');
+    // bright peach
+    C(-4, -2, 27, '#d8b8a2'); C(22, -2, 23, '#d0b098'); C(46, 8,  19, '#c8a890'); C(-21,4, 17,'#c8a890');
+    // highlights
+    C(-1, -10, 22, '#e8cdb5'); C(17, -8, 19, '#e4c8b0'); C(-14,-3, 14,'#e0c4ac');
+    // top cream
+    C(2,  -17, 14, '#f0dcc8'); C(15,-15, 11, '#ecd8c4');
+    ctx.restore();
+  }
+
+  function mkCloud() {
+    return {
+      x:   Math.random() * W * 1.6 - W * 0.3,
+      y:   Math.random() * H * 0.9 + H * 0.04,
+      s:   Math.random() * 0.7 + 0.4,
+      spd: Math.random() * 0.12 + 0.04,
+      a:   Math.random() * 0.35 + 0.25,
+      ph:  Math.random() * Math.PI * 2,
+    };
+  }
+
+  function initCloudsArr() {
+    clouds = Array.from({length: 9}, () => mkCloud());
+  }
+
+  let t = 0;
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    t += 0.007;
+    clouds.forEach(cl => {
+      cl.x -= cl.spd;
+      if (cl.x < -320) { cl.x = W + 80 + Math.random()*160; cl.y = Math.random()*H*.9+H*.04; }
+      const dy = Math.sin(t * 0.4 + cl.ph) * 4;
+      drawCloud(cl.x, cl.y + dy, cl.s, cl.a);
+    });
+    requestAnimationFrame(frame);
+  }
+
+  new ResizeObserver(() => { resize(); initCloudsArr(); }).observe(cv.parentElement);
+  resize(); initCloudsArr(); frame();
+})();
+
+// ── PIXEL GALAXY ──
+(function initGalaxy() {
+  const cv = document.getElementById('galaxy-canvas');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  let W, H, ang = 0;
+
+  function resize() {
+    W = cv.width  = cv.offsetWidth  || window.innerWidth;
+    H = cv.height = cv.offsetHeight || window.innerHeight;
+  }
+
+  const P = 3; // pixel size
+
+  function drawGalaxy() {
+    ctx.clearRect(0,0,W,H);
+    const cx = W/2, cy = H/2;
+    const R = Math.min(W,H) * 0.33;
+    const COLS = ['#7dd8f0','#60bce8','#9080d8','#c090e0','#e8e0ff','#50c8e0','#4488c0','#e8d0f0'];
+
+    // Background haze
+    const g = ctx.createRadialGradient(cx,cy,0,cx,cy,R*1.2);
+    g.addColorStop(0, 'rgba(180,160,255,.07)');
+    g.addColorStop(.5,'rgba(80,100,220,.03)');
+    g.addColorStop(1, 'transparent');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,W,H);
+
+    // Pixel rings
+    for (let layer = 0; layer < 5; layer++) {
+      const lr = R * (0.22 + layer * 0.18);
+      const n = 28 + layer * 22;
+      for (let i = 0; i < n; i++) {
+        const theta = (i/n)*Math.PI*2 + ang*(0.15 + layer*0.08);
+        const scatter = lr * (0.75 + Math.sin(i*7.3+layer)*0.22);
+        const x = cx + Math.cos(theta)*scatter + Math.sin(theta*1.6)*lr*0.1;
+        const y = cy + Math.sin(theta)*scatter*0.38 + Math.cos(theta*1.6)*lr*0.04;
+        const col = COLS[Math.floor(Math.abs(Math.sin(i*3.7+layer))*COLS.length)];
+        const a = 0.25 + Math.abs(Math.sin(i*2.1+ang*2+layer))*0.55;
+        const sz = P * (layer < 2 ? 1 : (Math.random() > .85 ? 2 : 1));
+        ctx.globalAlpha = a;
+        ctx.fillStyle = col;
+        ctx.fillRect(Math.round(x), Math.round(y), sz, sz);
+      }
+    }
+
+    // Core glow
+    ctx.globalAlpha = 1;
+    const gc = ctx.createRadialGradient(cx,cy,0,cx,cy,R*.25);
+    gc.addColorStop(0,'rgba(220,210,255,.2)');
+    gc.addColorStop(.5,'rgba(160,180,255,.07)');
+    gc.addColorStop(1,'transparent');
+    ctx.fillStyle = gc;
+    ctx.fillRect(0,0,W,H);
+
+    // Sparkle stars (cross shape)
+    [[cx-R*.65, cy-R*.28],[cx+R*.78, cy+R*.18],[cx-R*.25, cy+R*.48],[cx+R*.5, cy-R*.5]].forEach(([sx,sy],i) => {
+      const sa = .5 + Math.sin(ang*3+i)*0.35;
+      ctx.globalAlpha = sa;
+      ctx.fillStyle = '#fff';
+      const rx = Math.round(sx), ry = Math.round(sy);
+      ctx.fillRect(rx,   ry-4, 2,2); ctx.fillRect(rx,   ry+4,2,2);
+      ctx.fillRect(rx-4, ry,   2,2); ctx.fillRect(rx+4, ry,  2,2);
+      ctx.fillRect(rx,   ry,   2,2);
+    });
+
+    ctx.globalAlpha = 1;
+    ang += 0.004;
+  }
+
+  function loop() {
+    if (document.getElementById('login-world') && document.getElementById('login-world').style.display !== 'none') {
+      drawGalaxy();
+    }
+    requestAnimationFrame(loop);
+  }
+  new ResizeObserver(resize).observe(cv.parentElement);
+  resize(); loop();
+})();
+
+// ── AURORA ──
+(function initAurora() {
+  const wrap = document.getElementById('lw-aurora-bg');
+  const ocean = document.getElementById('lw-ocean');
+  if (!wrap) return;
+
+  const N = 55;
+  for (let i = 0; i < N; i++) {
+    const col = document.createElement('div');
+    col.className = 'lw-aurora-col';
+    const x = (i / N) * 110 - 5;
+    col.style.left = x + '%';
+    const hPct = 35 + Math.sin(i * 0.28) * 22 + Math.cos(i * 0.11) * 14;
+    col.style.height = Math.max(10, hPct) + '%';
+    col.style.width = '9px';
+    const dur = 1.8 + Math.sin(i * 0.5) * 1.2 + Math.random() * 1.5;
+    const dly = Math.random() * 4;
+    const op  = 0.1 + Math.sin(i * 0.4) * 0.1 + Math.random() * 0.15;
+    col.style.setProperty('--dur', dur + 's');
+    col.style.setProperty('--dly', dly + 's');
+    col.style.setProperty('--op',  op.toString());
+    // teal vs green vs cyan variety
+    const hue = 155 + (i % 5) * 14;
+    col.style.background = `linear-gradient(180deg,transparent 0%,hsla(${hue},80%,55%,${op*1.2}) 40%,hsla(${hue},90%,60%,${op}) 70%,transparent 100%)`;
+    col.style.borderRadius = '6px 6px 0 0';
+    wrap.appendChild(col);
+  }
+
+  if (ocean) {
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement('div');
+      s.className = 'lw-ocean-line';
+      s.style.top   = (8 + Math.random()*80) + '%';
+      s.style.left  = (Math.random()*25) + '%';
+      s.style.width = (15 + Math.random()*35) + '%';
+      s.style.setProperty('--dur', (3 + Math.random()*4) + 's');
+      s.style.setProperty('--dly', (Math.random()*5) + 's');
+      ocean.appendChild(s);
+    }
+  }
+
+  // CSS mountain silhouettes via canvas
+  const mEl = document.getElementById('lw-mountains');
+  if (mEl) {
+    const mc = document.createElement('canvas');
+    mc.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;';
+    mEl.appendChild(mc);
+    function drawMountains() {
+      mc.width  = mc.offsetWidth  || window.innerWidth;
+      mc.height = mc.offsetHeight || 80;
+      const ctx2 = mc.getContext('2d');
+      ctx2.clearRect(0,0,mc.width,mc.height);
+      ctx2.fillStyle = 'rgba(5,12,28,.9)';
+      ctx2.beginPath();
+      ctx2.moveTo(0, mc.height);
+      const peaks = [
+        [0,.6],[.08,.1],[.15,.45],[.22,.05],[.3,.35],[.38,.15],[.47,.4],[.55,.08],[.62,.38],[.7,.2],[.78,.45],[.85,.12],[.92,.38],[1,.5],[1,1]
+      ];
+      peaks.forEach(([x,y]) => ctx2.lineTo(x*mc.width, y*mc.height));
+      ctx2.closePath();
+      ctx2.fill();
+    }
+    drawMountains();
+    new ResizeObserver(drawMountains).observe(mEl);
+  }
+})();
+
+// ── PIXEL PLANE ──
+(function initPlane() {
+  const sky = document.querySelector('.lw-sky');
+  if (!sky) return;
+
+  const pw = document.createElement('canvas');
+  pw.width = 48; pw.height = 20;
+  pw.style.cssText = 'position:absolute;pointer-events:none;z-index:15;filter:drop-shadow(0 0 6px rgba(200,210,255,.5));';
+  sky.appendChild(pw);
+  const pc = pw.getContext('2d');
+
+  // Draw pixel airplane
+  const PLANE = [
+    '      ###     ',
+    '     #####    ',
+    '##############',
+    '###############',
+    '     #####    ',
+    '      ###     ',
+  ];
+  pc.fillStyle = 'rgba(210,220,255,.85)';
+  PLANE.forEach((row, ry) => {
+    [...row].forEach((ch, rx) => {
+      if (ch === '#') pc.fillRect(rx*2, ry*3, 2, 3);
+    });
+  });
+
+  let px = -60;
+  let py = 18 + Math.random() * 25;
+  const spd = 0.6 + Math.random() * 0.5;
+
+  function fly() {
+    px += spd;
+    if (px > window.innerWidth + 60) {
+      px = -60;
+      py = 12 + Math.random() * 30;
+    }
+    pw.style.left = px + 'px';
+    pw.style.top  = py + '%';
+    requestAnimationFrame(fly);
+  }
+  fly();
+})();
+
+// ── DISCORD PRELOAD ──
+(function lwDiscord() {
+  fetch('https://api.lanyard.rest/v1/users/1111705596543119370')
+    .then(r => r.json())
+    .then(({data: d}) => {
+      if (!d) return;
+      const st = d.discord_status || 'offline';
+      const dot = document.getElementById('lw-dc-sdot');
+      if (dot) { dot.className = 'lw-dc-sdot ' + st; }
+
+      const stC = {online:'rgba(59,165,92,.8)',idle:'rgba(250,166,26,.8)',dnd:'rgba(237,66,69,.8)',offline:'rgba(116,127,141,.6)'};
+      const stL = {online:'● online',idle:'● idle',dnd:'● do not disturb',offline:'● offline'};
+      const stEl = document.getElementById('lw-dc-status');
+      if (stEl) { stEl.textContent = stL[st]||'● '+st; stEl.style.color = stC[st]||'rgba(130,150,220,.45)'; }
+
+      const u = d.discord_user || {};
+      const nm = document.getElementById('lw-dc-name');
+      if (nm) nm.textContent = u.global_name || u.username || 'FAA';
+
+      if (u.id && u.avatar) {
+        const img = document.getElementById('lw-dc-img');
+        const fb  = document.getElementById('lw-dc-fb');
+        if (img) {
+          img.src = `https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.png?size=128`;
+          img.onload = () => { img.style.display='block'; if(fb) fb.style.display='none'; };
+        }
+      }
+
+      const sp   = d.listening_to_spotify ? d.spotify : null;
+      const acts = (d.activities||[]).filter(a=>a.type!==2);
+      const cust = acts.find(a=>a.type===4);
+      const act  = document.getElementById('lw-dc-act');
+      if (act) {
+        if (sp) {
+          act.textContent = '♫ ' + sp.song.slice(0,40) + ' — ' + sp.artist.slice(0,30);
+          act.style.color = 'rgba(29,185,84,.55)';
+        } else if (cust?.state) {
+          act.textContent = '💬 ' + cust.state.slice(0,50);
+          act.style.color = 'rgba(130,150,220,.45)';
+        }
+      }
+    }).catch(()=>{});
+})();
+
+// ── SCROLL FADE-IN ──
+(function initScrollFade() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.lw-fade').forEach(el => el.classList.add('lw-in'));
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.lw-section').forEach(s => obs.observe(s));
+  // Hero section visible immediately
+  const sky = document.querySelector('.lw-sky');
+  if (sky) sky.querySelectorAll('.lw-fade').forEach(el => el.classList.add('lw-in'));
+})();
+
+// Sync visitor count to hero
+(function syncVc() {
+  const orig = document.getElementById('login-vc-num');
+  const hero = document.getElementById('lw-vc-num');
+  if (!orig || !hero) return;
+  const ob = new MutationObserver(() => { hero.textContent = orig.textContent; });
+  ob.observe(orig, {childList:true, characterData:true, subtree:true});
+})();
+
+</script>
 </body>
 </html>
