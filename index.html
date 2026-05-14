@@ -229,9 +229,18 @@
     .activity-line { margin-top:.72rem; color:rgba(255,255,255,.54); font-size:.86rem; line-height:1.45; }
 
     [hidden] { display: none !important; }
-    .now-live { animation: popIn .28s ease both; }
+    .now-live {
+      animation: popIn .28s ease both;
+      max-height: 330px;
+      overflow: hidden;
+    }
     @keyframes popIn { from { opacity:0; transform:translateY(10px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
-    .now-grid { display:grid; gap:.7rem; }
+    .now-grid {
+      display:grid;
+      gap:.7rem;
+      max-height: 255px;
+      overflow: hidden;
+    }
     .live-card {
       display:grid; grid-template-columns:72px minmax(0,1fr); gap:.75rem; align-items:center;
       border:1px solid rgba(255,255,255,.14);
@@ -248,7 +257,14 @@
     .progress { margin-top:.58rem; height:8px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.12); }
     .progress span { display:block; height:100%; width:0%; border-radius:inherit; background:linear-gradient(90deg, var(--green), var(--blue2), #fff); transition:width .5s linear; }
     .time-row { display:flex; justify-content:space-between; margin-top:.38rem; color:rgba(255,255,255,.48); font:800 .65rem/1 Space Mono, monospace; }
-    .activity-list { display:grid; gap:.65rem; }
+    .activity-list {
+      display:grid;
+      gap:.65rem;
+      max-height: 118px;
+      overflow:auto;
+      overscroll-behavior:contain;
+      padding-right:.1rem;
+    }
     .find-sub { margin:.25rem 0 1rem; color:rgba(255,255,255,.62); font-weight:850; }
 
     .chips { display:flex; flex-wrap:wrap; gap:.48rem; }
@@ -347,7 +363,7 @@
 
     .footer { position:relative; z-index:4; padding: 3rem 1rem 6rem; text-align:center; color:rgba(255,255,255,.50); font: 800 .8rem/1.6 Space Mono, monospace; }
 
-    .sticker-stage { position:absolute; inset:0; width:100%; min-height:215svh; pointer-events:none; z-index:8; overflow:hidden; }
+    .sticker-stage { position:absolute; inset:0; width:100%; min-height:215svh; pointer-events:none; z-index:8; overflow:hidden; overscroll-behavior:contain; }
     .sticker {
       position:absolute;
       left: calc(var(--x) * 1%);
@@ -359,6 +375,7 @@
       cursor: grab;
       user-select:none;
       -webkit-user-drag:none;
+      touch-action:none;
       animation: floaty calc(var(--d) * 1s) ease-in-out infinite alternate;
       transition: filter .18s ease, z-index .18s ease;
     }
@@ -367,6 +384,13 @@
     .sticker.reserve { opacity:0; pointer-events:none; }
     body.chaos .sticker.reserve { opacity:.96; pointer-events:auto; }
     body.chaos .sticker { z-index:95; }
+    body.stickers-hidden .sticker {
+      opacity:0 !important;
+      pointer-events:none !important;
+    }
+    body.dragging-sticker {
+      overscroll-behavior:none;
+    }
 
     .sticker.dragging { cursor:grabbing; animation:none; z-index:1000; filter:drop-shadow(0 30px 30px rgba(0,0,0,.6)); }
     @keyframes floaty {
@@ -490,6 +514,7 @@
             <div class="buttons">
               <button class="fun-btn warn" id="panicBtn" type="button">do not press</button>
               <button class="fun-btn" id="moodBtn" type="button">change mood</button>
+              <button class="fun-btn" id="stickerToggleBtn" type="button">hide stickers</button>
             </div>
           </section>
         </aside>
@@ -694,6 +719,8 @@
       stage.addEventListener('pointerdown', (e) => {
         const el = e.target.closest('.sticker');
         if (!el) return;
+        if (e.cancelable) e.preventDefault();
+        document.body.classList.add('dragging-sticker');
         active = el;
         rect = stage.getBoundingClientRect();
         start.x = e.clientX;
@@ -706,6 +733,7 @@
       });
       stage.addEventListener('pointermove', (e) => {
         if (!active) return;
+        if (e.cancelable) e.preventDefault();
         const nowX = e.clientX;
         const nowY = e.clientY + window.scrollY;
         const dxPct = ((nowX - start.x) / rect.width) * 100;
@@ -713,7 +741,7 @@
         active.style.setProperty('--x', Math.max(0, Math.min(100, original.x + dxPct)).toFixed(2));
         active.style.setProperty('--y', Math.max(0, Math.min(220, original.y + dyVh)).toFixed(2));
       });
-      const stop = () => { if(active) active.classList.remove('dragging'); active = null; };
+      const stop = () => { if(active) active.classList.remove('dragging'); active = null; document.body.classList.remove('dragging-sticker'); };
       stage.addEventListener('pointerup', stop);
       stage.addEventListener('pointercancel', stop);
       stage.addEventListener('dblclick', (e) => {
@@ -941,7 +969,7 @@
         return String(displayed).padStart(5, '0');
       };
 
-      const host = (location.hostname && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') ? location.hostname : 'faa-about-me-local-preview';
+      const host = 'faaa.space';
       const body = {
         domain: host,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -965,11 +993,11 @@
         total.textContent = formatTotal(totalCount);
         today.textContent = new Intl.NumberFormat().format(todayCount);
       } catch (e) {
-        const key = 'faa_local_visits_backup';
+        const key = 'faa_visits_backup_faaa_space';
         const n = Number(localStorage.getItem(key) || 0) + 1;
         localStorage.setItem(key, n);
         total.textContent = formatTotal(n);
-        today.textContent = 'local';
+        today.textContent = new Intl.NumberFormat().format(n);
       }
     }
 
@@ -996,6 +1024,21 @@
         video.style.filter = moods[mood].filter;
         say(moods[mood].text);
       });
+
+      const stickerToggleBtn = $('#stickerToggleBtn');
+      if (stickerToggleBtn) {
+        const applyStickerToggle = (hidden) => {
+          document.body.classList.toggle('stickers-hidden', hidden);
+          stickerToggleBtn.textContent = hidden ? 'show stickers' : 'hide stickers';
+          localStorage.setItem('faa_stickers_hidden', hidden ? 'yes' : 'no');
+        };
+        applyStickerToggle(localStorage.getItem('faa_stickers_hidden') === 'yes');
+        stickerToggleBtn.addEventListener('click', () => {
+          const hidden = !document.body.classList.contains('stickers-hidden');
+          applyStickerToggle(hidden);
+          say(hidden ? 'stickers hidden. clean mode.' : 'stickers are back.');
+        });
+      }
     }
 
     buildStickers();

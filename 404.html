@@ -106,6 +106,7 @@
       cursor:grab;
       user-select:none;
       -webkit-user-drag:none;
+      touch-action:none;
       animation:floaty calc(var(--d) * 1s) ease-in-out infinite alternate;
       transition:filter .18s ease, z-index .18s ease, opacity .18s ease;
     }
@@ -114,6 +115,7 @@
     body.chaos .sticker.reserve { opacity:.96; pointer-events:auto; }
     body.chaos .sticker { z-index:95; }
     .sticker.dragging { cursor:grabbing; animation:none; z-index:1000; filter:drop-shadow(0 30px 30px rgba(0,0,0,.60)); }
+    body.dragging-sticker { overscroll-behavior:none; }
 
     @keyframes floaty {
       0% { transform:translate(-50%, -50%) rotate(calc(var(--r) * 1deg)) translateY(-5px); }
@@ -553,6 +555,8 @@
       stage.addEventListener('pointerdown', (e) => {
         const el = e.target.closest('.sticker');
         if (!el) return;
+        if (e.cancelable) e.preventDefault();
+        document.body.classList.add('dragging-sticker');
         active = el;
         el.classList.add('dragging');
         el.setPointerCapture(e.pointerId);
@@ -565,6 +569,7 @@
 
       window.addEventListener('pointermove', (e) => {
         if (!active) return;
+        if (e.cancelable) e.preventDefault();
         const dx = (e.clientX - startX) / window.innerWidth * 100;
         const dy = (e.clientY - startY) / window.innerHeight * 100;
         active.style.setProperty('--x', Math.max(0, Math.min(100, startLeft + dx)).toFixed(2));
@@ -575,6 +580,7 @@
         if (!active) return;
         active.classList.remove('dragging');
         active = null;
+        document.body.classList.remove('dragging-sticker');
       });
     }
 
