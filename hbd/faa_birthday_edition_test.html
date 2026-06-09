@@ -3685,7 +3685,7 @@
     }
 
 
-    /* FAA birthday edition patch — keeps the original site unchanged until the real birthday window */
+    /* FAA birthday edition patch — keeps the original site unchanged until preview / birthday mode */
     .now-live,
     .now-live .now-grid,
     .now-live .activity-list {
@@ -4598,6 +4598,11 @@
               <div class="birthday-time-box"><b id="bdHours">--</b><span>hours</span></div>
               <div class="birthday-time-box"><b id="bdMinutes">--</b><span>minutes</span></div>
               <div class="birthday-time-box"><b id="bdSeconds">--</b><span>seconds</span></div>
+            </div>
+            <div class="birthday-preview-actions" id="birthdayPreviewActions">
+              <button class="birthday-on-btn" id="birthdayPreviewBtn" type="button">🎂 show birthday notice</button>
+              <button id="birthdayNormalBtn" type="button">normal mode</button>
+              <span class="birthday-preview-hint">temporary button — shows the real birthday notification.</span>
             </div>
             <div class="birthday-live-note" id="birthdayLiveNote">birthday mode is live.</div>
           </section>
@@ -5738,9 +5743,10 @@
       const pad = (n) => String(Math.max(0, Math.floor(n))).padStart(2, '0');
       const BIRTHDAY_MONTH = 5; // June, zero-based
       const BIRTHDAY_DAY = 20;
+      const PREVIEW_KEY = 'faa_birthday_preview_mode_v2';
       const POPOUT_SESSION_KEY = 'faa_birthday_popout_seen_this_session_v2';
 
-      // اكتب نص إشعار الميلاد هنا. هذا هو الإشعار الحقيقي الذي يظهر تلقائياً في وقت الميلاد.
+      // اكتب نص إشعار الميلاد هنا. الزر المؤقت يعرض نفس هذا الإشعار الحقيقي، بدون كلام preview.
       const FAA_BIRTHDAY_NOTICE = {
         day1: {
           badge: '🎂 birthday notification',
@@ -5778,7 +5784,7 @@
         catch (e) {}
       }
 
-      function showBirthdayPopout(day) {
+      function showBirthdayPopout(day, preview) {
         const pop = $('birthdayPopout');
         if (!pop) return;
         if (birthdayNoticeSeen()) return;
@@ -5798,7 +5804,7 @@
         pop.setAttribute('aria-hidden', 'true');
       }
 
-      function scheduleBirthdayPopout(day) {
+      function scheduleBirthdayPopout(day, preview) {
         if (!document.body.classList.contains('birthday-live')) return;
         if (birthdayNoticeSeen()) return;
         if (birthdayPopoutTimer) clearTimeout(birthdayPopoutTimer);
@@ -5808,7 +5814,7 @@
             birthdayPopoutTimer = setTimeout(openWhenReady, 350);
             return;
           }
-          birthdayPopoutTimer = setTimeout(() => showBirthdayPopout(day), 550);
+          birthdayPopoutTimer = setTimeout(() => showBirthdayPopout(day, preview), 550);
         };
         openWhenReady();
       }
@@ -5855,12 +5861,22 @@
         }
       }
 
-      function getPreview() { return false; }
+      function getPreview() {
+        try { return localStorage.getItem(PREVIEW_KEY) === 'on'; } catch (e) { return false; }
+      }
+
+      function setPreview(on) {
+        try { localStorage.setItem(PREVIEW_KEY, on ? 'on' : 'off'); } catch (e) {}
+        updateBirthday();
+      }
+
+      window.FAA_BIRTHDAY_PREVIEW = setPreview;
 
       function updateBirthday() {
         const now = new Date();
+        const preview = getPreview();
         const autoLive = isAutoBirthday(now);
-        const live = autoLive;
+        const live = preview || autoLive;
         const target = getTarget(now);
         const diff = Math.max(0, target - now);
 
@@ -5872,14 +5888,17 @@
         document.body.classList.toggle('birthday-live', live);
         if (live) buildConfetti();
 
+        const previewBtn = $('birthdayPreviewBtn');
+        if (previewBtn) previewBtn.textContent = preview ? '🎂 birthday notice is on' : '🎂 show birthday notice';
+
         if (live) {
-          const day = getDayIndex(now);
+          const day = preview && !autoLive ? 1 : getDayIndex(now);
           lastBirthdayDay = day;
           setText('birthdayModeLabel', 'birthday mode · day ' + day + '/3');
           setHTML('birthdayTitle', 'happy <em>birthday FAA</em>');
           setText('birthdaySub', "June 20 — Fares' birthday is here. a little birthday theme for his day.");
           setText('birthdayLiveNote', day === 1 ? "birthday notification is ready — today is Fares' day." : day === 2 ? "one day passed since Fares' birthday." : "two days passed — last day of birthday mode.");
-          scheduleBirthdayPopout(day);
+          scheduleBirthdayPopout(day, preview && !autoLive);
         } else {
           hideBirthdayPopout();
           setText('birthdayModeLabel', 'birthday countdown');
@@ -5890,8 +5909,18 @@
       }
 
       function bindBirthdayButtons() {
+        const on = $('birthdayPreviewBtn');
+        const off = $('birthdayNormalBtn');
         const close = $('birthdayPopoutClose');
         const pop = $('birthdayPopout');
+        if (on && !on.dataset.bound) {
+          on.dataset.bound = 'yes';
+          on.addEventListener('click', () => setPreview(true));
+        }
+        if (off && !off.dataset.bound) {
+          off.dataset.bound = 'yes';
+          off.addEventListener('click', () => setPreview(false));
+        }
         if (close && !close.dataset.bound) {
           close.dataset.bound = 'yes';
           close.addEventListener('click', hideBirthdayPopout);
@@ -5999,14 +6028,6 @@
         fallbackVisitors();
       });
     })();
-  </script>
-
-  <script>
-    /* final upload cleanup: no temporary birthday test buttons */
-    document.addEventListener('DOMContentLoaded', function () {
-      document.querySelectorAll('#birthdayPreviewActions, .birthday-preview-actions').forEach(function (el) { el.remove(); });
-      try { localStorage.removeItem('faa_birthday_preview_mode_v2'); } catch (e) {}
-    });
   </script>
 
 </body>
