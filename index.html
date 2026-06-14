@@ -4828,7 +4828,151 @@
 
   
     /* final sticker random-bag patch: visible stickers rotate through ALL stickers; reserve stickers appear after do not press */
-  </style>
+  
+
+    /* Hotline Webring block */
+    .hotline-webring-card {
+      grid-column: 1 / -1;
+      width: min(760px, 100%);
+      margin: .2rem auto 0;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .17);
+      border-radius: 1.65rem;
+      padding: clamp(1rem, 3vw, 1.45rem);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(41, 109, 255, .22), transparent 14rem),
+        radial-gradient(circle at 92% 24%, rgba(255, 255, 255, .09), transparent 13rem),
+        rgba(3, 5, 13, .66);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      box-shadow: 0 24px 90px rgba(0, 0, 0, .44), inset 0 1px 0 rgba(255, 255, 255, .10);
+      transform: rotate(.45deg);
+    }
+
+    .hotline-webring-card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      pointer-events: none;
+      opacity: .78;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, .13), transparent 52%);
+    }
+
+    .hotline-webring-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hotline-webring-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .8rem;
+      margin-bottom: .7rem;
+    }
+
+    .hotline-webring-title {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-weight: 950;
+      letter-spacing: -.05em;
+      font-size: clamp(1.35rem, 4vw, 2.35rem);
+      line-height: .95;
+    }
+
+    .hotline-webring-title span {
+      display: inline-grid;
+      place-items: center;
+      width: 2.05rem;
+      height: 2.05rem;
+      border-radius: 999px;
+      color: #000;
+      background: #fff;
+      font: 950 1rem/1 Space Mono, monospace;
+      box-shadow: 0 12px 28px rgba(41, 109, 255, .18);
+    }
+
+    .hotline-webring-slug {
+      flex: none;
+      border: 1px solid rgba(141, 184, 255, .25);
+      background: rgba(41, 109, 255, .15);
+      border-radius: 999px;
+      padding: .55rem .7rem;
+      color: rgba(255, 255, 255, .72);
+      font: 900 .66rem/1 Space Mono, monospace;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .hotline-webring-copy {
+      margin: 0;
+      width: 100%;
+      max-width: none;
+      color: rgba(255, 255, 255, .66);
+      font: 800 .92rem/1.58 Space Mono, monospace;
+    }
+
+    .hotline-webring-note {
+      display: block;
+      width: 100%;
+      max-width: none;
+      margin: .75rem 0 0;
+      padding: .68rem .82rem;
+      border-radius: .95rem;
+      border: 1px solid rgba(255, 110, 110, .18);
+      background: rgba(255, 90, 90, .08);
+      color: rgba(255, 214, 214, .82);
+      font: 850 .74rem/1.55 Space Mono, monospace;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04);
+    }
+
+
+    .hotline-webring-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .65rem;
+      margin-top: 1rem;
+    }
+
+    .hotline-webring-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 1rem;
+      color: #eaf2ff;
+      background: rgba(255, 255, 255, .055);
+      font-weight: 950;
+      transition: .18s ease;
+    }
+
+    .hotline-webring-link:hover {
+      color: #000;
+      background: #fff;
+      transform: translateY(-3px) rotate(-1deg);
+    }
+
+    @media (max-width: 900px) {
+      .hotline-webring-card {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .hotline-webring-top,
+      .hotline-webring-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .hotline-webring-top {
+        display: grid;
+        align-items: start;
+      }
+    }
+</style>
 
   <style id="faa-cursor-and-music-patch">
     html, body, body *, a, button, input[type="range"], .sticker {
@@ -5241,6 +5385,18 @@
             <a class="social" href="https://faaa.space/old2/" target="_blank" rel="noreferrer">old site 
               <span>↗</span></a>
 
+          </div>
+        </article>
+        <article class="hotline-webring-card tilt-card" aria-label="Hotline Webring">
+          <div class="hotline-webring-top">
+            <a class="hotline-webring-title" href="https://hotlinewebring.club" target="_blank" rel="noreferrer">Hotline Webring <span>→</span></a>
+            <span class="hotline-webring-slug">slug: FAA</span>
+          </div>
+          <p class="hotline-webring-copy">old internet energy, tiny personal sites, and a little ring that sends you to someone else’s corner of the web.</p>
+          <p class="hotline-webring-note">tiny heads-up: the next / previous sites are not mine. i don’t control what shows up there; they belong to totally different people.</p>
+          <div class="hotline-webring-actions" aria-label="Hotline Webring navigation">
+            <a class="hotline-webring-link" href="https://hotlinewebring.club/FAA/previous">← previous site</a>
+            <a class="hotline-webring-link" href="https://hotlinewebring.club/FAA/next">next site →</a>
           </div>
         </article>
       </div>
