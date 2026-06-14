@@ -4972,7 +4972,78 @@
         align-items: start;
       }
     }
-</style>
+
+    /* tamaNOTchi inline pet under socials */
+    .tama-pet-inline {
+      margin-top: .95rem;
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: .85rem;
+      align-items: center;
+      padding: .78rem;
+      border-radius: 1.15rem;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background:
+        radial-gradient(circle at 24% 18%, rgba(165, 255, 95, .14), transparent 58%),
+        rgba(255, 255, 255, .045);
+    }
+
+    .tama-pet-inline a {
+      width: 92px;
+      height: 92px;
+      display: grid;
+      place-items: center;
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .06);
+      overflow: hidden;
+      transition: .18s ease;
+    }
+
+    .tama-pet-inline a:hover {
+      background: #fff;
+      transform: translateY(-3px) rotate(-1deg);
+    }
+
+    .tama-pet-inline img {
+      display: block;
+      max-width: 86px;
+      max-height: 86px;
+      image-rendering: pixelated;
+    }
+
+    .tama-pet-inline b {
+      display: block;
+      color: #fff;
+      font-size: 1rem;
+      letter-spacing: -.04em;
+    }
+
+    .tama-pet-inline span {
+      display: block;
+      margin-top: .25rem;
+      color: rgba(255, 255, 255, .58);
+      font: 800 .72rem/1.45 Space Mono, monospace;
+    }
+
+    @media (max-width: 620px) {
+      .tama-pet-inline {
+        grid-template-columns: 78px minmax(0, 1fr);
+      }
+
+      .tama-pet-inline a {
+        width: 78px;
+        height: 78px;
+      }
+
+      .tama-pet-inline img {
+        max-width: 72px;
+        max-height: 72px;
+      }
+    }
+
+
+  </style>
 
   <style id="faa-cursor-and-music-patch">
     html, body, body *, a, button, input[type="range"], .sticker {
@@ -5385,6 +5456,16 @@
             <a class="social" href="https://faaa.space/old2/" target="_blank" rel="noreferrer">old site 
               <span>↗</span></a>
 
+          </div>
+
+          <div class="tama-pet-inline" aria-label="tamaNOTchi pet">
+            <a href="https://tamanotchi.world/34348c" target="_blank" rel="noreferrer">
+              <img src="https://tamanotchi.world/i/34348" alt="It's tamaNOTchi! Click to feed!">
+            </a>
+            <div>
+              <b>tamaNOTchi</b>
+              <span>tiny web pet. click it to feed.</span>
+            </div>
           </div>
         </article>
         <article class="hotline-webring-card tilt-card" aria-label="Hotline Webring">
