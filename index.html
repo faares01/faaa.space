@@ -3685,7 +3685,7 @@
     }
 
 
-    /* FAA birthday edition patch — keeps the original site unchanged until the real birthday window */
+    /* now live layout patch */
     .now-live,
     .now-live .now-grid,
     .now-live .activity-list {
@@ -3708,416 +3708,6 @@
       align-content: start !important;
     }
 
-    .birthday-panel {
-      position: relative;
-      border: 1px solid rgba(255, 255, 255, .17);
-      background: rgba(4, 6, 14, .64);
-      backdrop-filter: blur(18px) saturate(140%);
-      -webkit-backdrop-filter: blur(18px) saturate(140%);
-      box-shadow: 0 24px 90px rgba(0, 0, 0, .42), inset 0 1px 0 rgba(255, 255, 255, .1);
-      border-radius: 1.7rem;
-      padding: 1.05rem;
-      overflow: hidden;
-    }
-
-    .birthday-panel::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      pointer-events: none;
-      opacity: .72;
-      background:
-        radial-gradient(circle at 12% 0%, rgba(255, 119, 217, .20), transparent 12rem),
-        radial-gradient(circle at 92% 18%, rgba(255, 211, 111, .16), transparent 11rem),
-        linear-gradient(120deg, transparent, rgba(255, 255, 255, .08), transparent 52%);
-    }
-
-    .birthday-panel > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .birthday-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: .7rem;
-      margin-bottom: .9rem;
-    }
-
-    .birthday-kicker,
-    .birthday-date-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      white-space: nowrap;
-      border-radius: 999px;
-      font: 900 .68rem/1 Space Mono, monospace;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, .68);
-      border: 1px solid rgba(255, 255, 255, .15);
-      background: rgba(255, 255, 255, .06);
-      padding: .66rem .86rem;
-    }
-
-    .birthday-date-pill {
-      color: #09070c;
-      background: linear-gradient(135deg, #ff77d9, #ffd36f);
-      border-color: rgba(255, 255, 255, .38);
-      box-shadow: 0 10px 26px rgba(255, 119, 217, .18);
-    }
-
-    .birthday-title {
-      display: inline-block;
-      width: 100%;
-      margin: .1rem 0 .75rem;
-      padding: .34rem .18rem .44rem;
-      font-size: clamp(1.9rem, 5.3vw, 3.55rem);
-      line-height: .92;
-      letter-spacing: -.065em;
-      font-weight: 950;
-      text-wrap: balance;
-    }
-
-    .birthday-title em {
-      font-family: Instrument Serif, Georgia, serif;
-      font-style: italic;
-      font-weight: 400;
-      color: #ffd36f;
-      letter-spacing: -.035em;
-    }
-
-    .birthday-sub {
-      margin: 0 0 1rem;
-      min-height: 2.95em;
-      max-width: 100%;
-      color: rgba(255, 255, 255, .68);
-      font: 850 .9rem/1.45 Space Mono, monospace;
-      overflow-wrap: anywhere;
-      transform: translateZ(0);
-    }
-
-    .birthday-countdown {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: .55rem;
-      align-items: stretch;
-      margin-top: .75rem;
-    }
-
-    .birthday-time-box {
-      min-width: 0;
-      min-height: 84px;
-      border: 1px solid rgba(255, 255, 255, .13);
-      border-radius: 1.1rem;
-      background: rgba(255, 255, 255, .052);
-      display: grid;
-      place-items: center;
-      padding: .72rem .4rem;
-      text-align: center;
-    }
-
-    .birthday-time-box b {
-      display: block;
-      width: 3ch;
-      font-variant-numeric: tabular-nums;
-      font-feature-settings: "tnum" 1, "lnum" 1;
-      font-size: clamp(1.35rem, 4.7vw, 2.1rem);
-      line-height: 1;
-      letter-spacing: -.05em;
-      font-weight: 950;
-      text-align: center;
-    }
-
-    .birthday-time-box span {
-      display: block;
-      margin-top: .32rem;
-      color: rgba(255, 255, 255, .50);
-      font: 900 .62rem/1 Space Mono, monospace;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-    }
-
-    .birthday-preview-actions {
-      display: grid !important;
-      grid-template-columns: 1fr 1fr;
-      gap: .7rem;
-      margin-top: .95rem;
-      padding: .85rem;
-      border: 1px solid rgba(255, 211, 111, .30);
-      border-radius: 1.15rem;
-      background: rgba(255, 255, 255, .055);
-    }
-
-    .birthday-preview-actions button {
-      display: inline-flex !important;
-      align-items: center;
-      justify-content: center;
-      min-height: 52px;
-      width: 100%;
-      border-radius: 1rem;
-      padding: .95rem .8rem;
-      border: 1px solid rgba(255, 255, 255, .22);
-      color: #fff;
-      background: rgba(255, 255, 255, .08);
-      font: 950 .82rem/1.15 Inter, system-ui, sans-serif;
-      cursor: pointer;
-      transition: transform .16s ease, filter .16s ease;
-    }
-
-    .birthday-preview-actions button:hover {
-      transform: translateY(-2px) rotate(-1deg);
-      filter: brightness(1.05);
-    }
-
-    .birthday-preview-actions .birthday-on-btn {
-      color: #09070c;
-      background: linear-gradient(135deg, #ff77d9, #ffd36f);
-      border-color: rgba(255, 255, 255, .72);
-      box-shadow: 0 14px 34px rgba(255, 119, 217, .22);
-    }
-
-    .birthday-preview-hint {
-      grid-column: 1 / -1;
-      color: rgba(255, 255, 255, .62);
-      font: 800 .72rem/1.45 Space Mono, monospace;
-    }
-
-    .birthday-live-note {
-      display: none;
-      margin-top: .9rem;
-      padding: .78rem .85rem;
-      border-radius: 1rem;
-      color: #09070c;
-      background: rgba(255, 211, 111, .92);
-      font: 950 .78rem/1.35 Space Mono, monospace;
-    }
-
-
-
-    .birthday-popout {
-      position: fixed;
-      inset: 0;
-      z-index: 16000;
-      display: grid;
-      place-items: center;
-      padding: 1.25rem;
-      background: rgba(0, 0, 0, .42);
-      backdrop-filter: blur(12px) saturate(130%);
-      -webkit-backdrop-filter: blur(12px) saturate(130%);
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity .28s ease, visibility .28s ease;
-    }
-
-    .birthday-popout.show {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    .birthday-popout-card {
-      width: min(470px, 94vw);
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, .28);
-      border-radius: 1.75rem;
-      padding: 1.25rem;
-      color: #fff;
-      background:
-        radial-gradient(circle at 12% 0%, rgba(255, 119, 217, .32), transparent 14rem),
-        radial-gradient(circle at 92% 18%, rgba(255, 211, 111, .26), transparent 14rem),
-        rgba(5, 7, 17, .88);
-      box-shadow: 0 30px 120px rgba(0, 0, 0, .62), inset 0 1px 0 rgba(255, 255, 255, .13);
-      transform: translateY(18px) scale(.96) rotate(-1deg);
-      transition: transform .32s cubic-bezier(.2, .95, .2, 1.12);
-    }
-
-    .birthday-popout.show .birthday-popout-card {
-      transform: translateY(0) scale(1) rotate(-1deg);
-    }
-
-    .birthday-popout-card::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      pointer-events: none;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,.16), transparent 55%);
-      opacity: .85;
-    }
-
-    .birthday-popout-card > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .birthday-popout-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: .45rem;
-      border-radius: 999px;
-      padding: .62rem .78rem;
-      color: #09070c;
-      background: linear-gradient(135deg, #ff77d9, #ffd36f);
-      font: 950 .68rem/1 Space Mono, monospace;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      box-shadow: 0 12px 30px rgba(255, 119, 217, .20);
-    }
-
-    .birthday-popout-title {
-      margin: 1rem 0 .55rem;
-      font-size: clamp(2.25rem, 9vw, 4.8rem);
-      line-height: .82;
-      letter-spacing: -.08em;
-      font-weight: 950;
-      text-wrap: balance;
-    }
-
-    .birthday-popout-title em {
-      font-family: Instrument Serif, Georgia, serif;
-      font-style: italic;
-      font-weight: 400;
-      color: #ffd36f;
-    }
-
-    .birthday-popout-text {
-      margin: 0;
-      color: rgba(255, 255, 255, .74);
-      font: 850 .95rem/1.55 Space Mono, monospace;
-    }
-
-    .birthday-popout-close {
-      width: 100%;
-      margin-top: 1rem;
-      border: 1px solid rgba(255, 255, 255, .38);
-      border-radius: 1rem;
-      padding: .95rem 1rem;
-      color: #09070c;
-      background: #fff;
-      font: 950 .82rem/1 Inter, system-ui, sans-serif;
-      cursor: pointer;
-      transition: transform .16s ease;
-    }
-
-    .birthday-popout-close:hover {
-      transform: translateY(-2px) rotate(-1deg);
-    }
-
-    .birthday-confetti-layer {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 9997;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .birthday-confetti-piece {
-      position: absolute;
-      top: -14vh;
-      width: 9px;
-      height: 14px;
-      border-radius: 4px;
-      opacity: .9;
-      background: var(--confetti-color, #ffd36f);
-      animation: faaBirthdayConfettiFall var(--confetti-speed, 7s) linear infinite;
-      animation-delay: var(--confetti-delay, 0s);
-      transform: translateY(-14vh) rotate(0deg);
-    }
-
-    @keyframes faaBirthdayConfettiFall {
-      to { transform: translateY(120vh) rotate(560deg); }
-    }
-
-    body.birthday-live .birthday-confetti-layer {
-      display: block;
-    }
-
-    body.birthday-live {
-      --blue: #ff77d9;
-      --blue2: #ffd36f;
-      --hot: #ff77d9;
-      --green: #ffd36f;
-    }
-
-    body.birthday-live .video-bg video {
-      filter: saturate(1.15) contrast(1.18) brightness(.68) hue-rotate(18deg);
-    }
-
-    body.birthday-live .topbar,
-    body.birthday-live .card,
-    body.birthday-live .intro,
-    body.birthday-live .black-card,
-    body.birthday-live .birthday-panel {
-      border-color: rgba(255, 211, 111, .26);
-      box-shadow: 0 24px 90px rgba(255, 119, 217, .12), inset 0 1px 0 rgba(255, 255, 255, .12);
-    }
-
-    body.birthday-live .brand-dot {
-      background: #ffd36f;
-      box-shadow: 0 0 0 5px rgba(255, 211, 111, .20), 0 0 28px #ffd36f;
-    }
-
-    body.birthday-live h1 {
-      text-shadow: 0 4px 0 rgba(255, 119, 217, .55), 0 18px 70px rgba(0, 0, 0, .8);
-    }
-
-    body.birthday-live .tagline em,
-    body.birthday-live .big-line em,
-    body.birthday-live .loading-title em {
-      color: #ffd36f;
-    }
-
-    body.birthday-live .birthday-live-note {
-      display: block;
-    }
-
-    @media (max-width: 620px) {
-      .birthday-top { align-items: stretch; flex-direction: column; }
-      .birthday-countdown { gap: .42rem; }
-      .birthday-time-box { min-height: 74px; padding: .62rem .25rem; }
-      .birthday-preview-actions { grid-template-columns: 1fr; }
-    }
-
-
-
-    /* v4 final placement + balloons + contained now-live */
-    .intro .birthday-panel {
-      margin-top: 1.15rem !important;
-      width: min(100%, 560px);
-      transform: rotate(.45deg);
-    }
-
-    .side-stack > .birthday-panel {
-      display: none !important;
-    }
-
-    .birthday-title {
-      padding: .62rem .55rem .72rem !important;
-      margin: .05rem 0 .75rem !important;
-      line-height: .98 !important;
-      letter-spacing: -.055em !important;
-    }
-
-    .birthday-sub {
-      display: block !important;
-      min-height: 3.1em !important;
-      line-height: 1.5 !important;
-      contain: layout paint;
-    }
-
-    .birthday-countdown {
-      contain: layout paint;
-    }
-
-    .birthday-time-box b {
-      min-width: 3ch !important;
-      width: 3ch !important;
-    }
-
     .now-live {
       height: auto !important;
       max-height: none !important;
@@ -4138,11 +3728,6 @@
       align-content: start !important;
     }
 
-    .now-live .activity-list::-webkit-scrollbar,
-    .now-live .now-grid::-webkit-scrollbar {
-      display: none !important;
-    }
-
     .now-live .live-card {
       width: 100% !important;
       max-width: 100% !important;
@@ -4158,60 +3743,6 @@
       max-width: 100% !important;
     }
 
-    .birthday-balloon-layer {
-      position: fixed;
-      inset: 0;
-      z-index: 15020;
-      pointer-events: none;
-      overflow: hidden;
-      opacity: 0;
-      transition: opacity .45s ease;
-    }
-
-    body.birthday-live .birthday-balloon-layer {
-      opacity: 1;
-    }
-
-    .birthday-balloon-layer span {
-      position: absolute;
-      left: var(--x);
-      bottom: -18vh;
-      width: calc(54px * var(--s));
-      height: calc(72px * var(--s));
-      border-radius: 52% 52% 46% 46%;
-      background: radial-gradient(circle at 34% 25%, rgba(255,255,255,.85), transparent 17%), var(--c);
-      box-shadow: 0 16px 42px rgba(0,0,0,.24);
-      animation: birthdayBalloonFloat 9.5s ease-in-out infinite;
-      animation-delay: var(--d);
-      opacity: .9;
-    }
-
-    .birthday-balloon-layer span::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 100%;
-      width: 1px;
-      height: calc(78px * var(--s));
-      background: rgba(255,255,255,.55);
-      transform: translateX(-50%);
-    }
-
-    @keyframes birthdayBalloonFloat {
-      0% { transform: translateY(0) translateX(0) rotate(-3deg); opacity: 0; }
-      12% { opacity: .92; }
-      48% { transform: translateY(-58vh) translateX(18px) rotate(5deg); }
-      100% { transform: translateY(-118vh) translateX(-16px) rotate(-6deg); opacity: 0; }
-    }
-
-    @media (max-width: 900px) {
-      .intro .birthday-panel {
-        width: 100%;
-        transform: none;
-      }
-    }
-
-  
 
     /* v7: now live activity card spacing fix */
     .card.now-live,
@@ -4259,7 +3790,7 @@
     }
 
 
-    /* v8: stickers and balloons stay behind all content boxes */
+    /* v8: stickers stay behind all content boxes */
     .sticker-stage {
       z-index: 2 !important;
       pointer-events: none !important;
@@ -4275,7 +3806,6 @@
     .intro,
     .side-stack,
     .card,
-    .birthday-panel,
     .about-zone,
     .about-inner,
     .paper-card,
@@ -4295,23 +3825,14 @@
       z-index: 3 !important;
     }
 
-    .birthday-balloon-layer {
-      z-index: 3 !important;
-    }
-
-    .birthday-popout {
-      z-index: 16000 !important;
-    }
 
     /* Keep transparent/glass cards readable even when stickers pass behind them. */
     .intro,
     .card,
-    .birthday-panel,
     .black-card,
     .paper-card {
       isolation: isolate;
     }
-
 
 
     /* v9: stickers stay behind cards BUT remain draggable in empty areas */
@@ -4345,13 +3866,11 @@
     /* Actual boxes/buttons/links remain clickable and visually above stickers. */
     .intro,
     .card,
-    .birthday-panel,
     .paper-card,
     .black-card,
     .topbar,
     .room-zone,
     .toast,
-    .birthday-popout,
     button,
     a,
     input,
@@ -4370,7 +3889,6 @@
 
     .intro,
     .card,
-    .birthday-panel,
     .paper-card,
     .black-card,
     .topbar,
@@ -4379,23 +3897,12 @@
       z-index: 35 !important;
     }
 
-    /* Birthday balloons are decoration only: behind boxes and never block dragging/clicks. */
-    .birthday-balloon-layer {
-      z-index: 12 !important;
-      pointer-events: none !important;
-    }
-
-    .birthday-popout {
-      z-index: 16000 !important;
-      pointer-events: auto !important;
-    }
 
     @media (max-width: 900px) {
       .sticker-stage .sticker {
         max-width: 135px !important;
       }
     }
-
 
 
     /* v10: stickers start in safe empty zones, but user-dragged stickers may stay above cards */
@@ -4428,15 +3935,6 @@
       z-index: 120 !important;
     }
 
-    .birthday-popout {
-      z-index: 16000 !important;
-    }
-
-    .birthday-balloon-layer {
-      z-index: 65 !important;
-      pointer-events: none !important;
-    }
-
 
     /* v11: default/random stickers stay behind cards; user-dragged + do-not-press can cover cards */
     .sticker-stage {
@@ -4453,7 +3951,6 @@
     /* Cards stay above the automatic sticker layout. */
     .intro,
     .card,
-    .birthday-panel,
     .paper-card,
     .black-card,
     .topbar,
@@ -4472,20 +3969,11 @@
 
     body.chaos .intro,
     body.chaos .card,
-    body.chaos .birthday-panel,
     body.chaos .paper-card,
     body.chaos .black-card {
       z-index: 120 !important;
     }
 
-    .birthday-popout {
-      z-index: 16000 !important;
-    }
-
-    .birthday-balloon-layer {
-      z-index: 65 !important;
-      pointer-events: none !important;
-    }
 
   
     /* final music player: same style as the other cards */
@@ -5174,24 +4662,6 @@
   </div>
   <div class="cursor-blob" id="blob" aria-hidden="true"></div>
   <div class="sticker-stage" id="stickerStage" aria-hidden="true"></div>
-  <div class="birthday-confetti-layer" id="birthdayConfetti" aria-hidden="true"></div>
-  <div class="birthday-balloon-layer" id="birthdayBalloonLayer" aria-hidden="true">
-    <span style="--x:8%;--d:0s;--s:1.05;--c:#ff77d9"></span>
-    <span style="--x:18%;--d:1.1s;--s:.88;--c:#ffd36f"></span>
-    <span style="--x:82%;--d:.55s;--s:1;--c:#8db8ff"></span>
-    <span style="--x:92%;--d:1.6s;--s:.82;--c:#a5ff5f"></span>
-    <span style="--x:50%;--d:2.1s;--s:.74;--c:#ffffff"></span>
-  </div>
-  <div class="birthday-popout" id="birthdayPopout" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="birthdayPopoutTitle">
-    <div class="birthday-popout-card">
-      <span class="birthday-popout-badge" id="birthdayPopoutBadge">🎂 birthday notification</span>
-      <h2 class="birthday-popout-title" id="birthdayPopoutTitle">today is <em>Fares' birthday</em></h2>
-      <p class="birthday-popout-text" id="birthdayPopoutText">June 20 is Fares' birthday. today is his day.</p>
-      <button class="birthday-popout-close" id="birthdayPopoutClose" type="button">nice, continue</button>
-    </div>
-  </div>
-
-
 
   <main class="wrap">
     <section class="hero" id="home">
@@ -5206,22 +4676,6 @@
           <p class="tagline">yeahh that <em c>me!</em></p>
           <p class="tiny-about"><b>Fares Alamori</b> — music on, making tiny weird things for the web.</p>
           <div class="chaos-note">warning: this page may contain: blue, stickers, chaos, potato chips.</div>
-          <br>
-          <section class="birthday-panel tilt-card" id="birthdayPanel" aria-label="Birthday countdown">
-            <div class="birthday-top">
-              <span class="birthday-kicker" id="birthdayModeLabel">birthday countdown</span>
-              <span class="birthday-date-pill">🎂 20 / 6</span>
-            </div>
-            <h2 class="birthday-title" id="birthdayTitle">counting down to <em>FAA day</em></h2>
-            <p class="birthday-sub" id="birthdaySub">June 20 — Fares' birthday. just a small countdown for his day.</p>
-            <div class="birthday-countdown" id="birthdayCountdown">
-              <div class="birthday-time-box"><b id="bdDays">--</b><span>days</span></div>
-              <div class="birthday-time-box"><b id="bdHours">--</b><span>hours</span></div>
-              <div class="birthday-time-box"><b id="bdMinutes">--</b><span>minutes</span></div>
-              <div class="birthday-time-box"><b id="bdSeconds">--</b><span>seconds</span></div>
-            </div>
-            <div class="birthday-live-note" id="birthdayLiveNote">birthday mode is live.</div>
-          </section>
           <span class="h1-shadow">main character? pending...</span>
         </article>
 
@@ -5303,9 +4757,6 @@
 
             <audio id="faaLocalAudio" src="m.mp3" preload="auto" autoplay muted loop playsinline></audio>
           </section>
-
-
-
 
 
           <section class="card tilt-card">
@@ -5704,7 +5155,6 @@
     }
 
 
-
     function safeRandomizeHomeStickers() {
       const isSmall = innerWidth < 760;
       const visible = $$('.sticker:not(.reserve)');
@@ -5891,7 +5341,6 @@
     function statusText(status) {
       return { online: 'Online', idle: 'Idle', dnd: 'Do Not Disturb', offline: 'Offline' }[status] || status || 'Offline';
     }
-
 
 
     function bannerUrl(user, data = {}) {
@@ -6183,11 +5632,6 @@
     ];
 
 
-
-
-
-
-
     function bootLoadingIntro() {
       const intro = $('#loadingIntro');
       const bar = $('#loadingBar');
@@ -6329,7 +5773,6 @@
     }
 
 
-
     function exitRoomMode() {
       const overlay = $('#roomTransition');
       const text = $('#walkText');
@@ -6461,177 +5904,10 @@
 
 
   <script>
-    /* FAA birthday + visitor + now-live final patch */
+    /* visitor + now-live final patch */
     (function () {
       const $ = (id) => document.getElementById(id);
-      const setText = (id, value) => { const el = $(id); if (el && el.textContent !== value) el.textContent = value; };
-      const setHTML = (id, value) => { const el = $(id); if (el && el.innerHTML !== value) el.innerHTML = value; };
-      const pad = (n) => String(Math.max(0, Math.floor(n))).padStart(2, '0');
-      const BIRTHDAY_MONTH = 5; // June, zero-based
-      const BIRTHDAY_DAY = 20;
-      const POPOUT_SESSION_KEY = 'faa_birthday_popout_seen_this_session_v2';
-
-      // اكتب نص إشعار الميلاد هنا. هذا هو الإشعار الحقيقي الذي يظهر تلقائياً في وقت الميلاد.
-      const FAA_BIRTHDAY_NOTICE = {
-        day1: {
-          badge: '🎂 birthday notification',
-          title: "today is <em>Fares' birthday</em>",
-          text: "June 20 is Fares' birthday. today is his day."
-        },
-        day2: {
-          badge: '🎂 birthday notification',
-          title: "yesterday was <em>Fares' birthday</em>",
-          text: "One day passed since Fares' birthday, but the birthday mood is still here."
-        },
-        day3: {
-          badge: '🎂 birthday notification',
-          title: "two days since <em>Fares' birthday</em>",
-          text: "This is the last day of Fares' birthday theme."
-        }
-      };
-
-      let lastBirthdayDay = 1;
-      let birthdayPopoutTimer = null;
-
-      function birthdayPopoutCopy(day) {
-        if (day === 2) return FAA_BIRTHDAY_NOTICE.day2;
-        if (day === 3) return FAA_BIRTHDAY_NOTICE.day3;
-        return FAA_BIRTHDAY_NOTICE.day1;
-      }
-
-      function birthdayNoticeSeen() {
-        try { return sessionStorage.getItem(POPOUT_SESSION_KEY) === 'yes'; }
-        catch (e) { return false; }
-      }
-
-      function markBirthdayNoticeSeen() {
-        try { sessionStorage.setItem(POPOUT_SESSION_KEY, 'yes'); }
-        catch (e) {}
-      }
-
-      function showBirthdayPopout(day) {
-        const pop = $('birthdayPopout');
-        if (!pop) return;
-        if (birthdayNoticeSeen()) return;
-        markBirthdayNoticeSeen();
-        const copy = birthdayPopoutCopy(day || 1);
-        setText('birthdayPopoutBadge', copy.badge);
-        setHTML('birthdayPopoutTitle', copy.title);
-        setText('birthdayPopoutText', copy.text);
-        pop.classList.add('show');
-        pop.setAttribute('aria-hidden', 'false');
-      }
-
-      function hideBirthdayPopout() {
-        const pop = $('birthdayPopout');
-        if (!pop) return;
-        pop.classList.remove('show');
-        pop.setAttribute('aria-hidden', 'true');
-      }
-
-      function scheduleBirthdayPopout(day) {
-        if (!document.body.classList.contains('birthday-live')) return;
-        if (birthdayNoticeSeen()) return;
-        if (birthdayPopoutTimer) clearTimeout(birthdayPopoutTimer);
-        const openWhenReady = () => {
-          const intro = $('loadingIntro');
-          if (intro && !intro.classList.contains('done')) {
-            birthdayPopoutTimer = setTimeout(openWhenReady, 350);
-            return;
-          }
-          birthdayPopoutTimer = setTimeout(() => showBirthdayPopout(day), 550);
-        };
-        openWhenReady();
-      }
-
-      function birthdayWindow(year) {
-        return {
-          start: new Date(year, BIRTHDAY_MONTH, BIRTHDAY_DAY, 0, 0, 0, 0),
-          end: new Date(year, BIRTHDAY_MONTH, BIRTHDAY_DAY + 3, 0, 0, 0, 0)
-        };
-      }
-
-      function getTarget(now) {
-        let target = new Date(now.getFullYear(), BIRTHDAY_MONTH, BIRTHDAY_DAY, 0, 0, 0, 0);
-        if (now >= birthdayWindow(now.getFullYear()).end) {
-          target = new Date(now.getFullYear() + 1, BIRTHDAY_MONTH, BIRTHDAY_DAY, 0, 0, 0, 0);
-        }
-        return target;
-      }
-
-      function isAutoBirthday(now) {
-        const w = birthdayWindow(now.getFullYear());
-        return now >= w.start && now < w.end;
-      }
-
-      function getDayIndex(now) {
-        const w = birthdayWindow(now.getFullYear());
-        return Math.min(3, Math.max(1, Math.floor((now - w.start) / 86400000) + 1));
-      }
-
-      function buildConfetti() {
-        const layer = $('birthdayConfetti');
-        if (!layer || layer.dataset.ready === 'yes') return;
-        layer.dataset.ready = 'yes';
-        const colors = ['#ff77d9', '#ffd36f', '#71c7ff', '#8f6bff', '#ffffff'];
-        for (let i = 0; i < 46; i++) {
-          const bit = document.createElement('span');
-          bit.className = 'birthday-confetti-piece';
-          bit.style.left = (Math.random() * 100).toFixed(2) + 'vw';
-          bit.style.setProperty('--confetti-color', colors[i % colors.length]);
-          bit.style.setProperty('--confetti-delay', (-Math.random() * 7).toFixed(2) + 's');
-          bit.style.setProperty('--confetti-speed', (5.5 + Math.random() * 5).toFixed(2) + 's');
-          bit.style.transform = 'rotate(' + Math.floor(Math.random() * 180) + 'deg)';
-          layer.appendChild(bit);
-        }
-      }
-
-      function getPreview() { return false; }
-
-      function updateBirthday() {
-        const now = new Date();
-        const autoLive = isAutoBirthday(now);
-        const live = autoLive;
-        const target = getTarget(now);
-        const diff = Math.max(0, target - now);
-
-        setText('bdDays', Math.floor(diff / 86400000));
-        setText('bdHours', pad((diff / 3600000) % 24));
-        setText('bdMinutes', pad((diff / 60000) % 60));
-        setText('bdSeconds', pad((diff / 1000) % 60));
-
-        document.body.classList.toggle('birthday-live', live);
-        if (live) buildConfetti();
-
-        if (live) {
-          const day = getDayIndex(now);
-          lastBirthdayDay = day;
-          setText('birthdayModeLabel', 'birthday mode · day ' + day + '/3');
-          setHTML('birthdayTitle', 'happy <em>birthday FAA</em>');
-          setText('birthdaySub', "June 20 — Fares' birthday is here. a little birthday theme for his day.");
-          setText('birthdayLiveNote', day === 1 ? "birthday notification is ready — today is Fares' day." : day === 2 ? "one day passed since Fares' birthday." : "two days passed — last day of birthday mode.");
-          scheduleBirthdayPopout(day);
-        } else {
-          hideBirthdayPopout();
-          setText('birthdayModeLabel', 'birthday countdown');
-          setHTML('birthdayTitle', 'counting down to <em>FAA day</em>');
-          setText('birthdaySub', "June 20 — Fares' birthday. just a small countdown for his day.");
-          setText('birthdayLiveNote', 'birthday mode is live.');
-        }
-      }
-
-      function bindBirthdayButtons() {
-        const close = $('birthdayPopoutClose');
-        const pop = $('birthdayPopout');
-        if (close && !close.dataset.bound) {
-          close.dataset.bound = 'yes';
-          close.addEventListener('click', hideBirthdayPopout);
-        }
-        if (pop && !pop.dataset.bound) {
-          pop.dataset.bound = 'yes';
-          pop.addEventListener('click', (event) => { if (event.target === pop) hideBirthdayPopout(); });
-        }
-      }
+      const $$ = (selector) => document.querySelectorAll(selector);
 
       function fixNowLiveLayout() {
         const card = $('nowLiveCard');
@@ -6710,11 +5986,8 @@
       }
 
       function initPatch() {
-        bindBirthdayButtons();
-        updateBirthday();
         fixNowLiveLayout();
         fallbackVisitors();
-        setInterval(updateBirthday, 1000);
         setInterval(fixNowLiveLayout, 2000);
       }
 
@@ -6724,20 +5997,10 @@
         initPatch();
       }
       window.addEventListener('load', () => {
-        bindBirthdayButtons();
-        updateBirthday();
         fixNowLiveLayout();
         fallbackVisitors();
       });
     })();
-  </script>
-
-  <script>
-    /* final upload cleanup: no temporary birthday test buttons */
-    document.addEventListener('DOMContentLoaded', function () {
-      document.querySelectorAll('#birthdayPreviewActions, .birthday-preview-actions').forEach(function (el) { el.remove(); });
-      try { localStorage.removeItem('faa_birthday_preview_mode_v2'); } catch (e) {}
-    });
   </script>
 
 
