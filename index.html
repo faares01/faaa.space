@@ -4531,6 +4531,1198 @@
     }
 
 
+  
+    /* FAA featured scenes above Hotline Webring */
+    .faa-feature-scenes {
+      grid-column: 1 / -1;
+      width: min(980px, 100%);
+      margin: 1.1rem auto 1.35rem;
+      --scene-index: 0;
+    }
+
+    .faa-scenes-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin: 0 0 .78rem;
+      padding: 0 .15rem;
+    }
+
+    .faa-scroll-label {
+      display: block;
+      color: rgba(255,255,255,.56);
+      font: 900 .72rem/1 Space Mono, monospace;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .faa-scroll-mini {
+      margin: .28rem 0 0;
+      color: rgba(255,255,255,.38);
+      font: 850 .7rem/1.45 Space Mono, monospace;
+    }
+
+    .faa-feature-controls {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      flex: none;
+    }
+
+    .faa-scene-arrow {
+      width: 2.8rem;
+      height: 2.8rem;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.07);
+      color: #fff;
+      font: 900 1rem/1 Space Mono, monospace;
+      box-shadow: 0 10px 28px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.08);
+      transition: .18s ease;
+    }
+
+    .faa-scene-arrow:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.12);
+    }
+
+    .faa-scene-counter {
+      min-width: 4.6rem;
+      text-align: center;
+      color: rgba(255,255,255,.72);
+      font: 900 .78rem/1 Space Mono, monospace;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .faa-scene-counter b {
+      color: #fff;
+      font-size: .96rem;
+    }
+
+    .faa-feature-viewport {
+      position: relative;
+      overflow: hidden;
+      border-radius: 2rem;
+    }
+
+    .faa-feature-track {
+      display: flex;
+      width: 100%;
+      transform: translate3d(calc(var(--scene-index) * -100%), 0, 0);
+      transition: transform .82s cubic-bezier(.22, 1, .36, 1);
+      will-change: transform;
+      touch-action: pan-y;
+      user-select: none;
+    }
+
+    .faa-feature-scene {
+      position: relative;
+      flex: 0 0 100%;
+      width: 100%;
+      min-height: 430px;
+      display: grid;
+      align-items: end;
+      overflow: hidden;
+      border-radius: 2rem;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(3,5,13,.74);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      box-shadow: 0 28px 100px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.10);
+      isolation: isolate;
+    }
+
+    .faa-feature-scene::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.02), transparent 24%),
+        linear-gradient(120deg, transparent 8%, rgba(255,255,255,.07) 28%, transparent 56%),
+        repeating-linear-gradient(to bottom, transparent 0 12px, rgba(255,255,255,.035) 13px, transparent 14px);
+      opacity: .9;
+    }
+
+    .faa-feature-scene::after {
+      content: "";
+      position: absolute;
+      inset: auto auto 0 0;
+      width: 100%;
+      height: 54%;
+      background: linear-gradient(180deg, transparent, rgba(2,4,10,.72));
+      pointer-events: none;
+    }
+
+    .star-scene {
+      --star-x: 50%;
+      --star-y: 38%;
+      --star-tilt-x: 0px;
+      --star-tilt-y: 0px;
+      background:
+        radial-gradient(circle at 14% 12%, rgba(255,255,255,.16), transparent 15rem),
+        radial-gradient(circle at 74% 22%, rgba(55,125,255,.28), transparent 20rem),
+        radial-gradient(circle at 85% 74%, rgba(59,84,170,.18), transparent 14rem),
+        linear-gradient(145deg, rgba(5,11,24,.98), rgba(4,8,18,.76));
+      border-color: rgba(145,186,255,.24);
+    }
+
+    .store-scene {
+      background:
+        radial-gradient(circle at 18% 10%, rgba(255,79,216,.18), transparent 14rem),
+        radial-gradient(circle at 85% 26%, rgba(255,211,111,.14), transparent 14rem),
+        radial-gradient(circle at 80% 76%, rgba(104,122,255,.12), transparent 12rem),
+        linear-gradient(145deg, rgba(17,8,20,.98), rgba(9,6,18,.76));
+      border-color: rgba(255,214,245,.18);
+    }
+
+    .star-stage {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .star-cursor-light {
+      position: absolute;
+      left: var(--star-x);
+      top: var(--star-y);
+      width: 16rem;
+      height: 16rem;
+      border-radius: 999px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(126, 181, 255, .24), rgba(126, 181, 255, .10) 42%, transparent 72%);
+      filter: blur(8px);
+      opacity: .92;
+      transition: left .18s ease-out, top .18s ease-out, opacity .28s ease;
+    }
+
+    .star-network {
+      position: absolute;
+      inset: 0;
+      transform: translate(calc(var(--star-tilt-x) * .45), calc(var(--star-tilt-y) * .45));
+      transition: transform .16s ease-out;
+    }
+
+    .star-node,
+    .star-link,
+    .star-core,
+    .star-ring {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .star-node {
+      width: .78rem;
+      height: .78rem;
+      left: calc(var(--sx) * 1%);
+      top: calc(var(--sy) * 1%);
+      border-radius: 999px;
+      transform: translate(-50%, -50%) scale(calc(1 + var(--boost, 0) * .95));
+      background: radial-gradient(circle at 35% 35%, #fff, #a9d1ff 54%, transparent 70%);
+      box-shadow: 0 0 calc(10px + var(--boost, 0) * 18px) rgba(122,185,255,.55);
+      opacity: calc(.52 + var(--boost, 0) * .48);
+      transition: transform .16s ease-out, opacity .16s ease-out, box-shadow .16s ease-out;
+      animation: faaTwinkle 3.8s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .star-link {
+      height: 1px;
+      left: calc(var(--lx) * 1%);
+      top: calc(var(--ly) * 1%);
+      width: calc(var(--lw) * 1%);
+      transform-origin: left center;
+      transform: rotate(calc(var(--lr) * 1deg));
+      background: linear-gradient(90deg, rgba(164,208,255,.08), rgba(164,208,255,.44), rgba(164,208,255,.05));
+      box-shadow: 0 0 12px rgba(121, 184, 255, .12);
+      opacity: .82;
+    }
+
+    .star-core {
+      right: 9.2%;
+      top: 18%;
+      width: 9.8rem;
+      height: 9.8rem;
+      display: grid;
+      place-items: center;
+      border-radius: 2.2rem;
+      color: rgba(255,255,255,.94);
+      font: 950 5rem/1 Space Mono, monospace;
+      background:
+        radial-gradient(circle at center, transparent 44%, rgba(151,197,255,.24) 44.5%, transparent 47%),
+        radial-gradient(circle at center, transparent 58%, rgba(151,197,255,.14) 58.5%, transparent 60%),
+        radial-gradient(circle at center, rgba(41,109,255,.24), transparent 68%),
+        rgba(255,255,255,.04);
+      border: 1px solid rgba(170,205,255,.16);
+      box-shadow: 0 24px 80px rgba(8,21,58,.42);
+      transform: translate(calc(var(--star-tilt-x) * -.35), calc(var(--star-tilt-y) * -.35));
+      transition: transform .16s ease-out, box-shadow .22s ease;
+      animation: faaFloatStar 4.8s ease-in-out infinite;
+    }
+
+    .star-ring {
+      right: 12%;
+      top: 22%;
+      border-radius: 999px;
+      border: 1px solid rgba(146, 194, 255, .16);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+      opacity: .84;
+      animation: faaRingPulse 7s ease-in-out infinite;
+    }
+
+    .star-ring.r1 { width: 12.8rem; height: 12.8rem; }
+    .star-ring.r2 { width: 16.6rem; height: 16.6rem; right: 9.5%; top: 17.4%; animation-delay: -2s; }
+    .star-ring.r3 { width: 20rem; height: 20rem; right: 6.4%; top: 13.6%; animation-delay: -4s; opacity: .48; }
+
+    .store-window {
+      position: absolute;
+      right: 7.5%;
+      top: 13%;
+      width: 255px;
+      padding: .8rem;
+      border-radius: 1.4rem;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.07);
+      box-shadow: 0 18px 52px rgba(0,0,0,.28);
+      pointer-events: none;
+    }
+
+    .store-window-bar {
+      display: flex;
+      gap: .3rem;
+      margin-bottom: .7rem;
+    }
+
+    .store-window-bar span {
+      width: .62rem;
+      height: .62rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,.34);
+    }
+
+    .store-preview-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .42rem;
+      padding: .48rem .68rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(255,213,112,.96), rgba(255,122,215,.96));
+      color: #120b15;
+      border: 1px solid rgba(255,255,255,.44);
+      font: 950 .68rem/1 Space Mono, monospace;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      width: fit-content;
+      box-shadow: 0 14px 34px rgba(255,122,215,.18);
+    }
+
+    .store-preview-chip::before {
+      content: "●";
+      font-size: .58rem;
+      animation: pulse 1.35s infinite;
+    }
+
+    .store-mini-lines {
+      display: grid;
+      gap: .45rem;
+      margin-top: .8rem;
+    }
+
+    .store-mini-lines span {
+      display: block;
+      height: .65rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+    }
+
+    .store-mini-lines span:nth-child(1) { width: 78%; }
+    .store-mini-lines span:nth-child(2) { width: 100%; }
+    .store-mini-lines span:nth-child(3) { width: 62%; }
+
+    .faa-feature-content {
+      position: relative;
+      z-index: 1;
+      max-width: 560px;
+      padding: 1.45rem;
+    }
+
+    .faa-feature-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      width: fit-content;
+      margin-bottom: .75rem;
+      padding: .55rem .72rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.17);
+      background: rgba(255,255,255,.07);
+      color: rgba(255,255,255,.72);
+      font: 900 .68rem/1 Space Mono, monospace;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .faa-feature-title {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(2.8rem, 7vw, 5.4rem);
+      line-height: .84;
+      letter-spacing: -.09em;
+      font-weight: 950;
+      text-wrap: balance;
+    }
+
+    .faa-feature-title em {
+      font-family: Instrument Serif, Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      color: #bcd4ff;
+      letter-spacing: -.04em;
+    }
+
+    .store-scene .faa-feature-title em {
+      color: #ffd6f5;
+    }
+
+    .faa-feature-copy {
+      max-width: 490px;
+      margin: .8rem 0 0;
+      color: rgba(255,255,255,.70);
+      font: 850 .9rem/1.55 Space Mono, monospace;
+    }
+
+    .star-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .55rem;
+      margin-top: 1rem;
+      max-width: 500px;
+    }
+
+    .star-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: .55rem .72rem;
+      border-radius: 999px;
+      border: 1px solid rgba(160,202,255,.16);
+      background: rgba(120,163,255,.08);
+      color: rgba(227,237,255,.84);
+      font: 850 .72rem/1 Space Mono, monospace;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    .store-coming-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .42rem;
+      margin-top: .95rem;
+      padding: .55rem .78rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(255,213,112,.96), rgba(255,122,215,.96));
+      color: #120b15;
+      border: 1px solid rgba(255,255,255,.44);
+      font: 950 .72rem/1 Space Mono, monospace;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      box-shadow: 0 14px 34px rgba(255,122,215,.18);
+      width: fit-content;
+    }
+
+    .store-coming-chip::before {
+      content: "●";
+      font-size: .6rem;
+      animation: pulse 1.35s infinite;
+    }
+
+    .faa-feature-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-top: 1rem;
+    }
+
+    .faa-feature-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: .78rem .95rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      color: #070911;
+      background: #fff;
+      font-weight: 950;
+      transition: .18s ease;
+      box-shadow: 0 14px 32px rgba(0,0,0,.22);
+    }
+
+    .faa-feature-btn:hover {
+      transform: translateY(-3px) rotate(-1deg);
+    }
+
+    .faa-feature-btn.disabled,
+    .faa-feature-btn.disabled:hover {
+      color: rgba(255,255,255,.82);
+      background: rgba(255,255,255,.07);
+      box-shadow: none;
+      transform: none;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .faa-feature-meta {
+      position: absolute;
+      right: 1.1rem;
+      bottom: 1rem;
+      z-index: 1;
+      color: rgba(255,255,255,.36);
+      font: 900 .66rem/1 Space Mono, monospace;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      pointer-events: none;
+    }
+
+    @keyframes faaTwinkle {
+      0%, 100% { opacity: .55; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes faaFloatStar {
+      0%, 100% { transform: translate(calc(var(--star-tilt-x) * -.35), calc(var(--star-tilt-y) * -.35)) translateY(0); }
+      50% { transform: translate(calc(var(--star-tilt-x) * -.35), calc(var(--star-tilt-y) * -.35)) translateY(-10px); }
+    }
+
+    @keyframes faaRingPulse {
+      0%, 100% { transform: scale(.98); opacity: .4; }
+      50% { transform: scale(1.02); opacity: .9; }
+    }
+
+    @media (max-width: 860px) {
+      .faa-feature-scene {
+        min-height: 390px;
+      }
+
+      .star-core {
+        right: 7%;
+        top: 18%;
+        width: 8rem;
+        height: 8rem;
+        font-size: 4rem;
+      }
+
+      .star-ring.r1 { width: 10rem; height: 10rem; right: 9%; top: 21%; }
+      .star-ring.r2 { width: 13.4rem; height: 13.4rem; right: 5.9%; top: 16.9%; }
+      .star-ring.r3 { width: 16rem; height: 16rem; right: 2.9%; top: 13.7%; }
+
+      .store-window {
+        right: 4%;
+        top: 12%;
+        width: 210px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .faa-feature-scenes {
+        width: 100%;
+      }
+
+      .faa-scenes-top {
+        align-items: flex-start;
+      }
+
+      .faa-feature-controls {
+        margin-top: .1rem;
+      }
+
+      .faa-scene-counter {
+        min-width: 4rem;
+      }
+
+      .faa-feature-scene {
+        min-height: 410px;
+      }
+
+      .faa-feature-content {
+        max-width: 100%;
+        padding: 1rem;
+      }
+
+      .faa-feature-copy,
+      .star-pills {
+        max-width: 100%;
+      }
+
+      .star-core {
+        right: 4%;
+        top: 17%;
+        width: 5.9rem;
+        height: 5.9rem;
+        font-size: 3rem;
+        border-radius: 1.35rem;
+      }
+
+      .star-ring.r1 { width: 8rem; height: 8rem; right: 4.8%; top: 19%; }
+      .star-ring.r2 { width: 10rem; height: 10rem; right: 1.4%; top: 15.8%; }
+      .star-ring.r3 { width: 12rem; height: 12rem; right: -1.6%; top: 13%; opacity: .38; }
+
+      .store-window {
+        right: 4%;
+        top: 12%;
+        width: 145px;
+        padding: .6rem;
+      }
+
+      .faa-feature-title {
+        font-size: clamp(2.2rem, 12vw, 4rem);
+      }
+
+      .faa-feature-meta {
+        display: none;
+      }
+    }
+
+
+
+  
+    /* final stats rebuild */
+    .stats-card {
+      overflow: hidden;
+    }
+
+    .visits-panel {
+      display: grid;
+      grid-template-columns: .86fr 1.14fr;
+      gap: .65rem;
+      margin-top: .3rem;
+    }
+
+    .visit-box {
+      position: relative;
+      min-height: 118px;
+      border-radius: 1.28rem;
+      padding: .88rem;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255, 255, 255, .11), transparent 8rem),
+        rgba(255, 255, 255, .045);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .visit-box::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      pointer-events: none;
+      opacity: .78;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.08), transparent 58%);
+    }
+
+    .visit-box > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .today-visit {
+      background:
+        radial-gradient(circle at 18% 10%, rgba(165, 255, 95, .14), transparent 9rem),
+        rgba(255, 255, 255, .045);
+    }
+
+    .total-visit {
+      background:
+        radial-gradient(circle at 18% 10%, rgba(41, 109, 255, .20), transparent 9rem),
+        rgba(255, 255, 255, .05);
+    }
+
+    .visit-kicker {
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 999px;
+      padding: .42rem .55rem;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.065);
+      color: rgba(255,255,255,.58);
+      font: 900 .58rem/1 Space Mono, monospace;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .visit-box b {
+      display: block;
+      margin-top: .56rem;
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1, "lnum" 1;
+      font-size: clamp(1.9rem, 6vw, 3rem);
+      line-height: .88;
+      letter-spacing: -.08em;
+      font-weight: 950;
+    }
+
+    .visit-box small {
+      display: block;
+      margin-top: .48rem;
+      color: rgba(255,255,255,.52);
+      font: 850 .64rem/1.18 Space Mono, monospace;
+      text-transform: uppercase;
+      letter-spacing: .045em;
+    }
+
+    .stats-mini-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .55rem;
+      margin-top: .65rem;
+    }
+
+    .stats-mini-row div {
+      min-height: 62px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 1rem;
+      padding: .7rem;
+      background: rgba(255,255,255,.04);
+    }
+
+    .stats-mini-row b {
+      display: block;
+      color: rgba(255,255,255,.92);
+      font-size: 1rem;
+      letter-spacing: -.035em;
+    }
+
+    .stats-mini-row span {
+      display: block;
+      margin-top: .22rem;
+      color: rgba(255,255,255,.48);
+      font: 800 .62rem/1.1 Space Mono, monospace;
+      text-transform: uppercase;
+    }
+
+    .stats-buttons {
+      margin-top: .8rem !important;
+    }
+
+    @media (max-width: 620px) {
+      .visits-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .visit-box {
+        min-height: 104px;
+      }
+    }
+
+
+  
+    /* STAR final patch: staaar title + compact scenes + interactive core only */
+    .faa-feature-scenes {
+      width: min(920px, 100%) !important;
+    }
+
+    .faa-feature-scene {
+      min-height: 386px !important;
+    }
+
+    .faa-feature-content {
+      max-width: 520px !important;
+      padding: clamp(1.05rem, 2.6vw, 1.35rem) !important;
+    }
+
+    .faa-feature-title {
+      font-size: clamp(2.15rem, 5.7vw, 4.45rem) !important;
+    }
+
+    .star-title {
+      letter-spacing: -.082em !important;
+      text-transform: lowercase;
+    }
+
+    .star-title .star-aaa {
+      display: inline-block;
+      margin-inline: .018em;
+      color: transparent;
+      background: linear-gradient(135deg, #ffffff 5%, #8db8ff 36%, #296dff 62%, #ff4fd8 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      filter: drop-shadow(0 0 18px rgba(141, 184, 255, .38));
+      text-shadow: none;
+      animation: starAaaGlow 2.8s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    .star-scene {
+      --star-x: 50%;
+      --star-y: 38%;
+      --star-tilt-x: 0px;
+      --star-tilt-y: 0px;
+      --star-rotate-x: 0deg;
+      --star-rotate-y: 0deg;
+      --star-power: .18;
+      background:
+        radial-gradient(circle at var(--star-x) var(--star-y), rgba(141, 184, 255, calc(.18 + var(--star-power) * .24)), transparent 16rem),
+        radial-gradient(circle at 14% 12%, rgba(255,255,255,.12), transparent 13rem),
+        radial-gradient(circle at 78% 22%, rgba(55,125,255,.26), transparent 18rem),
+        radial-gradient(circle at 85% 74%, rgba(59,84,170,.16), transparent 13rem),
+        linear-gradient(145deg, rgba(5,11,24,.98), rgba(4,8,18,.76)) !important;
+      border-color: rgba(145,186,255, calc(.18 + var(--star-power) * .22)) !important;
+      transition: border-color .18s ease, background .18s ease;
+    }
+
+    .star-scene::before {
+      opacity: calc(.72 + var(--star-power) * .18) !important;
+    }
+
+    .star-cursor-light,
+    .star-network,
+    .star-ring,
+    .star-node,
+    .star-link {
+      display: none !important;
+    }
+
+    .star-stage {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      perspective: 900px;
+    }
+
+    .star-stage::before {
+      content: "";
+      position: absolute;
+      right: -7rem;
+      top: -9rem;
+      width: 28rem;
+      height: 28rem;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at center, rgba(141,184,255,.14), transparent 56%),
+        repeating-conic-gradient(from 20deg, rgba(141,184,255,.06) 0 7deg, transparent 7deg 22deg);
+      transform: translate(calc(var(--star-tilt-x) * .18), calc(var(--star-tilt-y) * .18)) rotate(calc(var(--star-power) * 16deg));
+      opacity: .72;
+      filter: blur(.2px);
+      animation: starAuroraSpin 18s linear infinite;
+    }
+
+    .star-core {
+      position: absolute;
+      right: clamp(1rem, 7.5vw, 5.2rem);
+      top: clamp(.9rem, 6vw, 3.65rem);
+      width: clamp(6.25rem, 15vw, 8.6rem);
+      height: clamp(6.25rem, 15vw, 8.6rem);
+      display: grid;
+      place-items: center;
+      border-radius: 42% 58% 54% 46% / 48% 42% 58% 52%;
+      color: rgba(255,255,255,.96);
+      background:
+        radial-gradient(circle at 35% 24%, rgba(255,255,255,.72), transparent 10%),
+        radial-gradient(circle at var(--star-x) var(--star-y), rgba(255,255,255,.22), transparent 36%),
+        conic-gradient(from 130deg, rgba(255,255,255,.05), rgba(141,184,255,.32), rgba(41,109,255,.18), rgba(255,79,216,.18), rgba(255,255,255,.05)),
+        rgba(255,255,255,.045);
+      border: 1px solid rgba(177, 211, 255, calc(.18 + var(--star-power) * .30));
+      box-shadow:
+        0 0 calc(24px + var(--star-power) * 36px) rgba(84, 151, 255, .34),
+        0 22px 78px rgba(8, 21, 58, .42),
+        inset 0 1px 0 rgba(255,255,255,.20),
+        inset 0 0 46px rgba(141,184,255,.12);
+      transform:
+        translate(calc(var(--star-tilt-x) * -.45), calc(var(--star-tilt-y) * -.45))
+        rotateX(var(--star-rotate-y))
+        rotateY(var(--star-rotate-x))
+        rotate(-4deg);
+      transform-style: preserve-3d;
+      transition: transform .16s ease-out, box-shadow .18s ease, border-color .18s ease;
+      animation: starCoreMorph 6.6s ease-in-out infinite, starCoreBreath 3.1s ease-in-out infinite;
+      overflow: hidden;
+    }
+
+    .star-core::before,
+    .star-core::after {
+      content: "";
+      position: absolute;
+      inset: -38%;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .star-core::before {
+      background:
+        conic-gradient(from 0deg, transparent, rgba(255,255,255,.28), transparent 28%, rgba(141,184,255,.22), transparent 62%, rgba(255,79,216,.18), transparent);
+      mix-blend-mode: screen;
+      opacity: calc(.34 + var(--star-power) * .38);
+      animation: starCoreSpin 8.5s linear infinite;
+    }
+
+    .star-core::after {
+      inset: 10%;
+      border: 1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(120deg, transparent, rgba(255,255,255,.16), transparent 46%),
+        radial-gradient(circle at center, transparent 43%, rgba(255,255,255,.11) 44%, transparent 46%);
+      opacity: .8;
+      animation: starCoreScan 3.2s ease-in-out infinite;
+    }
+
+    .star-core-symbol {
+      position: relative;
+      z-index: 4;
+      display: block;
+      font: 950 clamp(3.1rem, 8vw, 5rem)/1 Space Mono, monospace;
+      text-shadow:
+        0 0 16px rgba(255,255,255,.55),
+        0 0 42px rgba(141,184,255,.46);
+      transform: translateZ(42px);
+      animation: starGlyphPulse 2.4s ease-in-out infinite;
+    }
+
+    .star-core-shape,
+    .star-core-particle {
+      position: absolute;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .star-core-shape {
+      width: 1.2rem;
+      height: 1.2rem;
+      background: rgba(255,255,255,.22);
+      border: 1px solid rgba(255,255,255,.24);
+      filter: drop-shadow(0 0 12px rgba(141,184,255,.34));
+      mix-blend-mode: screen;
+    }
+
+    .shape-a {
+      left: 14%;
+      top: 18%;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      animation: starShapeFloatA 4.2s ease-in-out infinite;
+    }
+
+    .shape-b {
+      right: 12%;
+      bottom: 18%;
+      border-radius: 999px;
+      animation: starShapeFloatB 5s ease-in-out infinite;
+    }
+
+    .shape-c {
+      left: 18%;
+      bottom: 12%;
+      width: .95rem;
+      height: .95rem;
+      transform: rotate(45deg);
+      animation: starShapeFloatC 4.6s ease-in-out infinite;
+    }
+
+    .star-core-particle {
+      width: .42rem;
+      height: .42rem;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 0 18px rgba(141,184,255,.75);
+      opacity: .72;
+    }
+
+    .p1 { left: 22%; top: 48%; animation: coreParticleOne 3.2s ease-in-out infinite; }
+    .p2 { right: 23%; top: 26%; animation: coreParticleTwo 3.8s ease-in-out infinite; }
+    .p3 { right: 31%; bottom: 23%; animation: coreParticleThree 4.1s ease-in-out infinite; }
+
+    .star-scene.is-star-active .star-core {
+      box-shadow:
+        0 0 72px rgba(141,184,255,.54),
+        0 0 118px rgba(41,109,255,.28),
+        0 22px 78px rgba(8, 21, 58, .42),
+        inset 0 1px 0 rgba(255,255,255,.26),
+        inset 0 0 54px rgba(141,184,255,.18);
+    }
+
+    .star-core.is-pop .star-core-symbol {
+      animation: starGlyphPop .55s cubic-bezier(.2, .9, .2, 1.4), starGlyphPulse 2.4s ease-in-out .55s infinite;
+    }
+
+    @keyframes starAaaGlow {
+      0%, 100% { transform: translateY(0) skewX(0deg); filter: drop-shadow(0 0 14px rgba(141,184,255,.28)); }
+      50% { transform: translateY(-.045em) skewX(-4deg); filter: drop-shadow(0 0 25px rgba(255,79,216,.34)); }
+    }
+
+    @keyframes starAuroraSpin {
+      to { transform: translate(calc(var(--star-tilt-x) * .18), calc(var(--star-tilt-y) * .18)) rotate(360deg); }
+    }
+
+    @keyframes starCoreMorph {
+      0%, 100% { border-radius: 42% 58% 54% 46% / 48% 42% 58% 52%; }
+      33% { border-radius: 54% 46% 42% 58% / 40% 55% 45% 60%; }
+      66% { border-radius: 46% 54% 60% 40% / 56% 44% 54% 46%; }
+    }
+
+    @keyframes starCoreBreath {
+      0%, 100% { filter: saturate(1) brightness(1); }
+      50% { filter: saturate(1.22) brightness(1.08); }
+    }
+
+    @keyframes starCoreSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes starCoreScan {
+      0%, 100% { transform: translateX(-9%) rotate(-4deg); opacity: .42; }
+      50% { transform: translateX(9%) rotate(4deg); opacity: .88; }
+    }
+
+    @keyframes starGlyphPulse {
+      0%, 100% { transform: translateZ(42px) scale(1) rotate(0deg); }
+      50% { transform: translateZ(54px) scale(1.08) rotate(5deg); }
+    }
+
+    @keyframes starGlyphPop {
+      0% { transform: translateZ(42px) scale(.84) rotate(-8deg); opacity: .72; }
+      58% { transform: translateZ(72px) scale(1.34) rotate(12deg); opacity: 1; }
+      100% { transform: translateZ(42px) scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @keyframes starShapeFloatA {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: .42; }
+      50% { transform: translate(9px, -10px) rotate(28deg); opacity: .84; }
+    }
+
+    @keyframes starShapeFloatB {
+      0%, 100% { transform: translate(0, 0) scale(.9); opacity: .38; }
+      50% { transform: translate(-12px, 6px) scale(1.2); opacity: .86; }
+    }
+
+    @keyframes starShapeFloatC {
+      0%, 100% { transform: translate(0, 0) rotate(45deg); opacity: .40; }
+      50% { transform: translate(12px, 7px) rotate(95deg); opacity: .82; }
+    }
+
+    @keyframes coreParticleOne {
+      0%, 100% { transform: translate(0, 0) scale(.8); }
+      50% { transform: translate(38px, -18px) scale(1.28); }
+    }
+
+    @keyframes coreParticleTwo {
+      0%, 100% { transform: translate(0, 0) scale(.9); }
+      50% { transform: translate(-28px, 30px) scale(1.35); }
+    }
+
+    @keyframes coreParticleThree {
+      0%, 100% { transform: translate(0, 0) scale(.75); }
+      50% { transform: translate(-36px, -20px) scale(1.2); }
+    }
+
+    @media (max-width: 860px) {
+      .faa-feature-scene {
+        min-height: 366px !important;
+      }
+
+      .star-core {
+        right: 5% !important;
+        top: 14% !important;
+        width: 6.6rem !important;
+        height: 6.6rem !important;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .faa-feature-scene {
+        min-height: 382px !important;
+      }
+
+      .star-core {
+        right: 4% !important;
+        top: 13% !important;
+        width: 5.25rem !important;
+        height: 5.25rem !important;
+        border-radius: 1.45rem !important;
+      }
+
+      .star-core-symbol {
+        font-size: 2.9rem !important;
+      }
+
+      .faa-feature-title {
+        font-size: clamp(2rem, 10.5vw, 3.55rem) !important;
+      }
+    }
+
+
+  
+    /* STAR calm final: core only, dark purple + site blue */
+    .star-scene {
+      --star-x: 50%;
+      --star-y: 38%;
+      --star-tilt-x: 0px;
+      --star-tilt-y: 0px;
+      --star-rotate-x: 0deg;
+      --star-rotate-y: 0deg;
+      --star-power: .12;
+      background:
+        radial-gradient(circle at var(--star-x) var(--star-y), rgba(91, 118, 255, calc(.08 + var(--star-power) * .12)), transparent 15rem),
+        radial-gradient(circle at 16% 12%, rgba(41, 109, 255, .12), transparent 15rem),
+        radial-gradient(circle at 86% 24%, rgba(82, 45, 145, .18), transparent 16rem),
+        linear-gradient(145deg, rgba(7, 8, 22, .98), rgba(16, 10, 35, .84) 55%, rgba(4, 6, 14, .92)) !important;
+      border-color: rgba(141, 184, 255, .16) !important;
+      box-shadow:
+        0 26px 90px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.08) !important;
+    }
+
+    .star-scene::before {
+      opacity: .46 !important;
+      background:
+        linear-gradient(120deg, transparent 0 42%, rgba(255,255,255,.045), transparent 62%),
+        repeating-linear-gradient(to bottom, transparent 0 14px, rgba(255,255,255,.022) 15px, transparent 16px) !important;
+    }
+
+    .star-stage,
+    .star-stage::before {
+      background: none !important;
+      filter: none !important;
+    }
+
+    .star-stage::before,
+    .star-core::before,
+    .star-core::after,
+    .star-core-shape,
+    .star-core-particle,
+    .star-cursor-light,
+    .star-network,
+    .star-ring,
+    .star-node,
+    .star-link {
+      display: none !important;
+      content: none !important;
+    }
+
+    .star-core {
+      position: absolute !important;
+      right: clamp(1rem, 7.5vw, 5.1rem) !important;
+      top: clamp(1rem, 6vw, 3.55rem) !important;
+      width: clamp(5.8rem, 13vw, 7.6rem) !important;
+      height: clamp(5.8rem, 13vw, 7.6rem) !important;
+      display: grid !important;
+      place-items: center !important;
+      border-radius: 1.75rem !important;
+      color: rgba(238, 244, 255, .94) !important;
+      background:
+        radial-gradient(circle at 35% 24%, rgba(255,255,255,.18), transparent 13%),
+        radial-gradient(circle at 50% 50%, rgba(41,109,255,.18), transparent 58%),
+        linear-gradient(145deg, rgba(35, 24, 72, .92), rgba(9, 12, 34, .86)) !important;
+      border: 1px solid rgba(141, 184, 255, calc(.18 + var(--star-power) * .18)) !important;
+      box-shadow:
+        0 0 calc(20px + var(--star-power) * 26px) rgba(41, 109, 255, .20),
+        0 18px 55px rgba(0, 0, 0, .34),
+        inset 0 1px 0 rgba(255,255,255,.12),
+        inset 0 0 26px rgba(141,184,255,.08) !important;
+      transform:
+        translate(calc(var(--star-tilt-x) * -.28), calc(var(--star-tilt-y) * -.28))
+        rotateX(var(--star-rotate-y))
+        rotateY(var(--star-rotate-x))
+        rotate(-2deg) !important;
+      transition: transform .18s ease-out, box-shadow .2s ease, border-color .2s ease, background .2s ease !important;
+      animation: starCoreCalmBreath 4.2s ease-in-out infinite !important;
+      overflow: hidden !important;
+    }
+
+    .star-core-symbol {
+      position: relative !important;
+      z-index: 2 !important;
+      display: block !important;
+      font: 950 clamp(3rem, 7vw, 4.55rem)/1 Space Mono, monospace !important;
+      color: rgba(245, 248, 255, .94) !important;
+      text-shadow:
+        0 0 16px rgba(141,184,255,.26),
+        0 0 34px rgba(41,109,255,.18) !important;
+      transform: translateZ(28px) !important;
+      animation: starGlyphCalmPulse 3.8s ease-in-out infinite !important;
+    }
+
+    .star-scene.is-star-active .star-core {
+      border-color: rgba(141, 184, 255, .28) !important;
+      box-shadow:
+        0 0 36px rgba(41,109,255,.26),
+        0 0 72px rgba(63, 44, 128, .18),
+        0 18px 55px rgba(0,0,0,.36),
+        inset 0 1px 0 rgba(255,255,255,.14),
+        inset 0 0 34px rgba(141,184,255,.10) !important;
+      background:
+        radial-gradient(circle at var(--star-x) var(--star-y), rgba(141,184,255,.16), transparent 44%),
+        linear-gradient(145deg, rgba(38, 26, 78, .94), rgba(9, 12, 34, .86)) !important;
+    }
+
+    .star-core.is-pop .star-core-symbol {
+      animation: starGlyphSoftPop .46s cubic-bezier(.2,.9,.2,1.25), starGlyphCalmPulse 3.8s ease-in-out .46s infinite !important;
+    }
+
+    @keyframes starCoreCalmBreath {
+      0%, 100% { filter: saturate(1) brightness(1); }
+      50% { filter: saturate(1.08) brightness(1.04); }
+    }
+
+    @keyframes starGlyphCalmPulse {
+      0%, 100% { transform: translateZ(28px) scale(1) rotate(0deg); opacity: .92; }
+      50% { transform: translateZ(34px) scale(1.045) rotate(2deg); opacity: 1; }
+    }
+
+    @keyframes starGlyphSoftPop {
+      0% { transform: translateZ(24px) scale(.92) rotate(-3deg); opacity: .82; }
+      62% { transform: translateZ(42px) scale(1.13) rotate(4deg); opacity: 1; }
+      100% { transform: translateZ(28px) scale(1) rotate(0deg); opacity: .94; }
+    }
+
+    @media (max-width: 860px) {
+      .star-core {
+        width: 5.9rem !important;
+        height: 5.9rem !important;
+        right: 5% !important;
+        top: 14% !important;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .star-core {
+        width: 4.8rem !important;
+        height: 4.8rem !important;
+        right: 4% !important;
+        top: 13% !important;
+        border-radius: 1.3rem !important;
+      }
+
+      .star-core-symbol {
+        font-size: 2.65rem !important;
+      }
+    }
+
+
+  
+    /* STAR text color final: calm aaa + server */
+    .star-title .star-aaa {
+      color: #93a7ff !important;
+      background: none !important;
+      -webkit-background-clip: initial !important;
+      background-clip: initial !important;
+      filter: none !important;
+      text-shadow: 0 0 18px rgba(41, 109, 255, .18) !important;
+      animation: none !important;
+      transform: none !important;
+    }
+
+    .star-title em {
+      color: #8b6fd6 !important;
+      text-shadow: 0 0 18px rgba(80, 58, 142, .20) !important;
+    }
+
+
   </style>
 
   <style id="faa-cursor-and-music-patch">
@@ -4757,17 +5949,29 @@
 
             <audio id="faaLocalAudio" src="m.mp3" preload="auto" autoplay muted loop playsinline></audio>
           </section>
+          <section class="card stats-card tilt-card">
+            <div class="card-title"><span>stats</span><span>tiny counter</span></div>
 
+            <div class="visits-panel" aria-label="visitor stats">
+              <div class="visit-box today-visit">
+                <span class="visit-kicker">today</span>
+                <b id="visitorToday">0</b>
+                <small>visits today</small>
+              </div>
 
-          <section class="card tilt-card">
-            <div class="card-title"><span>stats</span><span>real-ish meter</span></div>
-            <div class="stats-grid">
-              <div class="stat"><b id="visitorToday">...</b><span>visits today</span></div>
-              <div class="stat"><b id="visitorTotal">...</b><span>all-time visits</span></div>
-              <div class="stat"><b>online</b><span>spiritually</span></div>
-              <div class="stat"><b>sleepy</b><span>always</span></div>
+              <div class="visit-box total-visit">
+                <span class="visit-kicker">all time</span>
+                <b id="visitorTotal">00702</b>
+                <small>all-time visits</small>
+              </div>
             </div>
-            <div class="buttons">
+
+            <div class="stats-mini-row">
+              <div><b>online</b><span>spiritually</span></div>
+              <div><b>sleepy</b><span>always</span></div>
+            </div>
+
+            <div class="buttons stats-buttons">
               <button class="fun-btn warn" id="panicBtn" type="button">do not press</button>
               <button class="fun-btn" id="moodBtn" type="button">change mood</button>
               <button class="fun-btn" id="roomBtn" type="button">enter room</button>
@@ -4919,6 +6123,65 @@
             </div>
           </div>
         </article>
+
+        <section class="faa-feature-scenes" aria-label="featured places">
+          <div class="faa-scenes-top">
+            <div>
+              <span class="faa-scroll-label">things i made !</span>
+              <p class="faa-scroll-mini">left / right arrows</p>
+            </div>
+            <div class="faa-feature-controls" aria-label="scene controls">
+              <button class="faa-scene-arrow" type="button" data-scene-nav="prev" aria-label="previous scene">←</button>
+              <div class="faa-scene-counter"><b data-scene-current>01</b> / 02</div>
+              <button class="faa-scene-arrow" type="button" data-scene-nav="next" aria-label="next scene">→</button>
+            </div>
+          </div>
+          <div class="faa-feature-viewport">
+            <div class="faa-feature-track">
+              <article class="faa-feature-scene star-scene tilt-card">
+                <div class="star-stage" aria-hidden="true">
+                  <div class="star-core">
+                    <span class="star-core-symbol">✦</span>
+                  </div>
+                </div>
+                <div class="faa-feature-content">
+                  <span class="faa-feature-kicker">discord server</span>
+                  <h3 class="faa-feature-title star-title">staaar<span class="star-aaa"></span> <em>server</em></h3>
+                  <p class="faa-feature-copy">stay clam and ready for the next generation of life...</p>
+                  <div class="star-pills" aria-label="STAR highlights">
+                    <span class="star-pill">clans</span>
+                    <span class="star-pill">roles</span>
+                    <span class="star-pill">systems</span>
+                    <span class="star-pill">blue sky energy</span>
+                  </div>
+                  <div class="faa-feature-actions">
+                    <a class="faa-feature-btn" href="https://discord.gg/gNHffCHAnA" target="_blank" rel="noreferrer">join STAR ↗</a>
+                  </div>
+                </div>
+                <span class="faa-feature-meta">STAR COMMUNITY</span>
+              </article>
+
+              <article class="faa-feature-scene store-scene tilt-card">
+                <div class="store-window" aria-hidden="true">
+                  <div class="store-window-bar"><span></span><span></span><span></span></div>
+                  <span class="store-preview-chip">coming soon</span>
+                  <div class="store-mini-lines"><span></span><span></span><span></span></div>
+                </div>
+                <div class="faa-feature-content">
+                  <span class="faa-feature-kicker">my store</span>
+                  <h3 class="faa-feature-title">Discord Widget <em>Assistant</em></h3>
+                  <p class="faa-feature-copy">my little app for custom Discord widgets. the store page is still being built, so this spot is here as a coming soon preview.</p>
+                  <span class="store-coming-chip">NOT SUPPOSED TO BE HERE YET.</span>
+                  <div class="faa-feature-actions">
+                    <span class="faa-feature-btn disabled">store opens soon</span>
+                  </div>
+                </div>
+                <span class="faa-feature-meta">COMING SOON</span>
+              </article>
+            </div>
+          </div>
+        </section>
+
         <article class="hotline-webring-card tilt-card" aria-label="Hotline Webring">
           <div class="hotline-webring-top">
             <a class="hotline-webring-title" href="https://hotlinewebring.club" target="_blank" rel="noreferrer">Hotline Webring <span>→</span></a>
@@ -5579,47 +6842,114 @@
     }
 
     async function trackVisitors() {
-      const total = $('#visitorTotal'), today = $('#visitorToday');
+      const total = $('#visitorTotal');
+      const today = $('#visitorToday');
+      if (!total || !today) return;
 
-      // Start the public all-time counter from 00702.
-      // The API's first POST usually returns 1, so 701 + 1 = 00702.
-      const VISITOR_START_AT = 702;
-      const VISITOR_TOTAL_OFFSET = 701;
-      const formatTotal = (apiCount) => {
-        const count = Number(apiCount || 0);
-        const displayed = Math.max(VISITOR_START_AT, VISITOR_TOTAL_OFFSET + count);
-        return String(displayed).padStart(5, '0');
-      };
-
-      const host = 'faaa.space';
-      const body = {
-        domain: host,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        page_path: location.pathname || '/',
-        page_title: document.title,
-        referrer: document.referrer || ''
-      };
-      const recordedKey = 'faa_visit_recorded_' + host;
-      try {
-        let data;
-        if (!sessionStorage.getItem(recordedKey)) {
-          const res = await fetch('https://visitor.6developer.com/visit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-          data = await res.json();
-          sessionStorage.setItem(recordedKey, 'yes');
-        } else {
-          const res = await fetch('https://visitor.6developer.com/visit?domain=' + encodeURIComponent(host));
-          data = await res.json();
+      const START_TOTAL = 702;
+      const TOTAL_OFFSET = START_TOTAL - 1;
+      const ns = 'faaa_space';
+      const date = (() => {
+        try {
+          const parts = new Intl.DateTimeFormat('en-CA', {
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Riyadh',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          }).formatToParts(new Date());
+          const get = (type) => parts.find(p => p.type === type)?.value || '';
+          return `${get('year')}-${get('month')}-${get('day')}`;
+        } catch (e) {
+          return new Date().toISOString().slice(0, 10);
         }
-        const totalCount = data.totalCount ?? data.total ?? data.count ?? 0;
-        const todayCount = data.todayCount ?? data.today ?? data.daily ?? 0;
-        total.textContent = formatTotal(totalCount);
-        today.textContent = new Intl.NumberFormat().format(todayCount);
+      })();
+
+      const numberFrom = (data) => {
+        if (data == null) return NaN;
+        if (typeof data === 'number') return data;
+        if (typeof data === 'string') {
+          const m = data.match(/-?\d+(\.\d+)?/);
+          return m ? Number(m[0]) : NaN;
+        }
+        const possible = [
+          data.value,
+          data.count,
+          data.total,
+          data.hits,
+          data.result,
+          data.data && data.data.value,
+          data.data && data.data.count
+        ];
+        for (const item of possible) {
+          const n = Number(item);
+          if (Number.isFinite(n)) return n;
+        }
+        return NaN;
+      };
+
+      const getTextOrJson = async (url) => {
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) throw new Error('counter api failed');
+        const text = await res.text();
+        try { return JSON.parse(text); } catch (e) { return text; }
+      };
+
+      const hitCounter = async (key) => {
+        const safeKey = String(key).replace(/[^a-zA-Z0-9_-]/g, '_');
+
+        const urls = [
+          `https://api.countapi.xyz/hit/${encodeURIComponent(ns)}/${encodeURIComponent(safeKey)}`,
+          `https://countapi.mileshilliard.com/api/v1/hit/${encodeURIComponent(ns + '_' + safeKey)}`,
+          `https://api.counterapi.dev/v1/${encodeURIComponent(ns)}/${encodeURIComponent(safeKey)}/up`
+        ];
+
+        let lastError;
+        for (const url of urls) {
+          try {
+            const data = await getTextOrJson(url);
+            const n = numberFrom(data);
+            if (Number.isFinite(n)) return n;
+          } catch (error) {
+            lastError = error;
+          }
+        }
+        throw lastError || new Error('all counters failed');
+      };
+
+      const localFallback = () => {
+        const page = (location.hostname || 'local').replace(/[^a-z0-9]+/gi, '_').toLowerCase();
+        const localTotalKey = `faa_real_visits_total_${page}`;
+        const localTodayKey = `faa_real_visits_today_${page}_${date}`;
+        const totalNow = Math.max(START_TOTAL, Number(localStorage.getItem(localTotalKey) || START_TOTAL) + 1);
+        const todayNow = Math.max(1, Number(localStorage.getItem(localTodayKey) || 0) + 1);
+        try {
+          localStorage.setItem(localTotalKey, String(totalNow));
+          localStorage.setItem(localTodayKey, String(todayNow));
+        } catch (e) {}
+        today.textContent = String(todayNow);
+        total.textContent = String(totalNow).padStart(5, '0');
+        today.title = 'local fallback counter';
+        total.title = 'local fallback counter';
+      };
+
+      today.textContent = '...';
+      total.textContent = '...';
+
+      try {
+        const [totalHit, todayHit] = await Promise.all([
+          hitCounter('all_time'),
+          hitCounter('today_' + date)
+        ]);
+
+        const publicTotal = Math.max(START_TOTAL, TOTAL_OFFSET + Math.round(totalHit));
+        const publicToday = Math.max(1, Math.round(todayHit));
+
+        total.textContent = String(publicTotal).padStart(5, '0');
+        today.textContent = String(publicToday);
+        today.title = 'global visitor counter';
+        total.title = 'global visitor counter';
       } catch (e) {
-        const key = 'faa_visits_backup_faaa_space';
-        const n = Number(localStorage.getItem(key) || 0) + 1;
-        localStorage.setItem(key, n);
-        total.textContent = formatTotal(n);
-        today.textContent = new Intl.NumberFormat().format(n);
+        localFallback();
       }
     }
 
@@ -5902,10 +7232,8 @@
     startStickerTipLoop();
   </script>
 
-
-  <script>
-    /* visitor + now-live final patch */
-    (function () {
+  <script id="faa-now-live-layout-only">
+    (() => {
       const $ = (id) => document.getElementById(id);
       const $$ = (selector) => document.querySelectorAll(selector);
 
@@ -5913,12 +7241,14 @@
         const card = $('nowLiveCard');
         const grid = card ? card.querySelector('.now-grid') : null;
         const list = $('gameList');
+
         if (card) {
           card.style.maxHeight = 'none';
           card.style.overflow = 'hidden';
           card.style.paddingBottom = '1.15rem';
           card.style.scrollbarWidth = 'none';
         }
+
         if (grid) {
           grid.style.maxHeight = 'none';
           grid.style.height = 'auto';
@@ -5926,6 +7256,7 @@
           grid.style.paddingBottom = '.85rem';
           grid.style.scrollbarWidth = 'none';
         }
+
         if (list) {
           list.style.maxHeight = 'none';
           list.style.height = 'auto';
@@ -5933,6 +7264,7 @@
           list.style.paddingBottom = '.9rem';
           list.style.scrollbarWidth = 'none';
         }
+
         $$('#nowLiveCard .live-card').forEach(el => {
           el.style.boxSizing = 'border-box';
           el.style.margin = '0';
@@ -5941,68 +7273,16 @@
         });
       }
 
-      function fallbackVisitors() {
-        const total = $('visitorTotal');
-        const today = $('visitorToday');
-        if (!total || !today) return;
-        const fmt = new Intl.NumberFormat();
-        const date = new Date().toLocaleDateString('en-CA');
-        const page = (location.hostname || 'local').replace(/[^a-z0-9]+/gi, '_').toLowerCase();
-        const sessionKey = 'faa_visit_session_' + page + '_' + date;
-        const totalKey = 'faa_visit_total_' + page;
-        const todayKey = 'faa_visit_today_' + page + '_' + date;
-        let counted = false;
-        try { counted = sessionStorage.getItem(sessionKey) === 'yes'; } catch (e) {}
-        let localTotal = Number(localStorage.getItem(totalKey) || '702');
-        let localToday = Number(localStorage.getItem(todayKey) || '0');
-        if (!counted) {
-          localTotal += 1;
-          localToday += 1;
-          try {
-            localStorage.setItem(totalKey, String(localTotal));
-            localStorage.setItem(todayKey, String(localToday));
-            sessionStorage.setItem(sessionKey, 'yes');
-          } catch (e) {}
-        }
-        total.textContent = String(Math.max(702, localTotal)).padStart(5, '0');
-        today.textContent = fmt.format(Math.max(1, localToday));
-
-        if (location.protocol === 'file:') return;
-        const ns = encodeURIComponent('faa_' + page);
-        const day = encodeURIComponent(date);
-        const timeout = (ms) => new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms));
-        Promise.race([
-          Promise.all([
-            fetch('https://api.countapi.xyz/hit/' + ns + '/all_time').then(r => r.json()),
-            fetch('https://api.countapi.xyz/hit/' + ns + '/' + day).then(r => r.json())
-          ]),
-          timeout(3500)
-        ]).then(([a, d]) => {
-          const apiTotal = Number(a.value || a.count || 0);
-          const apiToday = Number(d.value || d.count || 0);
-          if (apiTotal > 0) total.textContent = String(Math.max(702, 701 + apiTotal)).padStart(5, '0');
-          if (apiToday > 0) today.textContent = fmt.format(apiToday);
-        }).catch(() => {});
-      }
-
-      function initPatch() {
-        fixNowLiveLayout();
-        fallbackVisitors();
-        setInterval(fixNowLiveLayout, 2000);
-      }
-
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initPatch);
+        document.addEventListener('DOMContentLoaded', fixNowLiveLayout);
       } else {
-        initPatch();
-      }
-      window.addEventListener('load', () => {
         fixNowLiveLayout();
-        fallbackVisitors();
-      });
+      }
+
+      window.addEventListener('load', fixNowLiveLayout);
+      setInterval(fixNowLiveLayout, 2000);
     })();
   </script>
-
 
   <script id="faa-local-music-patch">
     (() => {
@@ -6680,6 +7960,139 @@
     })();
   </script>
 
+
+  <script id="faa-scenes-slider-patch">
+    (() => {
+      const section = document.querySelector('.faa-feature-scenes');
+      if (!section) return;
+
+      const track = section.querySelector('.faa-feature-track');
+      const slides = Array.from(section.querySelectorAll('.faa-feature-scene'));
+      const current = section.querySelector('[data-scene-current]');
+      const prevBtn = section.querySelector('[data-scene-nav="prev"]');
+      const nextBtn = section.querySelector('[data-scene-nav="next"]');
+      const viewport = section.querySelector('.faa-feature-viewport');
+      const total = slides.length;
+      let index = 0;
+      let autoTimer = null;
+      let wheelLock = false;
+      let pointerStartX = null;
+      let pointerDeltaX = 0;
+      let dragging = false;
+
+      function updateScene(animate = true) {
+        track.style.transition = animate ? 'transform .82s cubic-bezier(.22, 1, .36, 1)' : 'none';
+        section.style.setProperty('--scene-index', index);
+        if (current) current.textContent = String(index + 1).padStart(2, '0');
+        slides.forEach((slide, i) => slide.setAttribute('aria-hidden', i === index ? 'false' : 'true'));
+      }
+
+      function goTo(nextIndex, animate = true) {
+        index = (nextIndex + total) % total;
+        updateScene(animate);
+        restartAuto();
+      }
+
+      function next() { goTo(index + 1); }
+      function prev() { goTo(index - 1); }
+
+      function restartAuto() {
+        window.clearInterval(autoTimer);
+        autoTimer = window.setInterval(() => goTo(index + 1), 10000);
+      }
+
+      prevBtn?.addEventListener('click', prev);
+      nextBtn?.addEventListener('click', next);
+
+      viewport?.addEventListener('wheel', (event) => {
+        const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+        if (Math.abs(delta) < 12 || wheelLock) return;
+        event.preventDefault();
+        wheelLock = true;
+        delta > 0 ? next() : prev();
+        window.setTimeout(() => { wheelLock = false; }, 520);
+      }, { passive: false });
+
+      viewport?.addEventListener('pointerdown', (event) => {
+        pointerStartX = event.clientX;
+        pointerDeltaX = 0;
+        dragging = true;
+        track.style.transition = 'none';
+      });
+
+      viewport?.addEventListener('pointermove', (event) => {
+        if (!dragging || pointerStartX == null) return;
+        pointerDeltaX = event.clientX - pointerStartX;
+        const viewportWidth = viewport.clientWidth || 1;
+        const offset = (-index * viewportWidth) + pointerDeltaX;
+        track.style.transform = `translate3d(${offset}px, 0, 0)`;
+      });
+
+      function endDrag() {
+        if (!dragging) return;
+        dragging = false;
+        const threshold = (viewport?.clientWidth || 1) * 0.16;
+        if (pointerDeltaX <= -threshold) index = (index + 1) % total;
+        else if (pointerDeltaX >= threshold) index = (index - 1 + total) % total;
+        updateScene(true);
+        restartAuto();
+        pointerStartX = null;
+        pointerDeltaX = 0;
+      }
+
+      viewport?.addEventListener('pointerup', endDrag);
+      viewport?.addEventListener('pointercancel', endDrag);
+      viewport?.addEventListener('pointerleave', endDrag);
+
+      updateScene(false);
+      restartAuto();
+
+      const starScene = section.querySelector('.star-scene');
+      if (starScene) {
+        const core = starScene.querySelector('.star-core');
+
+        const setStarPointer = (event) => {
+          const rect = starScene.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          const px = Math.max(0, Math.min(1, x / rect.width));
+          const py = Math.max(0, Math.min(1, y / rect.height));
+          const power = Math.max(.16, Math.min(1, 1 - Math.hypot(px - .68, py - .30) / .82));
+
+          starScene.classList.add('is-star-active');
+          starScene.style.setProperty('--star-x', `${(px * 100).toFixed(2)}%`);
+          starScene.style.setProperty('--star-y', `${(py * 100).toFixed(2)}%`);
+          starScene.style.setProperty('--star-tilt-x', `${((px - 0.5) * 26).toFixed(2)}px`);
+          starScene.style.setProperty('--star-tilt-y', `${((py - 0.5) * 20).toFixed(2)}px`);
+          starScene.style.setProperty('--star-rotate-x', `${((px - 0.5) * -14).toFixed(2)}deg`);
+          starScene.style.setProperty('--star-rotate-y', `${((py - 0.5) * 10).toFixed(2)}deg`);
+          starScene.style.setProperty('--star-power', power.toFixed(3));
+        };
+
+        const popCore = () => {
+          if (!core) return;
+          core.classList.remove('is-pop');
+          void core.offsetWidth;
+          core.classList.add('is-pop');
+          window.setTimeout(() => core.classList.remove('is-pop'), 650);
+        };
+
+        starScene.addEventListener('pointermove', setStarPointer);
+        starScene.addEventListener('pointerenter', setStarPointer);
+        starScene.addEventListener('pointerdown', popCore);
+        starScene.addEventListener('pointerleave', () => {
+          starScene.classList.remove('is-star-active');
+          starScene.style.setProperty('--star-x', '50%');
+          starScene.style.setProperty('--star-y', '38%');
+          starScene.style.setProperty('--star-tilt-x', '0px');
+          starScene.style.setProperty('--star-tilt-y', '0px');
+          starScene.style.setProperty('--star-rotate-x', '0deg');
+          starScene.style.setProperty('--star-rotate-y', '0deg');
+          starScene.style.setProperty('--star-power', '.18');
+        });
+      }
+    })();
+  </script>
 </body>
 
 </html>
