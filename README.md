@@ -17,4 +17,7 @@
 🌌 ملاحظات الرائد
 
 "ترقّب ظهور المفاجآت، فكل نقرة قد تُفتح بابًا إلى مجرة جديدة،
+
 وكل لمحة من الشاشة تلمس نجمًا لم يُر من قبل."
+
+![Views](https://api.visitorbadge.io/api/VisitorHit?user=faares01&repo=faaa.space&label=VIEWS&countColor=%237B1E7A)
